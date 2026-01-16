@@ -1,0 +1,567 @@
+.container {
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.headerActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.primaryBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.primaryBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.statCard {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.statIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statIcon.blue {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.statIcon.purple {
+    background: #faf5ff;
+    color: #8b5cf6;
+}
+
+.statIcon.green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.statIcon.orange {
+    background: #fff7ed;
+    color: #f97316;
+}
+
+.statInfo {
+    flex: 1;
+}
+
+.statValue {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.statLabel {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.wideCard {
+    grid-column: 1 / -1;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cardHeader h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardHeader a {
+    font-size: 0.8125rem;
+    color: #6366f1;
+    text-decoration: none;
+}
+
+/* Leave Table */
+.leaveTable {
+    overflow-x: auto;
+}
+
+.tableHeader,
+.tableRow {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.8fr 1.2fr 0.8fr;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    align-items: center;
+}
+
+.tableHeader {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tableRow {
+    font-size: 0.875rem;
+    color: #475569;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.tableRow:last-child {
+    border-bottom: none;
+}
+
+.employeeName {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.leaveType {
+    background: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    width: fit-content;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.approveBtn,
+.rejectBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.approveBtn {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.approveBtn:hover {
+    background: #d1fae5;
+}
+
+.rejectBtn {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.rejectBtn:hover {
+    background: #fee2e2;
+}
+
+/* Attendance Circle */
+.attendanceStats {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.attendanceCircle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.attendanceCircle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circleBack {
+    fill: none;
+    stroke: #f1f5f9;
+    stroke-width: 8;
+}
+
+.circleFront {
+    fill: none;
+    stroke: #10b981;
+    stroke-width: 8;
+    stroke-linecap: round;
+}
+
+.circleText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.circleValue {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.circleLabel {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.attendanceBreakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.breakdownItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.dotGreen,
+.dotOrange,
+.dotRed,
+.dotBlue {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dotGreen {
+    background: #10b981;
+}
+
+.dotOrange {
+    background: #f59e0b;
+}
+
+.dotRed {
+    background: #ef4444;
+}
+
+.dotBlue {
+    background: #3b82f6;
+}
+
+/* Recent Hires */
+.hiresList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.hireItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hireAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hireInfo {
+    flex: 1;
+}
+
+.hireName {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.hireRole {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.hireDate {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Events */
+.eventsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.eventItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.eventIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #fef3c7;
+    color: #d97706;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eventInfo {
+    flex: 1;
+}
+
+.eventName {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.eventType {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.eventDate {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    background: #f8fafc;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+@media (max-width: 1200px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .mainGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Expandable Leave Card Styles */
+.leaveCardWrapper {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.leaveCardWrapper:last-child {
+    border-bottom: none;
+}
+
+.clickableRow {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickableRow:hover {
+    background-color: #f8fafc;
+}
+
+.expandIcon {
+    margin-left: 0.5rem;
+    color: #94a3b8;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.leaveExpanded {
+    padding: 1rem 0;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+.emailContainer {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.emailHeader {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+.emailHeader strong {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.emailBody {
+    padding: 1.25rem;
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.emailBody p {
+    margin: 0 0 0.875rem 0;
+}
+
+.emailBody p:last-child {
+    margin-bottom: 0;
+}
+
+.reasonText {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #6366f1;
+    font-style: italic;
+    color: #334155;
+    margin: 0.5rem 0 1rem 0 !important;
+}
+
+.emailSignature {
+    margin-top: 1.5rem !important;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.emailSignature strong {
+    color: #1e293b;
+}
+
+.employeeIdText {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Employee Status Badges */
+.statusBadge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+.statusPresent {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #047857;
+}
+
+.statusLate {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #b45309;
+}
+
+.statusAbsent {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #64748b;
+}
+
+.statusLeave {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1d4ed8;
+}

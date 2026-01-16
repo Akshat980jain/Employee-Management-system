@@ -1,0 +1,483 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Left Panel */
+.leftPanel {
+    width: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #4f46e5 30%, #06b6d4 100%);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.leftPanel::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.leftContent {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+}
+
+.dots {
+    color: white;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+}
+
+.logoText {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.heroSection {
+    margin-bottom: 3rem;
+}
+
+.heroSection h1 {
+    color: white;
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.heroSection p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    font-size: 0.9375rem;
+}
+
+.featureIcon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.stats {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statValue {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.statLabel {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.8125rem;
+}
+
+/* Right Panel */
+.rightPanel {
+    width: 50%;
+    background: #f8fafc;
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formCard {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.formHeader {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.formHeader h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.formHeader p {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.googleBtn {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.googleBtn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.25rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.divider span {
+    padding: 0 0.75rem;
+    font-size: 0.6875rem;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+}
+
+.formGroup {
+    margin-bottom: 1rem;
+}
+
+.formGroup label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.formGroup input {
+    width: 100%;
+    height: 44px;
+    padding: 0 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    color: #1e293b;
+    transition: all 0.2s;
+}
+
+.formGroup input::placeholder {
+    color: #94a3b8;
+}
+
+.formGroup input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.passwordWrapper {
+    position: relative;
+}
+
+.passwordWrapper input {
+    padding-right: 3rem;
+}
+
+.eyeBtn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.eyeBtn:hover {
+    color: #64748b;
+}
+
+.submitBtn {
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.submitBtn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.termsText {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.termsText a {
+    color: #8b5cf6;
+    text-decoration: none;
+}
+
+.termsText a:hover {
+    text-decoration: underline;
+}
+
+.loginLink {
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.loginLink a {
+    color: #1e293b;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.footer p {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+/* Role Selector */
+.roleSelector {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.roleOption {
+    flex: 1;
+    padding: 0.75rem 0.5rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.roleOption:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
+.roleOption.roleSelected {
+    border-color: #8b5cf6;
+    background: #faf5ff;
+}
+
+.roleLabel {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.125rem;
+}
+
+.roleDesc {
+    display: block;
+    font-size: 0.625rem;
+    color: #64748b;
+}
+
+.roleOption.roleSelected .roleLabel {
+    color: #7c3aed;
+}
+
+.roleOption.roleSelected .roleDesc {
+    color: #8b5cf6;
+}
+
+/* Select Wrapper for Dropdown */
+.selectWrapper {
+    position: relative;
+}
+
+.selectWrapper select {
+    width: 100%;
+    height: 44px;
+    padding: 0 2.5rem 0 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    color: #1e293b;
+    background: white;
+    cursor: pointer;
+    appearance: none;
+    transition: all 0.2s;
+}
+
+.selectWrapper select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.selectWrapper select:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: #f8fafc;
+}
+
+.selectIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.helpText {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #f59e0b;
+    font-style: italic;
+}
+
+.infoText {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Organization Mode Selector */
+.modeSelector {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.modeOption {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.modeOption:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
+.modeOption.modeSelected {
+    border-color: #8b5cf6;
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+.modeOption svg {
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .leftPanel {
+        display: none;
+    }
+
+    .rightPanel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .rightPanel {
+        padding: 1.5rem;
+    }
+
+    .formCard {
+        padding: 1.5rem;
+    }
+}

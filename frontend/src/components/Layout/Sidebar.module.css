@@ -1,0 +1,274 @@
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 280px;
+    height: calc(100vh - 60px);
+    background: white;
+    border-right: 1px solid #e2e8f0;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+}
+
+.nav {
+    flex: 0 0 auto;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin-bottom: 0.25rem;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.menuItem:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.menuItem.active {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+}
+
+.menuIcon {
+    flex-shrink: 0;
+}
+
+.menuLabel {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Clock Button */
+.clockBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.clockBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.clockBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.clockBtn.clockedIn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.clockBtn.clockedIn:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Stats Card */
+.statsCard {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.statsHeader {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.statsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #1e293b;
+}
+
+.statIconGreen {
+    color: #10b981;
+}
+
+.statIconBlue {
+    color: #3b82f6;
+}
+
+.statIconGray {
+    color: #94a3b8;
+}
+
+.correctionBtn {
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 0.75rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.correctionBtn:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+/* Calendar Card */
+.calendarCard {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calendarHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.calendarDays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.25rem;
+    text-align: center;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    margin-bottom: 0.25rem;
+}
+
+.calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.15rem;
+}
+
+.calendarDay {
+    text-align: center;
+    font-size: 0.7rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    color: #64748b;
+}
+
+.calendarDayEmpty {
+    padding: 0.25rem;
+}
+
+.calendarToday {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-weight: 600;
+}
+
+/* Tip Card */
+.tipCard {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.tipIcon {
+    color: #d97706;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.tipCard p {
+    font-size: 0.8rem;
+    color: #92400e;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Branding */
+.branding {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.brandingLogo {
+    color: #6366f1;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+}
+
+.brandingName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.brandingVersion {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}

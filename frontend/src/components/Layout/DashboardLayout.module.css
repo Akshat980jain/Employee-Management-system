@@ -1,0 +1,22 @@
+.layout {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.main {
+    margin-left: 280px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    padding: 1.5rem;
+}
+
+.content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+    .main {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,453 @@
+.container {
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.headerActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.primaryBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.primaryBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.statCard {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.statIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statIcon.blue {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.statIcon.purple {
+    background: #faf5ff;
+    color: #8b5cf6;
+}
+
+.statIcon.green {
+    background: #ecfdf5;
+    color: #10b981;
+}
+
+.statIcon.orange {
+    background: #fff7ed;
+    color: #f97316;
+}
+
+.statInfo {
+    flex: 1;
+}
+
+.statValue {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.statLabel {
+    font-size: 0.8125rem;
+    color: #64748b;
+}
+
+.statChange {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #10b981;
+    background: #ecfdf5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cardHeader h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardHeader a {
+    font-size: 0.8125rem;
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.activityItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.activityDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.activityDot.success {
+    background: #10b981;
+}
+
+.activityDot.info {
+    background: #3b82f6;
+}
+
+.activityDot.warning {
+    background: #f59e0b;
+}
+
+.activityContent {
+    flex: 1;
+}
+
+.activityAction {
+    display: block;
+    font-size: 0.875rem;
+    color: #1e293b;
+    margin-bottom: 0.125rem;
+}
+
+.activityMeta {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.quickActions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.quickActionBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quickActionBtn:hover {
+    background: #f1f5f9;
+    transform: translateY(-2px);
+}
+
+.quickActionBtn span {
+    font-size: 0.8125rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.actionIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actionIcon.blue {
+    background: #dbeafe;
+    color: #3b82f6;
+}
+
+.actionIcon.purple {
+    background: #ede9fe;
+    color: #8b5cf6;
+}
+
+.actionIcon.green {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.actionIcon.orange {
+    background: #ffedd5;
+    color: #f97316;
+}
+
+.healthList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.healthItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.healthLabel {
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.healthStatus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.healthStatus span {
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.healthStatus .healthy {
+    color: #10b981;
+}
+
+.healthStatus .unhealthy {
+    color: #ef4444;
+}
+
+.statusDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.statusDot.healthy {
+    background: #10b981;
+}
+
+.statusDot.unhealthy {
+    background: #ef4444;
+}
+
+.departmentList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.deptItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.deptName {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.deptCount {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Employee List Styles */
+.employeeList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.employeeItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.employeeItem:hover {
+    background: #f1f5f9;
+}
+
+.employeeAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.employeeAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.employeeInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.employeeName {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.employeeRole {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Status Badges */
+.statusBadge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.statusPresent {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.statusAbsent {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.statusLeave {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Loading/Empty text */
+.loadingText,
+.emptyText {
+    padding: 1rem;
+    color: #64748b;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 1200px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .mainGrid {
+        grid-template-columns: 1fr;
+    }
+}

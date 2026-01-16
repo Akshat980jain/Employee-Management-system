@@ -1,0 +1,199 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+}
+
+.logoDot {
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.logoText {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0.25rem;
+}
+
+.crumb {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.crumb:hover {
+    color: white;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: white;
+}
+
+.searchBox input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 0.875rem;
+    width: 180px;
+}
+
+.searchBox input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.iconBtn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.iconBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.15rem 0.35rem;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+}
+
+.profile {
+    position: relative;
+}
+
+.profileBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.profileBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    background: white;
+    color: #6366f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userName {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.profileMenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    overflow: hidden;
+    z-index: 200;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 0.875rem;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.menuItem:hover {
+    background: #f1f5f9;
+}
+
+.menuItem svg {
+    color: #64748b;
+}
