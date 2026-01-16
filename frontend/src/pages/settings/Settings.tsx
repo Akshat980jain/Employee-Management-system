@@ -1,14 +1,30 @@
-import { useState } from 'react';
-import { User, Bell, Shield, Palette, Globe, Lock, Eye, EyeOff, Save, Moon, Sun } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { User, Bell, Shield, Palette, Globe, Lock, Eye, EyeOff, Save, Moon, Sun, Building2 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './Settings.module.css';
+
+interface Organization {
+    _id: string;
+    name: string;
+    code: string;
+    description?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    website?: string;
+    employeeCount?: number;
+    createdAt?: string;
+}
 
 const Settings = () => {
     const { user } = useAuthStore();
     const [activeTab, setActiveTab] = useState('account');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [organization, setOrganization] = useState<Organization | null>(null);
+    const [orgLoading, setOrgLoading] = useState(true);
 
     const [accountSettings, setAccountSettings] = useState({
         firstName: user?.firstName || '',
@@ -35,6 +51,21 @@ const Settings = () => {
         compactMode: false,
         language: 'en',
     });
+
+    // Fetch organization details
+    useEffect(() => {
+        const fetchOrganization = async () => {
+            try {
+                const response = await api.get('/organizations/my');
+                setOrganization(response.data.data);
+            } catch (error) {
+                console.error('Failed to fetch organization:', error);
+            } finally {
+                setOrgLoading(false);
+            }
+        };
+        fetchOrganization();
+    }, []);
 
     const handleSaveAccount = async () => {
         setLoading(true);
@@ -83,6 +114,7 @@ const Settings = () => {
 
     const tabs = [
         { id: 'account', label: 'Account', icon: User },
+        { id: 'organization', label: 'Organization', icon: Building2 },
         { id: 'security', label: 'Security', icon: Shield },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'appearance', label: 'Appearance', icon: Palette },
@@ -149,6 +181,78 @@ const Settings = () => {
                                 <Save size={16} />
                                 {loading ? 'Saving...' : 'Save Changes'}
                             </button>
+                        </div>
+                    )}
+
+                    {activeTab === 'organization' && (
+                        <div className={styles.section}>
+                            <h2>Organization Details</h2>
+                            <p className={styles.sectionDesc}>Your organization information</p>
+
+                            {orgLoading ? (
+                                <p style={{ color: '#64748b' }}>Loading organization...</p>
+                            ) : organization ? (
+                                <div className={styles.orgDetails}>
+                                    <div className={styles.orgHeader}>
+                                        <div className={styles.orgAvatar}>
+                                            {organization.name.charAt(0)}
+                                        </div>
+                                        <div className={styles.orgInfo}>
+                                            <h3>{organization.name}</h3>
+                                            <span className={styles.orgCode}>{organization.code}</span>
+                                        </div>
+                                    </div>
+
+                                    {organization.description && (
+                                        <div className={styles.orgField}>
+                                            <label>Description</label>
+                                            <p>{organization.description}</p>
+                                        </div>
+                                    )}
+
+                                    <div className={styles.formGrid}>
+                                        {organization.email && (
+                                            <div className={styles.orgField}>
+                                                <label>Email</label>
+                                                <p>{organization.email}</p>
+                                            </div>
+                                        )}
+                                        {organization.phone && (
+                                            <div className={styles.orgField}>
+                                                <label>Phone</label>
+                                                <p>{organization.phone}</p>
+                                            </div>
+                                        )}
+                                        {organization.website && (
+                                            <div className={styles.orgField}>
+                                                <label>Website</label>
+                                                <p><a href={organization.website} target="_blank" rel="noreferrer">{organization.website}</a></p>
+                                            </div>
+                                        )}
+                                        {organization.address && (
+                                            <div className={styles.orgField}>
+                                                <label>Address</label>
+                                                <p>{organization.address}</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.orgStats}>
+                                        <div className={styles.orgStat}>
+                                            <span className={styles.statValue}>{organization.employeeCount || 0}</span>
+                                            <span className={styles.statLabel}>Employees</span>
+                                        </div>
+                                        <div className={styles.orgStat}>
+                                            <span className={styles.statValue}>
+                                                {organization.createdAt ? new Date(organization.createdAt).toLocaleDateString() : 'N/A'}
+                                            </span>
+                                            <span className={styles.statLabel}>Member Since</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p style={{ color: '#ef4444' }}>No organization found</p>
+                            )}
                         </div>
                     )}
 

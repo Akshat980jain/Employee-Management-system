@@ -15,6 +15,7 @@ router.use(authenticate);
 
 // Organization routes
 router.get('/', organizationController.getOrganization.bind(organizationController));
+router.get('/my', organizationController.getOrganization.bind(organizationController)); // Alias for /
 router.put('/', authorize('organization:update'), organizationController.updateOrganization.bind(organizationController));
 router.get('/settings', organizationController.getSettings.bind(organizationController));
 router.get('/stats', organizationController.getStats.bind(organizationController));
