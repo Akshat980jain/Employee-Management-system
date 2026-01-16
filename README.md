@@ -86,6 +86,3 @@ npm run dev
 | Attendance | `/api/attendance` |
 | Leave | `/api/leave` |
 
-## License
-
-MIT
