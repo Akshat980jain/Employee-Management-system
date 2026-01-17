@@ -32,6 +32,18 @@ const Profile = () => {
         return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
     };
 
+    // Get full avatar URL (handles both relative and absolute URLs)
+    const getAvatarUrl = () => {
+        if (!user?.avatar) return null;
+        // If already absolute URL, return as-is
+        if (user.avatar.startsWith('http')) return user.avatar;
+        // Prepend backend URL for relative paths
+        const backendUrl = import.meta.env.PROD
+            ? 'https://ems-backend-q0vm.onrender.com'
+            : '';
+        return `${backendUrl}${user.avatar}`;
+    };
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -93,8 +105,8 @@ const Profile = () => {
                 <div className={styles.profileCard}>
                     <div className={styles.avatarSection}>
                         <div className={styles.avatar}>
-                            {user?.avatar ? (
-                                <img src={user.avatar} alt="Profile" className={styles.avatarImage} />
+                            {getAvatarUrl() ? (
+                                <img src={getAvatarUrl()!} alt="Profile" className={styles.avatarImage} />
                             ) : (
                                 getInitials()
                             )}
