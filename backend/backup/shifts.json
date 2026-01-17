@@ -1,0 +1,74 @@
+[
+  {
+    "_id": "69633bb72f865fecaf440c45",
+    "name": "General Shift",
+    "organizationId": "69633bb72f865fecaf440c33",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-11T05:57:11.227Z",
+    "updatedAt": "2026-01-11T05:57:11.227Z",
+    "__v": 0
+  },
+  {
+    "_id": "696348a4750391e93c955964",
+    "name": "General Shift",
+    "organizationId": "696348a4750391e93c955952",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-11T06:52:20.215Z",
+    "updatedAt": "2026-01-11T06:52:20.215Z",
+    "__v": 0
+  },
+  {
+    "_id": "69635dd1c53928ee5ba1a488",
+    "name": "General Shift",
+    "organizationId": "69635dd1c53928ee5ba1a471",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-11T08:22:41.712Z",
+    "updatedAt": "2026-01-11T08:22:41.712Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963824dad4e1a32f365be94",
+    "name": "General Shift",
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-11T10:58:21.245Z",
+    "updatedAt": "2026-01-11T10:58:21.245Z",
+    "__v": 0
+  },
+  {
+    "_id": "69638651ad4e1a32f365bf0a",
+    "name": "General Shift",
+    "organizationId": "69638651ad4e1a32f365bef1",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-11T11:15:29.096Z",
+    "updatedAt": "2026-01-11T11:15:29.096Z",
+    "__v": 0
+  },
+  {
+    "_id": "696715c9f0723bf83900c46c",
+    "name": "General Shift",
+    "organizationId": "696715c9f0723bf83900c453",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "graceMinutes": 15,
+    "isDefault": true,
+    "createdAt": "2026-01-14T04:04:25.436Z",
+    "updatedAt": "2026-01-14T04:04:25.436Z",
+    "__v": 0
+  }
+]

@@ -1,0 +1,448 @@
+[
+  {
+    "_id": "696347b9b2a6a30a403fabef",
+    "name": "Admin",
+    "description": "Full system access",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "*:*"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696347b9b2a6a30a403fabf1",
+    "name": "HR Manager",
+    "description": "HR operations and employee management",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696347b9b2a6a30a403fabf3",
+    "name": "Department Head",
+    "description": "Department management and team oversight",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "employees:read",
+      "employees:update",
+      "attendance:read",
+      "attendance:update",
+      "leave:read",
+      "leave:approve",
+      "reports:read"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696347b9b2a6a30a403fabf5",
+    "name": "Payroll Admin",
+    "description": "Payroll management",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "employees:read",
+      "payroll:read",
+      "payroll:update",
+      "attendance:read",
+      "reports:read"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696347b9b2a6a30a403fabf7",
+    "name": "Recruiter",
+    "description": "Hiring and onboarding",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696347b9b2a6a30a403fabf9",
+    "name": "Employee",
+    "description": "Basic employee access",
+    "organizationId": "696347b9b2a6a30a403fabed",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "isSystem": true,
+    "__v": 0
+  },
+  {
+    "_id": "696348a4750391e93c955954",
+    "name": "Admin",
+    "description": "Full system access",
+    "isSystem": true,
+    "organizationId": "696348a4750391e93c955952",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T06:52:20.196Z",
+    "updatedAt": "2026-01-11T06:52:20.196Z",
+    "__v": 0
+  },
+  {
+    "_id": "696348a4750391e93c955956",
+    "name": "Employee",
+    "description": "Basic employee access",
+    "isSystem": true,
+    "organizationId": "696348a4750391e93c955952",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T06:52:20.199Z",
+    "updatedAt": "2026-01-11T06:52:20.199Z",
+    "__v": 0
+  },
+  {
+    "_id": "69635dd1c53928ee5ba1a474",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "69635dd1c53928ee5ba1a471",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T08:22:41.691Z",
+    "updatedAt": "2026-01-11T08:22:41.691Z",
+    "__v": 0
+  },
+  {
+    "_id": "69635dd1c53928ee5ba1a477",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "69635dd1c53928ee5ba1a471",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T08:22:41.695Z",
+    "updatedAt": "2026-01-11T08:22:41.695Z",
+    "__v": 0
+  },
+  {
+    "_id": "69635dd1c53928ee5ba1a47a",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "69635dd1c53928ee5ba1a471",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-11T08:22:41.698Z",
+    "updatedAt": "2026-01-11T08:22:41.698Z",
+    "__v": 0
+  },
+  {
+    "_id": "69636d34ca2d80ffb4c2bc85",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "69636d34ca2d80ffb4c2bc82",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T09:28:20.271Z",
+    "updatedAt": "2026-01-11T09:28:20.271Z",
+    "__v": 0
+  },
+  {
+    "_id": "69636d34ca2d80ffb4c2bc88",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "69636d34ca2d80ffb4c2bc82",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T09:28:20.274Z",
+    "updatedAt": "2026-01-11T09:28:20.274Z",
+    "__v": 0
+  },
+  {
+    "_id": "69636d34ca2d80ffb4c2bc8b",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "69636d34ca2d80ffb4c2bc82",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-11T09:28:20.277Z",
+    "updatedAt": "2026-01-11T09:28:20.277Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963817cca2d80ffb4c2bc97",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "6963817cca2d80ffb4c2bc94",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T10:54:52.344Z",
+    "updatedAt": "2026-01-11T10:54:52.344Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963817cca2d80ffb4c2bc9a",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "6963817cca2d80ffb4c2bc94",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-11T10:54:52.349Z",
+    "updatedAt": "2026-01-11T10:54:52.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963817cca2d80ffb4c2bc9d",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "6963817cca2d80ffb4c2bc94",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T10:54:52.355Z",
+    "updatedAt": "2026-01-11T10:54:52.355Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963824dad4e1a32f365be7e",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-11T10:58:21.205Z",
+    "updatedAt": "2026-01-11T10:58:21.205Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963824dad4e1a32f365be81",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T10:58:21.209Z",
+    "updatedAt": "2026-01-11T10:58:21.209Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963824dad4e1a32f365be84",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T10:58:21.213Z",
+    "updatedAt": "2026-01-11T10:58:21.213Z",
+    "__v": 0
+  },
+  {
+    "_id": "69638651ad4e1a32f365bef4",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "69638651ad4e1a32f365bef1",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-11T11:15:29.069Z",
+    "updatedAt": "2026-01-11T11:15:29.069Z",
+    "__v": 0
+  },
+  {
+    "_id": "69638651ad4e1a32f365bef7",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "69638651ad4e1a32f365bef1",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-11T11:15:29.073Z",
+    "updatedAt": "2026-01-11T11:15:29.073Z",
+    "__v": 0
+  },
+  {
+    "_id": "69638651ad4e1a32f365befa",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "69638651ad4e1a32f365bef1",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-11T11:15:29.077Z",
+    "updatedAt": "2026-01-11T11:15:29.077Z",
+    "__v": 0
+  },
+  {
+    "_id": "696715c9f0723bf83900c456",
+    "name": "HR Manager",
+    "description": "HR Manager role",
+    "isSystem": true,
+    "organizationId": "696715c9f0723bf83900c453",
+    "permissions": [
+      "employees:create",
+      "employees:read",
+      "employees:update",
+      "employees:delete",
+      "leave:create",
+      "leave:read",
+      "leave:approve",
+      "leave:delete",
+      "attendance:read",
+      "attendance:update",
+      "roles:read",
+      "organization:read",
+      "reports:read"
+    ],
+    "createdAt": "2026-01-14T04:04:25.224Z",
+    "updatedAt": "2026-01-14T04:04:25.224Z",
+    "__v": 0
+  },
+  {
+    "_id": "696715c9f0723bf83900c459",
+    "name": "Admin",
+    "description": "Admin role",
+    "isSystem": true,
+    "organizationId": "696715c9f0723bf83900c453",
+    "permissions": [
+      "*:*"
+    ],
+    "createdAt": "2026-01-14T04:04:25.230Z",
+    "updatedAt": "2026-01-14T04:04:25.230Z",
+    "__v": 0
+  },
+  {
+    "_id": "696715c9f0723bf83900c45c",
+    "name": "Employee",
+    "description": "Employee role",
+    "isSystem": true,
+    "organizationId": "696715c9f0723bf83900c453",
+    "permissions": [
+      "attendance:create",
+      "attendance:read",
+      "leave:create",
+      "leave:read"
+    ],
+    "createdAt": "2026-01-14T04:04:25.235Z",
+    "updatedAt": "2026-01-14T04:04:25.235Z",
+    "__v": 0
+  }
+]

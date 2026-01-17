@@ -1,11 +1,18 @@
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Load environment variables FIRST before any other imports
+const envPath = path.join(process.cwd(), '.env');
+console.log('📁 Loading .env from:', envPath);
+dotenv.config({ path: envPath });
+console.log('🔑 MONGODB_URI loaded:', process.env.MONGODB_URI ? 'Yes (Atlas)' : 'No (will use fallback)');
+
 import express from 'express';
 import { createServer } from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
-import path from 'path';
 
 import { connectDB } from './config/database.js';
 import { initializeSocket } from './config/socket.js';
@@ -24,8 +31,6 @@ import blockchainRoutes from './modules/blockchain/blockchain.routes.js';
 import joinRequestRoutes from './modules/join-request/join-request.routes.js';
 import transferRequestRoutes from './modules/transfer-request/transfer-request.routes.js';
 import warningRoutes from './modules/warning/warning.routes.js';
-
-dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);

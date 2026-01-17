@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { dualWritePlugin } from '../config/dual-write-plugin.js';
 
 // Organization Schema
 export interface IOrganization extends Document {
@@ -518,6 +519,30 @@ const WarningSchema = new Schema<IWarning>({
 WarningSchema.index({ employeeId: 1, isActive: 1 });
 WarningSchema.index({ organizationId: 1, createdAt: -1 });
 
+// Apply dual-write plugin to all schemas
+const allSchemas = [
+    OrganizationSchema,
+    UserSchema,
+    RoleSchema,
+    UserRoleSchema,
+    SessionSchema,
+    DepartmentSchema,
+    EmployeeSchema,
+    LeaveTypeSchema,
+    ShiftSchema,
+    AttendanceSchema,
+    LeaveRequestSchema,
+    AttendanceCorrectionSchema,
+    BlockchainTransactionSchema,
+    JoinRequestSchema,
+    OrganizationTransferRequestSchema,
+    WarningSchema,
+];
+
+allSchemas.forEach(schema => {
+    schema.plugin(dualWritePlugin);
+});
+
 // Export Models
 export const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);
 export const User = mongoose.model<IUser>('User', UserSchema);
@@ -535,4 +560,5 @@ export const BlockchainTransaction = mongoose.model<IBlockchainTransaction>('Blo
 export const JoinRequest = mongoose.model<IJoinRequest>('JoinRequest', JoinRequestSchema);
 export const OrganizationTransferRequest = mongoose.model<IOrganizationTransferRequest>('OrganizationTransferRequest', OrganizationTransferRequestSchema);
 export const Warning = mongoose.model<IWarning>('Warning', WarningSchema);
+
 

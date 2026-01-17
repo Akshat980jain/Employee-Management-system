@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "69674b471114a96af7f0c6a1",
+    "userId": "6963817cca2d80ffb4c2bc9f",
+    "fromOrganizationId": "6963817cca2d80ffb4c2bc94",
+    "toOrganizationId": "6963824dad4e1a32f365be7b",
+    "offerLetterUrl": "/uploads/offer-letters/offer-1768377159705-798868784.pdf",
+    "status": "APPROVED",
+    "requestedRole": "Admin",
+    "message": "",
+    "expiresAt": "2026-02-13T07:52:39.729Z",
+    "createdAt": "2026-01-14T07:52:39.731Z",
+    "updatedAt": "2026-01-14T07:58:07.809Z",
+    "__v": 0,
+    "verifiedAt": "2026-01-14T07:58:07.809Z",
+    "verifiedBy": "6963824dad4e1a32f365be86"
+  },
+  {
+    "_id": "6968834500968818620d9086",
+    "userId": "696673603a67128fb23178a8",
+    "fromOrganizationId": "696348a4750391e93c955952",
+    "toOrganizationId": "6963824dad4e1a32f365be7b",
+    "offerLetterUrl": "/uploads/offer-letters/offer-1768457029369-58489953.docx",
+    "status": "APPROVED",
+    "requestedRole": "Employee",
+    "message": "",
+    "expiresAt": "2026-02-14T06:03:49.415Z",
+    "createdAt": "2026-01-15T06:03:49.417Z",
+    "updatedAt": "2026-01-15T06:04:17.202Z",
+    "__v": 0,
+    "verifiedAt": "2026-01-15T06:04:17.201Z",
+    "verifiedBy": "6963824dad4e1a32f365be86"
+  }
+]

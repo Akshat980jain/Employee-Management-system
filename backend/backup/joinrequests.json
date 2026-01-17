@@ -1,0 +1,80 @@
+[
+  {
+    "_id": "696668eade450fed6326dcaf",
+    "userId": "696668eade450fed6326dcad",
+    "organizationId": "696348a4750391e93c955952",
+    "status": "PENDING",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-13T15:46:50.460Z",
+    "updatedAt": "2026-01-13T15:46:50.460Z",
+    "__v": 0
+  },
+  {
+    "_id": "696673603a67128fb23178aa",
+    "userId": "696673603a67128fb23178a8",
+    "organizationId": "696348a4750391e93c955952",
+    "status": "PENDING",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-13T16:31:28.097Z",
+    "updatedAt": "2026-01-13T16:31:28.097Z",
+    "__v": 0
+  },
+  {
+    "_id": "696718a8f0723bf83900c4de",
+    "userId": "696718a8f0723bf83900c4dc",
+    "organizationId": "696715c9f0723bf83900c453",
+    "status": "APPROVED",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-14T04:16:40.176Z",
+    "updatedAt": "2026-01-14T04:18:10.239Z",
+    "__v": 0,
+    "reviewedAt": "2026-01-14T04:18:10.238Z",
+    "reviewedBy": "696715c9f0723bf83900c45e"
+  },
+  {
+    "_id": "6967245408be4703302c4052",
+    "userId": "6967245408be4703302c4050",
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "status": "APPROVED",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-14T05:06:28.751Z",
+    "updatedAt": "2026-01-14T05:16:07.181Z",
+    "__v": 0,
+    "reviewedAt": "2026-01-14T05:16:07.181Z",
+    "reviewedBy": "6963824dad4e1a32f365be86"
+  },
+  {
+    "_id": "696749c61114a96af7f0c623",
+    "userId": "696749c61114a96af7f0c621",
+    "organizationId": "696348a4750391e93c955952",
+    "status": "PENDING",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-14T07:46:14.455Z",
+    "updatedAt": "2026-01-14T07:46:14.455Z",
+    "__v": 0
+  },
+  {
+    "_id": "6968805ea5d37a684b74387b",
+    "userId": "6968805ea5d37a684b743879",
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "status": "APPROVED",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-15T05:51:26.899Z",
+    "updatedAt": "2026-01-15T05:54:35.891Z",
+    "__v": 0,
+    "reviewedAt": "2026-01-15T05:54:35.890Z",
+    "reviewedBy": "6963817cca2d80ffb4c2bc9f"
+  },
+  {
+    "_id": "696b185f67252b3ce1d59b94",
+    "userId": "696b185f67252b3ce1d59b92",
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "status": "APPROVED",
+    "requestedRole": "Employee",
+    "createdAt": "2026-01-17T05:04:31.078Z",
+    "updatedAt": "2026-01-17T05:05:21.060Z",
+    "__v": 0,
+    "reviewedAt": "2026-01-17T05:05:21.059Z",
+    "reviewedBy": "6963817cca2d80ffb4c2bc9f"
+  }
+]

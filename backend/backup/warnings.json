@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "6969cab48fe4d30101741444",
+    "employeeId": "69672697d2d85973b7d886dc",
+    "organizationId": "6963824dad4e1a32f365be7b",
+    "issuedBy": "6963824dad4e1a32f365be86",
+    "message": "What is this",
+    "severity": "HIGH",
+    "isRead": true,
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-01-16T05:20:52.494Z",
+    "updatedAt": "2026-01-16T05:21:25.655Z",
+    "readAt": "2026-01-16T05:21:25.655Z"
+  }
+]

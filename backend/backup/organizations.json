@@ -1,0 +1,125 @@
+[
+  {
+    "_id": "696347b9b2a6a30a403fabed",
+    "name": "Demo Company",
+    "slug": "demo-company",
+    "industry": "Technology",
+    "size": "50-100",
+    "timezone": "UTC",
+    "__v": 0
+  },
+  {
+    "_id": "696348a4750391e93c955952",
+    "name": "Akshat's Organization",
+    "slug": "akshat-s-organization-mk9dmjuo",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-11T06:52:20.190Z",
+    "updatedAt": "2026-01-11T06:52:20.190Z",
+    "__v": 0
+  },
+  {
+    "_id": "69635dd1c53928ee5ba1a471",
+    "name": "Aarjav's Organization",
+    "slug": "aarjav-s-organization-mk9gur8z",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-11T08:22:41.683Z",
+    "updatedAt": "2026-01-11T08:22:41.683Z",
+    "__v": 0
+  },
+  {
+    "_id": "69636d34ca2d80ffb4c2bc82",
+    "name": "Aarjav's Organization",
+    "slug": "aarjav-s-organization-mk9j76a6",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-11T09:28:20.263Z",
+    "updatedAt": "2026-01-11T09:28:20.263Z",
+    "__v": 0
+  },
+  {
+    "_id": "6963824dad4e1a32f365be7b",
+    "name": "Manoj's Organization",
+    "slug": "manoj-s-organization-mk9mexil",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-11T10:58:21.198Z",
+    "updatedAt": "2026-01-11T10:58:21.198Z",
+    "__v": 0
+  },
+  {
+    "_id": "69638651ad4e1a32f365bef1",
+    "name": "Aarjav's Organization",
+    "slug": "aarjav-s-organization-mk9n0yed",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-11T11:15:29.060Z",
+    "updatedAt": "2026-01-11T11:15:29.060Z",
+    "__v": 0
+  },
+  {
+    "_id": "696715c9f0723bf83900c453",
+    "name": "Test Org",
+    "slug": "test-org-mkdhy5je",
+    "timezone": "UTC",
+    "workingDays": [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY"
+    ],
+    "annualLeaveQuota": 20,
+    "sickLeaveQuota": 10,
+    "carryForwardLimit": 5,
+    "createdAt": "2026-01-14T04:04:25.145Z",
+    "updatedAt": "2026-01-14T04:04:25.145Z",
+    "__v": 0
+  }
+]

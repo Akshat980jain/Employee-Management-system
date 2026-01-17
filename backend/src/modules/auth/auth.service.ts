@@ -337,6 +337,9 @@ export class AuthService {
         const userRoles = await UserRole.find({ userId: user._id }).populate('roleId');
         const roles = userRoles.map(ur => (ur.roleId as any)?.name || '');
 
+        // Get organization data
+        const organization = await Organization.findById(user.organizationId);
+
         return {
             user: {
                 id: user._id,
@@ -345,6 +348,11 @@ export class AuthService {
                 lastName: user.lastName,
                 role: roles[0] || 'Employee',
             },
+            organization: organization ? {
+                id: organization._id,
+                name: organization.name,
+                slug: organization.slug,
+            } : null,
             ...tokens,
         };
     }
