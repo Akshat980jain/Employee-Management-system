@@ -173,16 +173,20 @@ export class AuthController {
                 throw ApiError.badRequest('No file uploaded');
             }
 
-            const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+            // Convert file buffer to Base64 data URL
+            const mimeType = req.file.mimetype;
+            const base64Data = req.file.buffer.toString('base64');
+            const avatarDataUrl = `data:${mimeType};base64,${base64Data}`;
+
             const userId = req.user!.userId;
 
-            await User.findByIdAndUpdate(userId, { avatar: avatarUrl });
+            await User.findByIdAndUpdate(userId, { avatar: avatarDataUrl });
 
             res.json({
                 success: true,
                 message: 'Avatar uploaded successfully',
                 data: {
-                    avatar: avatarUrl
+                    avatar: avatarDataUrl
                 }
             });
         } catch (error) {

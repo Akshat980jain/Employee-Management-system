@@ -32,12 +32,14 @@ const Profile = () => {
         return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
     };
 
-    // Get full avatar URL (handles both relative and absolute URLs)
+    // Get full avatar URL (handles Base64 data URLs, relative and absolute URLs)
     const getAvatarUrl = () => {
         if (!user?.avatar) return null;
-        // If already absolute URL, return as-is
-        if (user.avatar.startsWith('http')) return user.avatar;
-        // Prepend backend URL for relative paths
+        // If Base64 data URL or absolute URL, return as-is
+        if (user.avatar.startsWith('data:') || user.avatar.startsWith('http')) {
+            return user.avatar;
+        }
+        // Prepend backend URL for relative paths (legacy support)
         const backendUrl = import.meta.env.PROD
             ? 'https://ems-backend-q0vm.onrender.com'
             : '';
