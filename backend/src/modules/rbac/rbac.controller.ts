@@ -21,7 +21,7 @@ export class RbacController {
 
     async getRole(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const role = await rbacService.getRole(req.user!.organizationId, req.params.id);
+            const role = await rbacService.getRole(req.params.id, req.user!.organizationId);
 
             res.json({
                 success: true,
@@ -53,7 +53,7 @@ export class RbacController {
     async updateRole(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const input = updateRoleSchema.parse(req.body);
-            const role = await rbacService.updateRole(req.user!.organizationId, req.params.id, input);
+            const role = await rbacService.updateRole(req.params.id, req.user!.organizationId, input);
 
             res.json({
                 success: true,
@@ -70,7 +70,7 @@ export class RbacController {
 
     async deleteRole(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            await rbacService.deleteRole(req.user!.organizationId, req.params.id);
+            await rbacService.deleteRole(req.params.id, req.user!.organizationId);
 
             res.json({
                 success: true,

@@ -1,7 +1,7 @@
 // Script to create Employee profiles for users who don't have one
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { User, Employee, UserRole, Role } from './models/index.js';
+import { User, Employee, UserRole } from './models/index.js';
 
 dotenv.config();
 
@@ -32,29 +32,29 @@ async function createMissingEmployeeProfiles() {
             const userRole = await UserRole.findOne({ userId: user._id }).populate('roleId');
             const roleName = (userRole?.roleId as any)?.name || 'Employee';
 
-            // Determine position based on role
-            let position = 'Employee';
+            // Determine designation based on role
+            let designation = 'Employee';
             if (roleName.toLowerCase().includes('admin')) {
-                position = 'Administrator';
+                designation = 'Administrator';
             } else if (roleName.toLowerCase().includes('hr')) {
-                position = 'HR Manager';
+                designation = 'HR Manager';
             }
 
-            // Create employee profile
-            const employeeCode = `EMP${Date.now().toString(36).toUpperCase()}`;
+            // Create employee profile with correct field names matching IEmployee interface
+            const employeeId = `EMP${Date.now().toString(36).toUpperCase()}`;
             await Employee.create({
                 userId: user._id,
                 organizationId: user.organizationId,
-                employeeCode,
+                employeeId, // Correct field name (not employeeCode)
                 firstName: user.firstName,
                 lastName: user.lastName || '',
                 email: user.email,
                 status: 'ACTIVE',
-                hireDate: user.createdAt || new Date(),
-                position,
+                joinDate: user.createdAt || new Date(), // Correct field name (not hireDate)
+                designation, // Correct field name (not position)
             });
 
-            console.log(`✅ Created employee profile for ${user.email} (${position})`);
+            console.log(`✅ Created employee profile for ${user.email} (${designation})`);
             created++;
         }
 

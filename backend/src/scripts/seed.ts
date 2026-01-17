@@ -140,7 +140,7 @@ async function seed() {
                 organizationId: org._id,
                 isSystem: true,
             });
-            roleMap.set(role.name, role);
+            roleMap.set(role.name ?? '', role);
             console.log(`👤 Created role: ${role.name}`);
         }
 

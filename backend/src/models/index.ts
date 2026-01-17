@@ -540,7 +540,7 @@ const allSchemas = [
 ];
 
 allSchemas.forEach(schema => {
-    schema.plugin(dualWritePlugin);
+    (schema as any).plugin(dualWritePlugin);
 });
 
 // Export Models

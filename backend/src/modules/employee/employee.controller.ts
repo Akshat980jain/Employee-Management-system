@@ -10,8 +10,7 @@ export class EmployeeController {
             const input = createEmployeeSchema.parse(req.body);
             const employee = await employeeService.createEmployee(
                 req.user!.organizationId,
-                input,
-                req.user!.userId
+                input
             );
 
             res.status(201).json({
@@ -49,7 +48,7 @@ export class EmployeeController {
 
     async getEmployee(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const employee = await employeeService.getEmployee(req.user!.organizationId, req.params.id);
+            const employee = await employeeService.getEmployee(req.params.id, req.user!.organizationId);
 
             res.json({
                 success: true,
@@ -64,8 +63,8 @@ export class EmployeeController {
         try {
             const input = updateEmployeeSchema.parse(req.body);
             const employee = await employeeService.updateEmployee(
-                req.user!.organizationId,
                 req.params.id,
+                req.user!.organizationId,
                 input
             );
 
@@ -85,11 +84,10 @@ export class EmployeeController {
     async updateEmployeeStatus(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const input = updateEmployeeStatusSchema.parse(req.body);
-            const employee = await employeeService.updateEmployeeStatus(
-                req.user!.organizationId,
+            const employee = await employeeService.updateStatus(
                 req.params.id,
-                input,
-                req.user!.userId
+                req.user!.organizationId,
+                input
             );
 
             res.json({
@@ -107,9 +105,9 @@ export class EmployeeController {
 
     async getEmployeeStatusHistory(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            const history = await employeeService.getEmployeeStatusHistory(
-                req.user!.organizationId,
-                req.params.id
+            const history = await employeeService.getHistory(
+                req.params.id,
+                req.user!.organizationId
             );
 
             res.json({
@@ -123,9 +121,13 @@ export class EmployeeController {
 
     async getReportingTree(req: AuthRequest, res: Response, next: NextFunction) {
         try {
+            const employeeId = req.query.employeeId as string;
+            if (!employeeId) {
+                throw new Error('employeeId query parameter is required');
+            }
             const tree = await employeeService.getReportingTree(
-                req.user!.organizationId,
-                req.query.employeeId as string | undefined
+                employeeId,
+                req.user!.organizationId
             );
 
             res.json({
@@ -139,7 +141,7 @@ export class EmployeeController {
 
     async deleteEmployee(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            await employeeService.deleteEmployee(req.user!.organizationId, req.params.id);
+            await employeeService.deleteEmployee(req.params.id, req.user!.organizationId);
 
             res.json({
                 success: true,

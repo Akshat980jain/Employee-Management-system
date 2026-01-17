@@ -1,13 +1,15 @@
 import { LeaveType, LeaveRequest, Employee } from '../../models/index.js';
 import {
     CreateLeaveTypeInput,
-    UpdateLeaveTypeInput,
     CreateLeaveRequestInput,
-    LeaveRequestFilterInput,
-    ApproveRejectInput
+    LeaveFilterInput,
+    ApproveLeaveInput
 } from './leave.dto.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { blockchainService } from '../blockchain/blockchain.service.js';
+
+// Alias for UpdateLeaveTypeInput (same shape as CreateLeaveTypeInput with optional fields)
+type UpdateLeaveTypeInput = Partial<CreateLeaveTypeInput>;
 
 export class LeaveService {
     // Leave Types
@@ -45,7 +47,7 @@ export class LeaveService {
     }
 
     // Leave Requests
-    async getLeaveRequests(organizationId: string, filters?: LeaveRequestFilterInput) {
+    async getLeaveRequests(organizationId: string, filters?: LeaveFilterInput) {
         const query: any = {};
 
         if (filters?.employeeId) {
@@ -150,7 +152,7 @@ export class LeaveService {
         }
     }
 
-    async approveRequest(requestId: string, approverId: string, input?: ApproveRejectInput) {
+    async approveRequest(requestId: string, approverId: string, input?: ApproveLeaveInput) {
         const request = await LeaveRequest.findById(requestId);
         if (!request) {
             throw ApiError.notFound('Leave request not found');
@@ -177,7 +179,7 @@ export class LeaveService {
         return request;
     }
 
-    async rejectRequest(requestId: string, approverId: string, input: ApproveRejectInput) {
+    async rejectRequest(requestId: string, approverId: string, input: ApproveLeaveInput) {
         const request = await LeaveRequest.findById(requestId);
         if (!request) {
             throw ApiError.notFound('Leave request not found');
@@ -246,6 +248,54 @@ export class LeaveService {
         }));
 
         return balances;
+    }
+
+    // Alias methods for controller compatibility
+    async getLeaveRequest(organizationId: string, requestId: string) {
+        return LeaveRequest.findById(requestId)
+            .populate('employeeId', 'firstName lastName employeeId')
+            .populate('leaveTypeId', 'name code color')
+            .select('-__v');
+    }
+
+    async getLeaveBalances(organizationId: string, employeeId: string) {
+        return this.getBalances(employeeId, organizationId);
+    }
+
+    async approveLeaveRequest(organizationId: string, requestId: string, input: ApproveLeaveInput, approverId: string) {
+        if (input.status === 'APPROVED') {
+            return this.approveRequest(requestId, approverId, input);
+        } else {
+            return this.rejectRequest(requestId, approverId, input);
+        }
+    }
+
+    async cancelLeaveRequest(organizationId: string, requestId: string, employeeId: string) {
+        return this.cancelRequest(requestId, employeeId);
+    }
+
+    // Leave Policies (stub implementations - can be extended later)
+    async getLeavePolicies(organizationId: string) {
+        // Return leave types as policies for now
+        return this.getLeaveTypes(organizationId);
+    }
+
+    async createLeavePolicy(organizationId: string, input: any) {
+        // Create as leave type for now
+        return LeaveType.create({
+            organizationId,
+            name: input.leaveTypeId || 'Custom Leave',
+            code: 'CL',
+            ...input,
+        });
+    }
+
+    async updateLeavePolicy(organizationId: string, policyId: string, input: any) {
+        return LeaveType.findOneAndUpdate(
+            { _id: policyId, organizationId },
+            input,
+            { new: true }
+        ).select('-__v');
     }
 }
 

@@ -41,7 +41,7 @@ export class RbacService {
             name: input.name,
             description: input.description,
             organizationId,
-            permissions: input.permissions || [],
+            permissions: input.permissionIds || [],
         });
     }
 
@@ -77,16 +77,16 @@ export class RbacService {
         await Role.findByIdAndDelete(roleId);
     }
 
-    async assignRole(input: AssignRoleInput) {
+    async assignRole(userId: string, roleId: string, organizationId?: string) {
         // Check if already assigned
-        const existing = await UserRole.findOne({ userId: input.userId, roleId: input.roleId });
+        const existing = await UserRole.findOne({ userId, roleId });
         if (existing) {
             throw ApiError.conflict('Role already assigned to user');
         }
 
         return UserRole.create({
-            userId: input.userId,
-            roleId: input.roleId,
+            userId,
+            roleId,
         });
     }
 
@@ -112,6 +112,21 @@ export class RbacService {
             permissions: role.permissions,
         }));
     }
+
+    async getPermissionsByModule() {
+        const permissions = await this.getPermissions();
+        const grouped: Record<string, string[]> = {};
+
+        for (const p of permissions) {
+            if (!grouped[p.module]) {
+                grouped[p.module] = [];
+            }
+            grouped[p.module].push(p.name);
+        }
+
+        return grouped;
+    }
 }
 
 export const rbacService = new RbacService();
+

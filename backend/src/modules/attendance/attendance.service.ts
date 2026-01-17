@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Attendance, Employee, Shift, UserRole, Role } from '../../models/index.js';
 import { CheckInInput, CheckOutInput, CreateAttendanceInput, UpdateAttendanceInput, AttendanceFilterInput, StaffMonitoringFilterInput } from './attendance.dto.js';
 import { ApiError } from '../../middleware/errorHandler.js';
@@ -36,6 +37,7 @@ export class AttendanceService {
             // Add new session
             sessions.push({
                 checkIn: now,
+                isLate: false,
                 checkInIp: ipAddress,
                 checkInLocation: input.location,
             });
@@ -56,6 +58,7 @@ export class AttendanceService {
                 status: 'PRESENT',
                 sessions: [{
                     checkIn: now,
+                    isLate: false,
                     checkInIp: ipAddress,
                     checkInLocation: input.location,
                 }],
@@ -259,8 +262,8 @@ export class AttendanceService {
             .select('-__v')
             .sort({ firstName: 1 });
 
-        // Get roles for all users
-        const userIds = employees.map(e => e.userId).filter(Boolean);
+        // Get roles for all users - filter out null/undefined userIds
+        const userIds = employees.map(e => e.userId).filter(id => id != null) as any[];
         const userRoles = await UserRole.find({ userId: { $in: userIds } })
             .populate('roleId', 'name');
 

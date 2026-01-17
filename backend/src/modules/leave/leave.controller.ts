@@ -117,13 +117,12 @@ export class LeaveController {
                     email: user.email,
                     employeeId: `EMP${Date.now().toString().slice(-8)}`,
                     status: 'ACTIVE',
-                    hireDate: new Date(),
+                    joinDate: new Date(),
                 });
             }
 
             const request = await leaveService.createLeaveRequest(
                 employee._id.toString(),
-                req.user!.organizationId,
                 input
             );
 

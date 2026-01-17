@@ -1,5 +1,5 @@
 import { Employee, Department, User } from '../../models/index.js';
-import { CreateEmployeeInput, UpdateEmployeeInput, EmployeeFilterInput, StatusChangeInput } from './employee.dto.js';
+import { CreateEmployeeInput, UpdateEmployeeInput, EmployeeFilterInput, UpdateEmployeeStatusInput } from './employee.dto.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 
 export class EmployeeService {
@@ -85,7 +85,7 @@ export class EmployeeService {
         ).select('-__v');
     }
 
-    async updateStatus(employeeId: string, organizationId: string, input: StatusChangeInput) {
+    async updateStatus(employeeId: string, organizationId: string, input: UpdateEmployeeStatusInput) {
         const employee = await Employee.findOne({ _id: employeeId, organizationId });
         if (!employee) {
             throw ApiError.notFound('Employee not found');

@@ -399,6 +399,18 @@ export class AuthService {
         await Session.deleteMany({ userId });
     }
 
+    async getSessions(userId: string) {
+        return Session.find({ userId }).select('-__v').sort({ createdAt: -1 });
+    }
+
+    async terminateSession(userId: string, sessionId: string) {
+        const session = await Session.findOne({ _id: sessionId, userId });
+        if (!session) {
+            throw ApiError.notFound('Session not found');
+        }
+        await Session.findByIdAndDelete(sessionId);
+    }
+
     private async generateTokens(userId: string, email: string, organizationId: string) {
         const accessToken = jwt.sign(
             { userId, email, organizationId },
@@ -413,3 +425,4 @@ export class AuthService {
 }
 
 export const authService = new AuthService();
+
