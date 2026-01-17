@@ -41,8 +41,27 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Security middleware
 app.use(helmet());
+
+// CORS - allow both localhost and deployed frontend
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://ems-frontend-h6k5.onrender.com',
+    process.env.CORS_ORIGIN
+].filter(Boolean);
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(null, true); // Allow anyway for now, log for debugging
+        }
+    },
     credentials: true,
 }));
 
