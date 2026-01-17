@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Calendar, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Plus, Calendar } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './LeaveRequests.module.css';

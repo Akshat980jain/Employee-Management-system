@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Bell, Search, User, Settings, LogOut, ChevronDown, Menu } from 'lucide-react';
+import { Bell, Search, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 import styles from './Header.module.css';

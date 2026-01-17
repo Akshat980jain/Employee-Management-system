@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Clock, Calendar, User, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Calendar, FileText } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './AttendanceCorrections.module.css';

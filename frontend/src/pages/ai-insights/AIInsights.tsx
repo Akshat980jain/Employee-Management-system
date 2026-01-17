@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Brain, TrendingUp, Users, AlertTriangle, Lightbulb, BarChart3, ArrowUp, ArrowDown } from 'lucide-react';
+import { Brain, TrendingUp, AlertTriangle, Lightbulb, BarChart3, ArrowUp, ArrowDown } from 'lucide-react';
 import styles from './AIInsights.module.css';
 
 interface Insight {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DollarSign, Download, Calendar, TrendingUp, Users, FileText } from 'lucide-react';
+import { DollarSign, Download, TrendingUp, Users, FileText } from 'lucide-react';
 import styles from './Payroll.module.css';
 
 const Payroll = () => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Folder, ChevronRight, Users, MoreVertical, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Folder, Users, Edit2, Trash2 } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './Departments.module.css';

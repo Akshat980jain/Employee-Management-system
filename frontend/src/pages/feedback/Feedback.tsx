@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, ThumbsUp, Clock, Send, Star, TrendingUp } from 'lucide-react';
+import { MessageSquare, ThumbsUp, Clock, Send, TrendingUp } from 'lucide-react';
 import styles from './Feedback.module.css';
 
 interface FeedbackItem {

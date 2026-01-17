@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Calendar, Clock, Check, X, Filter } from 'lucide-react';
+import { Plus, Calendar, Check, X } from 'lucide-react';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './Leave.module.css';

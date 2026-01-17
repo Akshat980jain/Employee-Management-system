@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Shield, Check, X } from 'lucide-react';
+import { Shield, Check, X } from 'lucide-react';
 import api from '../../services/api';
 import styles from './Roles.module.css';
 

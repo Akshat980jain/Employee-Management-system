@@ -130,7 +130,6 @@ const Attendance = () => {
         setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
     };
 
-    const today = new Date().toDateString();
 
     return (
         <div className={styles.container}>

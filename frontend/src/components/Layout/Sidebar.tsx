@@ -55,7 +55,7 @@ const tips = [
 const Sidebar = () => {
     const location = useLocation();
     const { user } = useAuthStore();
-    const { isCheckedIn, checkInTime, sessions, totalWorkMinutes, loading, fetchStatus, checkIn, checkOut } = useAttendanceStore();
+    const { isCheckedIn, sessions, totalWorkMinutes, loading, fetchStatus, checkIn, checkOut } = useAttendanceStore();
     const [currentTip, setCurrentTip] = useState(0);
     const [showCorrectionModal, setShowCorrectionModal] = useState(false);
     const today = new Date();
