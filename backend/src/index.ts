@@ -63,9 +63,23 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
 
+// Root route - API info
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'EMS Backend API is running!',
+        version: '1.0.0',
+        endpoints: {
+            health: '/health',
+            api: '/api/*'
+        }
+    });
+});
+
 // Health check
 app.get('/health', (req, res) => {
     res.json({
+        success: true,
         status: 'healthy',
         timestamp: new Date().toISOString(),
         version: '1.0.0'
