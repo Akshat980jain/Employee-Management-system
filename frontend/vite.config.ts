@@ -20,17 +20,20 @@ export default defineConfig({
         port: 5173,
         proxy: {
             '/api': {
-                target: 'http://localhost:3000',
+                target: 'https://ems-backend-q0vm.onrender.com',
                 changeOrigin: true,
+                secure: true,
             },
             '/uploads': {
-                target: 'http://localhost:3000',
+                target: 'https://ems-backend-q0vm.onrender.com',
                 changeOrigin: true,
+                secure: true,
             },
             '/socket.io': {
-                target: 'http://localhost:3000',
+                target: 'https://ems-backend-q0vm.onrender.com',
                 changeOrigin: true,
                 ws: true,
+                secure: true,
             },
         },
     },
