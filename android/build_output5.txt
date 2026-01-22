@@ -1,0 +1,92 @@
+﻿.\gradlew.bat : WARNING: A restricted method in java.lang.System has been called
+At line:1 char:1
++ .\gradlew.bat assembleDebug 2>&1 | Out-File -FilePath build_output5.t ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: A rest...has been called:String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+WARNING: java.lang.System::load has been called by 
+net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/C:/
+Users/hp/.gradle/wrapper/dists/gradle-8.9-bin/90cnw93cvbtalezasaz0blq0a/gradle-8.9/lib/n
+ative-platform-0.22-milestone-26.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this 
+module
+WARNING: Restricted methods will be blocked in a future release unless native access is 
+enabled
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/attendance/AttendanceScreen.kt:463:35 'val Icons.Filled.Login: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Login.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/attendance/AttendanceScreen.kt:477:35 'val Icons.Filled.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Logout.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/attendance/AttendanceScreen.kt:548:30 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/auth/PendingVerificationScreen.kt:144:31 'val Icons.Filled.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Logout.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/auth/RegisterScreen.kt:185:30 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/auth/RegisterScreen.kt:252:56 'val Icons.Filled.Message: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Message.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/dashboard/EmployeeDashboard.kt:206:42 'val Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/dashboard/HRDashboard.kt:118:42 'val Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/dashboard/MainScreen.kt:65:37 'val Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/dashboard/MainScreen.kt:66:41 'val Icons.Outlined.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.EventNote.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/dashboard/ProfileScreen.kt:164:38 'val Icons.Filled.Help: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Help.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/employee/AddEditEmployeeScreen.kt:176:26 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/employee/AddEditEmployeeScreen.kt:208:26 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/employee/AddEditEmployeeScreen.kt:239:35 Condition is always 'true'.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/leave/LeaveScreen.kt:186:35 'val Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/leave/LeaveScreen.kt:443:30 'fun Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+w: file:///E:/EMS/android/app/src/main/java/com/ems/android/ui/theme/Theme.kt:76:20 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugJavaWithJavac
+> Task :app:hiltAggregateDepsDebug
+
+> Task :app:hiltJavaCompileDebug
+warning: Kapt support in Moshi Kotlin Code Gen is deprecated and will be removed in 
+2.0. Please migrate to KSP. https://github.com/square/moshi#codegen
+1 warning
+
+> Task :app:processDebugJavaRes
+> Task :app:transformDebugClassesWithAsm
+> Task :app:mergeDebugJavaResource
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+
+BUILD SUCCESSFUL in 2m 19s
+42 actionable tasks: 13 executed, 29 up-to-date
