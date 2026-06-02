@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 // Attendance Models
 @JsonClass(generateAdapter = true)
 data class AttendanceSession(
-    @Json(name = "_id") val id: String,
+    @Json(name = "_id") val id: String? = null,
     @Json(name = "checkIn") val checkIn: String,
     @Json(name = "checkOut") val checkOut: String? = null,
     @Json(name = "duration") val duration: Long? = null,

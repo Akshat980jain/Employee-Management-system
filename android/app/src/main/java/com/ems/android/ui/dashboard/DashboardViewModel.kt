@@ -276,7 +276,7 @@ class DashboardViewModel @Inject constructor(
                         isClockedIn = false,
                         currentSession = null,
                         todaySessions = _attendanceStatus.value?.todaySessions?.map { session ->
-                            if (session.id == body.session?.id) body.session else session
+                            if (body.session != null && ((session.id != null && session.id == body.session.id) || session.checkIn == body.session.checkIn)) body.session else session
                         } ?: emptyList()
                     )
                     refreshDashboardData()

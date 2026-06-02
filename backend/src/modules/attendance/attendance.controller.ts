@@ -24,9 +24,14 @@ export class AttendanceController {
                 req.ip
             );
 
+            const latestSession = attendance.sessions && attendance.sessions.length > 0
+                ? attendance.sessions[attendance.sessions.length - 1]
+                : null;
+
             res.json({
                 success: true,
                 message: 'Checked in successfully',
+                session: latestSession,
                 data: attendance,
             });
         } catch (error: any) {
@@ -54,9 +59,14 @@ export class AttendanceController {
                 req.ip
             );
 
+            const latestSession = attendance.sessions && attendance.sessions.length > 0
+                ? attendance.sessions[attendance.sessions.length - 1]
+                : null;
+
             res.json({
                 success: true,
                 message: 'Checked out successfully',
+                session: latestSession,
                 data: attendance,
             });
         } catch (error: any) {
