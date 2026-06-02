@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,7 +40,7 @@ fun LeaveScreen(
     var rejectRequestId by remember { mutableStateOf<String?>(null) }
     var rejectComment by remember { mutableStateOf("") }
     
-    val isHROrAdmin = user?.role in listOf("ADMIN", "HR_MANAGER")
+    val isHROrAdmin = user?.role in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")
     
     LaunchedEffect(Unit) {
         viewModel.loadLeaveData()
@@ -256,7 +257,7 @@ fun MyRequestsTab(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Default.EventNote,
+                        Icons.AutoMirrored.Filled.EventNote,
                         contentDescription = null,
                         modifier = Modifier.size(40.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -398,10 +399,7 @@ fun LeaveRequestCard(
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Error
                     ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
-                        width = 1.dp,
-                        brush = androidx.compose.ui.graphics.SolidColor(Error)
-                    )
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Error)
                 ) {
                     Icon(
                         Icons.Default.Close,
@@ -627,7 +625,7 @@ fun NewLeaveRequestDialog(
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .menuAnchor(),
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                         shape = MaterialTheme.shapes.medium,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary

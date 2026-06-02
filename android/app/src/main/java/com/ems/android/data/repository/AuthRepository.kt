@@ -32,11 +32,13 @@ class AuthRepository @Inject constructor(
             
             if (response.isSuccessful && response.body() != null) {
                 val authResponse = response.body()!!
-                Log.d(TAG, "Login success: ${authResponse.success}, has token: ${authResponse.token != null}")
+                val accessToken = authResponse.getAccessToken()
+                val userData = authResponse.getUserData()
+                Log.d(TAG, "Login success: ${authResponse.success}, has token: ${accessToken != null}")
                 
-                if (authResponse.success && authResponse.token != null && authResponse.user != null) {
-                    tokenManager.saveToken(authResponse.token)
-                    tokenManager.saveUser(authResponse.user)
+                if (authResponse.success && accessToken != null && userData != null) {
+                    tokenManager.saveToken(accessToken)
+                    tokenManager.saveUser(userData)
                     Log.d(TAG, "Token and user saved")
                 }
                 emit(Resource.Success(authResponse))
@@ -81,9 +83,11 @@ class AuthRepository @Inject constructor(
             
             if (response.isSuccessful && response.body() != null) {
                 val authResponse = response.body()!!
-                if (authResponse.success && authResponse.token != null && authResponse.user != null) {
-                    tokenManager.saveToken(authResponse.token)
-                    tokenManager.saveUser(authResponse.user)
+                val accessToken = authResponse.getAccessToken()
+                val userData = authResponse.getUserData()
+                if (authResponse.success && accessToken != null && userData != null) {
+                    tokenManager.saveToken(accessToken)
+                    tokenManager.saveUser(userData)
                 }
                 emit(Resource.Success(authResponse))
             } else {
@@ -121,8 +125,9 @@ class AuthRepository @Inject constructor(
             val response = apiService.getCurrentUser()
             if (response.isSuccessful && response.body() != null) {
                 val authResponse = response.body()!!
-                if (authResponse.success && authResponse.user != null) {
-                    tokenManager.saveUser(authResponse.user)
+                val userData = authResponse.getUserData()
+                if (authResponse.success && userData != null) {
+                    tokenManager.saveUser(userData)
                 }
                 emit(Resource.Success(authResponse))
             } else {

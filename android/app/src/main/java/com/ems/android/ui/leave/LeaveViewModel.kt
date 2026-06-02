@@ -54,40 +54,45 @@ class LeaveViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             
-            // Load leave types
-            try {
-                val typesResponse = apiService.getLeaveTypes()
-                if (typesResponse.isSuccessful) {
-                    _leaveTypes.value = typesResponse.body()?.leaveTypes ?: emptyList()
-                }
-            } catch (_: Exception) {}
-            
-            // Load balances
-            try {
-                val balancesResponse = apiService.getMyLeaveBalances()
-                if (balancesResponse.isSuccessful) {
-                    _leaveBalances.value = balancesResponse.body()?.balances ?: emptyList()
-                }
-            } catch (_: Exception) {}
-            
-            // Load my requests
-            try {
-                val requestsResponse = apiService.getMyLeaveRequests()
-                if (requestsResponse.isSuccessful) {
-                    _myRequests.value = requestsResponse.body()?.requests ?: emptyList()
-                }
-            } catch (_: Exception) {}
-            
-            // Load pending requests for HR/Admin
-            if (_user.value?.role in listOf("ADMIN", "HR_MANAGER")) {
-                try {
-                    val pendingResponse = apiService.getAllLeaveRequests("PENDING")
-                    if (pendingResponse.isSuccessful) {
-                        _pendingRequests.value = pendingResponse.body()?.requests ?: emptyList()
+            val userRole = _user.value?.role
+            val jobs = listOf(
+                launch {
+                    try {
+                        val typesResponse = apiService.getLeaveTypes()
+                        if (typesResponse.isSuccessful) {
+                            _leaveTypes.value = typesResponse.body()?.leaveTypes ?: emptyList()
+                        }
+                    } catch (_: Exception) {}
+                },
+                launch {
+                    try {
+                        val balancesResponse = apiService.getMyLeaveBalances()
+                        if (balancesResponse.isSuccessful) {
+                            _leaveBalances.value = balancesResponse.body()?.balances ?: emptyList()
+                        }
+                    } catch (_: Exception) {}
+                },
+                launch {
+                    try {
+                        val requestsResponse = apiService.getMyLeaveRequests()
+                        if (requestsResponse.isSuccessful) {
+                            _myRequests.value = requestsResponse.body()?.requests ?: emptyList()
+                        }
+                    } catch (_: Exception) {}
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val pendingResponse = apiService.getAllLeaveRequests("PENDING")
+                            if (pendingResponse.isSuccessful) {
+                                _pendingRequests.value = pendingResponse.body()?.requests ?: emptyList()
+                            }
+                        } catch (_: Exception) {}
                     }
-                } catch (_: Exception) {}
-            }
+                }
+            )
             
+            jobs.forEach { it.join() }
             _isLoading.value = false
         }
     }

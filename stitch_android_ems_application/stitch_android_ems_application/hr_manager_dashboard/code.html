@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EMS Portal - HR Manager Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#767586",
+                        "surface": "#f8f9ff",
+                        "on-background": "#0b1c30",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#c0c1ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#464554",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary-container": "#00885d",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary": "#5c5f61",
+                        "outline-variant": "#c7c4d7",
+                        "on-secondary-fixed": "#191c1e",
+                        "secondary-container": "#e0e3e5",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#494bd6",
+                        "on-primary-fixed": "#07006c",
+                        "surface-variant": "#d3e4fe",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-tertiary-container": "#000703",
+                        "surface-dim": "#cbdbf5",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container": "#e5eeff",
+                        "secondary-fixed": "#e0e3e5",
+                        "on-secondary-fixed-variant": "#444749",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#eff4ff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary": "#4648d4",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed": "#e1e0ff",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "background": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#fffbff",
+                        "on-secondary-container": "#626567",
+                        "primary-container": "#6063ee",
+                        "tertiary": "#006c49",
+                        "on-tertiary-fixed-variant": "#005236"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "1rem",
+                        "margin-page": "1rem",
+                        "gutter-card": "0.75rem",
+                        "inline-gap": "0.5rem",
+                        "padding-card": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #f8f9ff; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-shadow {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .active-tab {
+            transition: all 0.2s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-on-background shadow-sm flex justify-between items-center px-margin-page h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img alt="User Profile Avatar" data-alt="A professional headshot of a female HR manager with a confident and friendly expression, set in a brightly lit, modern corporate office background. The lighting is soft and high-key, aligning with a light-mode UI aesthetic. She is wearing a smart navy blazer, reflecting a professional and organized brand identity focused on reliability and efficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB57NZnQoeGeDFa95vzpcq2-Ox7vuOPkXVMAjdudABx-N2APLo1luzyYbUD_2HSEwb7oX6zn1w-Nfge8U6VDs-u3L-Fal9BbUHKnRQVC34kvXj8P5mTpQckerjtIowwVA0ccppf8NpYmumjdG_qqxdUSCSvEceVv8DBtVgADk7r7c4DsT9JpWqW5oFeakboX9MgxOJT75zIzslKtJuyAxui8DfOyh5joTP2FEuecZQozVLtC_g2Nin_88FWS1d3Jiw_vgv_J88NkqI"/>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">EMS Portal</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary dark:text-inverse-primary hover:bg-surface-container transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined">search</span>
+</button>
+</header>
+<main class="pt-20 pb-28 px-margin-page space-y-stack-gap max-w-5xl mx-auto">
+<!-- Search & Filter Bar -->
+<section class="flex flex-col gap-inline-gap">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-3 rounded-xl border-none bg-surface-container-low focus:ring-2 focus:ring-primary text-body-md transition-all" placeholder="Search staff by name or ID..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-on-primary font-label-lg text-label-lg transition-all active:scale-95">All Departments</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-lg text-label-lg hover:bg-secondary-container transition-all">Engineering</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-lg text-label-lg hover:bg-secondary-container transition-all">Marketing</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-lg text-label-lg hover:bg-secondary-container transition-all">Design</button>
+</div>
+</section>
+<!-- Stats Overview (Asymmetric Layout) -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-gutter-card">
+<div class="col-span-2 bg-primary-container text-on-primary-container p-padding-card rounded-xl soft-shadow flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-lg text-label-lg opacity-80">Payroll Status</p>
+<h2 class="font-headline-lg text-headline-lg">Operational</h2>
+</div>
+<div class="flex items-center gap-1 relative z-10">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-sm text-label-sm">Next payout in 4 days</span>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 rotate-12">
+<span class="material-symbols-outlined text-8xl">payments</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-padding-card rounded-xl soft-shadow border border-outline-variant/10 flex flex-col justify-between">
+<p class="font-label-lg text-label-lg text-outline">Pending Leave</p>
+<div class="flex items-end justify-between">
+<span class="font-headline-lg text-headline-lg text-primary">12</span>
+<span class="material-symbols-outlined text-primary/40">event_busy</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-padding-card rounded-xl soft-shadow border border-outline-variant/10 flex flex-col justify-between">
+<p class="font-label-lg text-label-lg text-outline">On Duty</p>
+<div class="flex items-end justify-between">
+<span class="font-headline-lg text-headline-lg text-tertiary">142</span>
+<span class="material-symbols-outlined text-tertiary/40">badge</span>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-gap">
+<!-- Leave Requests Queue -->
+<section class="md:col-span-2 space-y-3">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-background">Leave Requests</h3>
+<button class="text-primary font-label-lg text-label-lg">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Request Item 1 -->
+<div class="bg-surface-container-lowest p-padding-card rounded-xl soft-shadow border border-outline-variant/10 group transition-all duration-200">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden">
+<img alt="Employee" data-alt="A detailed digital portrait of a middle-aged male employee with a professional and friendly look, wearing glasses and a business casual shirt. The background is a soft-focus office setting with warm indoor lighting, fitting a modern corporate theme. The overall aesthetic is clean, professional, and trustworthy, with high-quality rendering and a light-mode color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZqkCjL76qcstGsgwk-k3vgYiyc3UQBKsh0Qw9QHr498AAqHiW6Wbi87bnWnVVwyTqQsSVlSBZDIjFiDE3QOVstYYF3EUZi9h6Ly8Xf8qPWLumzEGgj_Z3_2rBRgykgJ8sdJLbe1UGvJzbWjBmeOV2yUeePsdA_EsV2cE_TrdA7Rp7Jr7GnBIpAUgBG6yaLEzoGdba2AAcDMzFsSpzfCJOuW06g0yBEFxySqW9v3Od6rzhWBgkzwbKhTMxrbzEtqbFhRIq_9I5TA4"/>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-background">Alex Miller</p>
+<p class="font-label-sm text-label-sm text-outline">Senior Designer • Sick Leave</p>
+</div>
+</div>
+<span class="px-2 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm">Urgent</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-4">"Feeling unwell since last night, need to take today and tomorrow off for recovery."</p>
+<div class="flex gap-2">
+<button class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg transition-transform active:scale-95 shadow-sm">Approve</button>
+<button class="flex-1 py-2 bg-surface-container-highest text-on-surface-variant rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Reject</button>
+</div>
+</div>
+<!-- Request Item 2 -->
+<div class="bg-surface-container-lowest p-padding-card rounded-xl soft-shadow border border-outline-variant/10">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden">
+<img alt="Employee" data-alt="A sharp, modern portrait of a young female professional with an engaging smile, in a contemporary office space with minimalist decor. The lighting is bright and natural, creating a serene and efficient atmosphere. Her attire is professional yet modern, consistent with a deep purple and white brand identity focused on reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO1L9hZ9Rk6Vw40A7V9gcUxuwhX693f8f_frC-qRz5ThdCk-RJ5wAGy4Hsd2KO3wI2a_IsraaVuA0ssnPohrlITkqpUSCG0EAhZwy5ZA0aws9e6OpDm6QsPrRls58VpG1j7YyvQxkqxwJ2bAn-_xXf8Omybg8mxgdPHbEaAMz2ejCzgHbFZQqBA8DQjwqx4nZzNcVDBT5cBATHygOGeb2EF79LnuMAA4a_a10qSHjw9hvXF4UhUsOp3LOYZlLXB2soq_8jfO7OHX8"/>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-background">Sarah Park</p>
+<p class="font-label-sm text-label-sm text-outline">HR Assistant • Annual Leave</p>
+</div>
+</div>
+<span class="px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">5 Days</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg transition-transform active:scale-95 shadow-sm">Approve</button>
+<button class="flex-1 py-2 bg-surface-container-highest text-on-surface-variant rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Reject</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Employee Performance Summary -->
+<section class="space-y-3">
+<h3 class="font-headline-md text-headline-md text-on-background">System Health</h3>
+<div class="bg-surface-container-lowest rounded-xl soft-shadow border border-outline-variant/10 overflow-hidden">
+<div class="p-padding-card space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-body-md text-on-surface">Database</span>
+</div>
+<span class="font-label-lg text-label-lg text-tertiary-container">Connected</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-body-md text-on-surface">Attendance Sync</span>
+</div>
+<span class="font-label-lg text-label-lg text-tertiary-container">Active</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-body-md text-on-surface">Payroll Engine</span>
+</div>
+<span class="font-label-lg text-label-lg text-primary">Idle</span>
+</div>
+</div>
+<div class="bg-surface-container px-padding-card py-3 border-t border-outline-variant/10">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Last backup: 12 minutes ago</p>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mt-6">Top Performers</h3>
+<div class="bg-surface-container-lowest p-4 rounded-xl soft-shadow border border-outline-variant/10 space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">01</div>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg">Elena Vance</p>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-1">
+<div class="bg-primary h-full rounded-full" style="width: 94%"></div>
+</div>
+</div>
+<span class="font-label-lg text-label-lg">94%</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">02</div>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg">David Chen</p>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-1">
+<div class="bg-primary h-full rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<span class="font-label-lg text-label-lg">88%</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface dark:bg-on-background shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 w-full px-2 pb-safe">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container dark:bg-primary-fixed-dim dark:text-on-primary-fixed rounded-xl px-4 py-1 transition-transform duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-lg text-label-lg">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-secondary-container transition-transform duration-200 active:scale-90 px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg">Employees</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-secondary-container transition-transform duration-200 active:scale-90 px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-lg text-label-lg">Attendance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:bg-secondary-container transition-transform duration-200 active:scale-90 px-4 py-1 rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) - For New Request/Employee -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center transition-all active:scale-90 z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<script>
+        // Micro-interaction for approve/reject buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function() {
+                if(this.innerText === 'Approve') {
+                    const card = this.closest('.group');
+                    if(card) {
+                        card.style.transform = 'translateX(100%)';
+                        card.style.opacity = '0';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                }
+            });
+        });
+
+        // Simple scroll shadow for header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

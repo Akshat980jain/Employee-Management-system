@@ -5,8 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -182,7 +182,7 @@ fun RegisterScreen(
                         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .menuAnchor(),
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                         singleLine = true,
                         shape = MaterialTheme.shapes.medium
                     )
@@ -249,7 +249,7 @@ fun RegisterScreen(
                     value = state.message,
                     onValueChange = { viewModel.updateRegisterField(message = it) },
                     label = { Text("Message (Optional)") },
-                    leadingIcon = { Icon(Icons.Default.Message, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.AutoMirrored.Filled.Message, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 2,
                     maxLines = 4,

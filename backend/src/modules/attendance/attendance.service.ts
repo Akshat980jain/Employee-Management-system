@@ -14,6 +14,16 @@ export class AttendanceService {
             throw ApiError.notFound('Employee not found');
         }
 
+        // Check if there is an open session in the employee's most recent attendance record
+        const lastAttendance = await Attendance.findOne({ employeeId }).sort({ date: -1 });
+        if (lastAttendance) {
+            const sessions = lastAttendance.sessions || [];
+            const hasOpenSession = sessions.some((s: any) => s.checkIn && !s.checkOut);
+            if (hasOpenSession) {
+                throw ApiError.badRequest('You have an open session. Please clock out first.');
+            }
+        }
+
         // Check for existing attendance record today
         let attendance = await Attendance.findOne({
             employeeId,
@@ -84,16 +94,12 @@ export class AttendanceService {
     }
 
     async checkOut(employeeId: string, organizationId: string, input: CheckOutInput, ipAddress?: string) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const attendance = await Attendance.findOne({
-            employeeId,
-            date: { $gte: today, $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) }
-        });
+        // Find the most recent attendance record to check out of
+        const attendance = await Attendance.findOne({ employeeId })
+            .sort({ date: -1 });
 
         if (!attendance || !attendance.checkIn) {
-            throw ApiError.badRequest('No check-in record found for today');
+            throw ApiError.badRequest('No check-in record found');
         }
 
         const now = new Date();
@@ -394,6 +400,27 @@ export class AttendanceService {
                 startDate: startDate.toISOString(),
                 endDate: endDate.toISOString(),
             }
+        };
+    }
+
+    async getAttendanceStatus(employeeId: string, organizationId: string) {
+        // Find the most recent attendance record
+        const attendance = await Attendance.findOne({ employeeId })
+            .sort({ date: -1 });
+
+        const sessions = attendance?.sessions || [];
+        const openSession = sessions.find((s: any) => s.checkIn && !s.checkOut);
+        const isClockedIn = !!openSession;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const isRecordFromToday = attendance && new Date(attendance.date).getTime() >= today.getTime();
+
+        return {
+            success: true,
+            isClockedIn,
+            currentSession: openSession || null,
+            todaySessions: isRecordFromToday ? sessions : (openSession ? [openSession] : [])
         };
     }
 }

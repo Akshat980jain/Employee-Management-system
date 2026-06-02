@@ -48,6 +48,12 @@ android {
     }
 }
 
+ksp {
+    // Disable KSP incremental processing to avoid Windows file-locking
+    // and NoSuchFileException crashes in the byRounds cache after clean builds.
+    arg("incremental", "false")
+}
+
 dependencies {
     // Core Android
     implementation(libs.androidx.core.ktx)
@@ -106,4 +112,14 @@ dependencies {
     implementation(libs.hilt.work)
     ksp(libs.hilt.work.compiler)
 }
+
+afterEvaluate {
+    tasks.withType<JavaCompile>().configureEach {
+        val currentPath = options.annotationProcessorPath
+        if (currentPath != null) {
+            options.annotationProcessorPath = files(currentPath.filter { !it.name.contains("moshi-kotlin-codegen") })
+        }
+    }
+}
+
 

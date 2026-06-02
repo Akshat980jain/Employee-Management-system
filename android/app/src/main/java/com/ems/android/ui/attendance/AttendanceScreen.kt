@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.data.models.AttendanceCorrection
 import com.ems.android.data.models.AttendanceRecord
 import com.ems.android.ui.components.ClockInOutCard
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.ems.android.utils.Resource
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -34,15 +38,36 @@ import java.util.*
 fun AttendanceScreen(
     viewModel: AttendanceViewModel = hiltViewModel()
 ) {
+    val user by viewModel.attendanceStatus.collectAsState()
     val attendanceStatus by viewModel.attendanceStatus.collectAsState()
     val attendanceHistory by viewModel.attendanceHistory.collectAsState()
     val corrections by viewModel.corrections.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val clockResult by viewModel.clockResult.collectAsState()
+    
+    val context = LocalContext.current
     var selectedTab by remember { mutableIntStateOf(0) }
     var showCorrectionDialog by remember { mutableStateOf(false) }
     
     LaunchedEffect(Unit) {
         viewModel.loadAttendanceData()
+    }
+    
+    LaunchedEffect(clockResult) {
+        clockResult?.let { result ->
+            when (result) {
+                is Resource.Success -> {
+                    val msg = result.data?.message ?: "Successfully clocked ${if (result.data?.session?.checkOut == null) "in" else "out"}!"
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    viewModel.clearClockResult()
+                }
+                is Resource.Error -> {
+                    Toast.makeText(context, "Failed to clock: ${result.message}", Toast.LENGTH_LONG).show()
+                    viewModel.clearClockResult()
+                }
+                else -> {}
+            }
+        }
     }
     
     // Correction Request Dialog
@@ -104,11 +129,12 @@ fun AttendanceScreen(
                 )
             }
             
-            when (selectedTab) {
+             when (selectedTab) {
                 0 -> TodayTab(
                     attendanceStatus = attendanceStatus,
                     onClockIn = { viewModel.clockIn() },
-                    onClockOut = { viewModel.clockOut() }
+                    onClockOut = { viewModel.clockOut() },
+                    isLoading = clockResult is Resource.Loading
                 )
                 1 -> CalendarTab(attendanceHistory = attendanceHistory)
                 2 -> CorrectionsTab(corrections = corrections)
@@ -121,7 +147,8 @@ fun AttendanceScreen(
 fun TodayTab(
     attendanceStatus: com.ems.android.data.models.AttendanceStatusResponse?,
     onClockIn: () -> Unit,
-    onClockOut: () -> Unit
+    onClockOut: () -> Unit,
+    isLoading: Boolean = false
 ) {
     Column(
         modifier = Modifier
@@ -135,7 +162,8 @@ fun TodayTab(
             isClockedIn = attendanceStatus?.isClockedIn == true,
             currentSession = attendanceStatus?.currentSession,
             onClockIn = onClockIn,
-            onClockOut = onClockOut
+            onClockOut = onClockOut,
+            isLoading = isLoading
         )
         
         // Today's Sessions
@@ -460,7 +488,7 @@ fun SessionRow(
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    Icons.Default.Login,
+                    Icons.AutoMirrored.Filled.Login,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.primary
@@ -474,7 +502,7 @@ fun SessionRow(
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    Icons.Default.Logout,
+                    Icons.AutoMirrored.Filled.Logout,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
                     tint = if (isActive) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error
@@ -545,7 +573,7 @@ fun CorrectionRequestDialog(
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeExpanded) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .menuAnchor()
+                            .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     )
                     ExposedDropdownMenu(
                         expanded = typeExpanded,

@@ -33,6 +33,7 @@ import transferRequestRoutes from './modules/transfer-request/transfer-request.r
 import warningRoutes from './modules/warning/warning.routes.js';
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 const PORT = process.env.PORT || 3000;
 
@@ -68,7 +69,7 @@ app.use(cors({
 // Rate limiting
 const limiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '1000'),
     message: { error: 'Too many requests, please try again later.' },
 });
 app.use(limiter);

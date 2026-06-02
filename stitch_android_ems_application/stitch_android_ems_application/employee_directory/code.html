@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Employee Directory | EMS Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#f8f9ff",
+                      "secondary-fixed-dim": "#c4c7c9",
+                      "outline-variant": "#c7c4d7",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#e0e3e5",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "tertiary": "#006c49",
+                      "on-surface-variant": "#464554",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "surface-container-low": "#eff4ff",
+                      "on-secondary-fixed": "#191c1e",
+                      "inverse-on-surface": "#eaf1ff",
+                      "secondary": "#5c5f61",
+                      "secondary-fixed": "#e0e3e5",
+                      "on-secondary-fixed-variant": "#444749",
+                      "on-primary-fixed": "#07006c",
+                      "surface-container": "#e5eeff",
+                      "primary-fixed": "#e1e0ff",
+                      "surface-container-high": "#dce9ff",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#c0c1ff",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-surface": "#0b1c30",
+                      "primary-container": "#6063ee",
+                      "inverse-surface": "#213145",
+                      "surface-tint": "#494bd6",
+                      "on-error-container": "#93000a",
+                      "on-primary-container": "#fffbff",
+                      "on-tertiary-container": "#000703",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#6ffbbe",
+                      "on-secondary-container": "#626567",
+                      "surface": "#f8f9ff",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-tertiary-fixed": "#002113",
+                      "on-background": "#0b1c30",
+                      "surface-bright": "#f8f9ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-dim": "#cbdbf5",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#d3e4fe",
+                      "primary": "#4648d4",
+                      "outline": "#767586",
+                      "tertiary-container": "#00885d",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#2f2ebe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "padding-card": "1.25rem",
+                      "gutter-card": "0.75rem",
+                      "inline-gap": "0.5rem",
+                      "stack-gap": "1rem",
+                      "margin-page": "1rem"
+              },
+              "fontFamily": {
+                      "label-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .employee-card { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .employee-card:active { transform: scale(0.98); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container shadow-md docked full-width top-0 z-40 sticky">
+<div class="flex justify-between items-center w-full px-4 h-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center text-primary font-bold overflow-hidden border-2 border-on-primary/20">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a mature corporate executive in a modern office environment. He wears a tailored navy suit and has a warm, confident expression. The lighting is soft and natural, emphasizing a professional and reliable tone suitable for a high-end corporate management portal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAybxuqQqIwihBHZnYzQUAM27L68f8xXAVlvYsw6GlgmWpuZPO0pjKVBW8P9PeRBVwO3WSDABvJFnFPQwW0NEJwLfTIQC52-iZe298cjU0uFI3qDNwF4LdVbWfR-DvoRby4iHUWj0Tr2n5HJ95khrQfFaIcPAeOUD4Fm63_4_HfGueh9OC_Rri56jlYLLUe8aDTZHLV4_9vR7Q7ivdIz0VpSX8bYDCigoaLrqCaY9TQhBihAMoCnxeap-HMY6Qa1xI-pLUUse1KlqU"/>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-on-primary dark:text-on-primary-container">EMS Portal</h1>
+</div>
+<button class="material-symbols-outlined text-2xl hover:bg-primary-container/20 p-2 rounded-full transition-colors" data-icon="search">search</button>
+</div>
+</header>
+<main class="px-4 mt-6 max-w-lg mx-auto">
+<!-- Search & Filter Area -->
+<div class="mb-8 space-y-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-outline-variant border rounded-xl py-3.5 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm font-body-md text-on-surface" placeholder="Search employees, roles, IDs..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-full font-label-lg text-label-lg shadow-sm whitespace-nowrap">All Staff</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-lg text-label-lg whitespace-nowrap hover:bg-surface-container-high transition-colors">Administrators</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-lg text-label-lg whitespace-nowrap hover:bg-surface-container-high transition-colors">On Site</button>
+<button class="bg-surface-container text-on-surface-variant px-4 py-2 rounded-full font-label-lg text-label-lg whitespace-nowrap hover:bg-surface-container-high transition-colors">Remote</button>
+</div>
+</div>
+<!-- Employee List Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-end mb-2">
+<h2 class="text-label-lg font-label-lg text-outline uppercase tracking-widest">Active Personnel</h2>
+<p class="text-label-sm font-label-sm text-secondary">248 Total</p>
+</div>
+<!-- Employee Card: CM -->
+<div class="employee-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-headline-md ring-2 ring-primary-fixed/50">CM</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Cody Miles</h3>
+<p class="font-label-lg text-label-lg text-secondary">Lead Designer</p>
+<span class="mt-1 inline-block text-[10px] font-bold bg-surface-container text-primary px-2 py-0.5 rounded uppercase tracking-tighter">Administrator</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        PRESENT
+                    </span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+<!-- Employee Card: AA -->
+<div class="employee-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary font-bold text-headline-md ring-2 ring-secondary-fixed/50">AA</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Alex Aris</h3>
+<p class="font-label-lg text-label-lg text-secondary">QA Engineer</p>
+<span class="mt-1 inline-block text-[10px] font-bold bg-surface-container-low text-on-surface-variant px-2 py-0.5 rounded uppercase tracking-tighter">Employee</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-error-container text-on-error-container px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                        NOT CHECKED IN
+                    </span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+<!-- Employee Card: AJ -->
+<div class="employee-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-headline-md ring-2 ring-tertiary-fixed/50">AJ</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Akshat Jain</h3>
+<p class="font-label-lg text-label-lg text-secondary">HR Administrator</p>
+<span class="mt-1 inline-block text-[10px] font-bold bg-surface-container text-primary px-2 py-0.5 rounded uppercase tracking-tighter">Administrator</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                        PRESENT
+                    </span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+<!-- Employee Card: BK -->
+<div class="employee-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-primary-fixed-dim flex items-center justify-center text-on-primary-fixed font-bold text-headline-md ring-2 ring-primary-fixed-dim/50">BK</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Bessie Kovac</h3>
+<p class="font-label-lg text-label-lg text-secondary">Product Manager</p>
+<span class="mt-1 inline-block text-[10px] font-bold bg-surface-container-low text-on-surface-variant px-2 py-0.5 rounded uppercase tracking-tighter">Employee</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                        ON LEAVE
+                    </span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+<!-- Employee Card: SL -->
+<div class="employee-card bg-surface-container-lowest p-4 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-surface-dim flex items-center justify-center text-on-surface font-bold text-headline-md ring-2 ring-surface-dim/50">SL</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Sarah Lopez</h3>
+<p class="font-label-lg text-label-lg text-secondary">DevOps Engineer</p>
+<span class="mt-1 inline-block text-[10px] font-bold bg-surface-container-low text-on-surface-variant px-2 py-0.5 rounded uppercase tracking-tighter">Employee</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2.5 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                        PRESENT
+                    </span>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="person_add">person_add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface shadow-[0_-2px_8px_rgba(0,0,0,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-xl px-3 py-1 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="grid_view">grid_view</span>
+<span class="text-label-sm font-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-3 py-1 scale-100 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="groups">groups</span>
+<span class="text-label-sm font-label-sm">Employees</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-xl px-3 py-1 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="schedule">schedule</span>
+<span class="text-label-sm font-label-sm">Attendance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-xl px-3 py-1 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+<span class="text-label-sm font-label-sm">Payroll</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-secondary-container/30 rounded-xl px-3 py-1 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="text-label-sm font-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple search filter interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        const cards = document.querySelectorAll('.employee-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Add subtle click ripples or feedback for cards
+        cards.forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.backgroundColor = '#f1f5f9';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.backgroundColor = '#ffffff';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.backgroundColor = '#ffffff';
+            });
+        });
+    </script>
+</body></html>

@@ -212,6 +212,25 @@ export class AttendanceController {
             next(error);
         }
     }
+
+    async getAttendanceStatus(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const employee = await Employee.findOne({ userId: req.user!.userId });
+
+            if (!employee) {
+                throw ApiError.badRequest('No employee profile linked to your account');
+            }
+
+            const result = await attendanceService.getAttendanceStatus(
+                employee._id.toString(),
+                req.user!.organizationId
+            );
+
+            res.json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export const attendanceController = new AttendanceController();

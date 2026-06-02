@@ -210,11 +210,11 @@ class OfflineRepository @Inject constructor(
     // ==================== ENTITY MAPPERS ====================
     
     private fun User.toEntity() = UserEntity(
-        id = id,
+        id = getUserId(),
         firstName = firstName,
         lastName = lastName,
         email = email,
-        role = role,
+        role = role ?: "Employee",
         phone = null,
         avatar = avatar,
         departmentId = null,

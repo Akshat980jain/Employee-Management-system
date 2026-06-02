@@ -101,7 +101,8 @@ fun ClockInOutCard(
     isClockedIn: Boolean,
     currentSession: AttendanceSession?,
     onClockIn: () -> Unit,
-    onClockOut: () -> Unit
+    onClockOut: () -> Unit,
+    isLoading: Boolean = false
 ) {
     var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     
@@ -196,6 +197,7 @@ fun ClockInOutCard(
             
             Button(
                 onClick = if (isClockedIn) onClockOut else onClockIn,
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -204,17 +206,25 @@ fun ClockInOutCard(
                     containerColor = if (isClockedIn) Error else Success
                 )
             ) {
-                Icon(
-                    imageVector = if (isClockedIn) Icons.Default.Stop else Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = if (isClockedIn) "Clock Out" else "Clock In",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Icon(
+                        imageVector = if (isClockedIn) Icons.Default.Stop else Icons.Default.PlayArrow,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (isClockedIn) "Clock Out" else "Clock In",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
     }
@@ -372,9 +382,7 @@ fun QuickActionButton(
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = Primary
         ),
-        border = ButtonDefaults.outlinedButtonBorder.copy(
-            width = 1.dp
-        )
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
     ) {
         Icon(
             imageVector = icon,

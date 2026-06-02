@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -173,7 +173,7 @@ fun AddEditEmployeeScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = roleExpanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(),
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                     leadingIcon = { Icon(Icons.Default.Badge, contentDescription = null) }
                 )
                 ExposedDropdownMenu(
@@ -205,7 +205,7 @@ fun AddEditEmployeeScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = deptExpanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(),
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable),
                     leadingIcon = { Icon(Icons.Default.AccountTree, contentDescription = null) }
                 )
                 ExposedDropdownMenu(
@@ -236,7 +236,7 @@ fun AddEditEmployeeScreen(
             // Submit Button
             Button(
                 onClick = {
-                    if (isEdit && employeeId != null) {
+                    if (isEdit) {
                         viewModel.updateEmployee(
                             employeeId = employeeId,
                             firstName = firstName,
@@ -258,7 +258,7 @@ fun AddEditEmployeeScreen(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = firstName.isNotBlank() && lastName.isNotBlank() && 
-                         email.isNotBlank() && (!isEdit || password.isNotBlank() || isEdit)
+                         email.isNotBlank() && (isEdit || password.isNotBlank())
             ) {
                 Icon(if (isEdit) Icons.Default.Save else Icons.Default.PersonAdd, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))

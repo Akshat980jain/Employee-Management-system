@@ -95,12 +95,14 @@ class AuthViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         val response = result.data
+                        val accessToken = response?.getAccessToken()
+                        val userData = response?.getUserData()
                         _loginState.update { 
                             it.copy(
                                 isLoading = false,
-                                isLoggedIn = response?.success == true && response.token != null,
-                                pendingApproval = response?.pendingApproval == true,
-                                user = response?.user,
+                                isLoggedIn = response?.success == true && accessToken != null,
+                                pendingApproval = response?.isPendingVerification() == true,
+                                user = userData,
                                 error = if (response?.success != true) response?.message else null
                             )
                         }
@@ -217,7 +219,7 @@ class AuthViewModel @Inject constructor(
                             it.copy(
                                 isLoading = false,
                                 isRegistered = response?.success == true,
-                                pendingApproval = response?.pendingApproval == true,
+                                pendingApproval = response?.isPendingVerification() == true,
                                 error = if (response?.success != true) response?.message else null
                             )
                         }

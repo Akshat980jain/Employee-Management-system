@@ -1,0 +1,554 @@
+﻿.\gradlew.bat : WARNING: A restricted method in java.lang.System has been called
+At line:1 char:1
++ .\gradlew.bat assembleDebug 2>&1 | Out-File -FilePath build_output7.t ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: A rest...has been called:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an 
+unnamed module (file:/C:/Users/hp/.gradle/wrapper/dists/gradle-8.9-bin/90cnw93cvbtalezasaz0blq0a/gradle-8.9/lib/native-
+platform-0.22-milestone-26.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Starting a Gradle Daemon, 1 busy and 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeExtDexDebug
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs UP-TO-DATE
+> Task :app:stripDebugDebugSymbols UP-TO-DATE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:processDebugResources
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+e: Daemon compilation failed: null
+java.lang.Exception
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:69)
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:65)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemon(GradleKotlinCompilerWork.kt:240)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemonOrFallbackImpl(GradleKotlinCompilerWo
+rk.kt:159)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.run(GradleKotlinCompilerWork.kt:111)
+	at org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction.execute(GradleCo
+mpilerRunnerWithWorkers.kt:76)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperati
+onRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperati
+onRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQ
+ueue.java:195)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQue
+ue.java:128)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.ja
+va:170)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:267)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:131)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:136)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue
+.java:165)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java
+:134)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.io.FileNotFoundException: E:\EMS\android\app\build\tmp\kotlin-classes\debug\com\ems\android\ui\dashboar
+d\ComposableSingletons$HRDashboardKt$lambda-1$1.class (The system cannot find the file specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:185)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:139)
+	at kotlin.io.FilesKt__FileReadWriteKt.readBytes(FileReadWrite.kt:69)
+	at org.jetbrains.kotlin.incremental.LocalFileKotlinClass$Companion.create(LocalFileKotlinClass.kt:37)
+	at org.jetbrains.kotlin.build.GeneratedJvmClass.<init>(generatedFiles.kt:39)
+	at org.jetbrains.kotlin.compilerRunner.SimpleOutputItemKt.toGeneratedFile(SimpleOutputItem.kt:31)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:521)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at 
+org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:351)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:166)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:543)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:744)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:623)
+	... 3 more
+
+Failed to compile with Kotlin daemon: java.lang.Exception
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:69)
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:65)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemon(GradleKotlinCompilerWork.kt:240)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemonOrFallbackImpl(GradleKotlinCompilerWork.kt:159)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.run(GradleKotlinCompilerWork.kt:111)
+	at org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction.execute(GradleCompilerRunnerWithWorkers.kt:76)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:195)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:128)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:170)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:267)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:131)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:136)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:165)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:134)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: java.io.FileNotFoundException: E:\EMS\android\app\build\tmp\kotlin-classes\debug\com\ems\android\ui\dashboard\ComposableSingletons$HRDashboardKt$lambda-1$1.class (The system cannot find the file specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:185)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:139)
+	at kotlin.io.FilesKt__FileReadWriteKt.readBytes(FileReadWrite.kt:69)
+	at org.jetbrains.kotlin.incremental.LocalFileKotlinClass$Companion.create(LocalFileKotlinClass.kt:37)
+	at org.jetbrains.kotlin.build.GeneratedJvmClass.<init>(generatedFiles.kt:39)
+	at org.jetbrains.kotlin.compilerRunner.SimpleOutputItemKt.toGeneratedFile(SimpleOutputItem.kt:31)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:521)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:351)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:166)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:543)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:744)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:623)
+	... 3 more
+Using fallback strategy: Compile without Kotlin daemon
+Try ./gradlew --stop if this issue persists
+If it does not look related to your configuration, please file an issue with logs to https://kotl.in/issue
+exception: WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+exception: WARNING: sun.misc.Unsafe::objectFieldOffset has been called by 
+org.jetbrains.kotlin.com.intellij.util.containers.Unsafe (file:/C:/Users/hp/.gradle/caches/modules-2/files-2.1/org.jetb
+rains.kotlin/kotlin-compiler-embeddable/2.0.21/79346ed53db48b18312a472602eb5c057070c54d/kotlin-compiler-embeddable-2.0.
+21.jar)
+exception: WARNING: Please consider reporting this to the maintainers of class 
+org.jetbrains.kotlin.com.intellij.util.containers.Unsafe
+exception: WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+exception: app\src\main\java\com\ems\android\ui\aiinsights\AIInsightsScreen.kt:40:31: warning: 'val 
+Icons.Filled.TrendingUp: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.TrendingUp.
+exception:                 Icons.Default.TrendingUp
+exception:                               ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\aiinsights\AIInsightsScreen.kt:64:31: warning: 'val 
+Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.EventNote.
+exception:                 Icons.Default.EventNote
+exception:                               ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\aiinsights\AIInsightsScreen.kt:84:44: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\attendance\AttendanceScreen.kt:463:35: warning: 'val 
+Icons.Filled.Login: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Login.
+exception:                     Icons.Default.Login,
+exception:                                   ^^^^^
+exception: app\src\main\java\com\ems\android\ui\attendance\AttendanceScreen.kt:477:35: warning: 'val 
+Icons.Filled.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Logout.
+exception:                     Icons.Default.Logout,
+exception:                                   ^^^^^^
+exception: app\src\main\java\com\ems\android\ui\attendance\AttendanceScreen.kt:548:30: warning: 'fun 
+Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+exception:                             .menuAnchor()
+exception:                              ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\auth\PendingVerificationScreen.kt:144:31: warning: 'val 
+Icons.Filled.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Logout.
+exception:                 Icons.Default.Logout,
+exception:                               ^^^^^^
+exception: app\src\main\java\com\ems\android\ui\auth\RegisterScreen.kt:185:30: warning: 'fun Modifier.menuAnchor(): 
+Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+exception:                             .menuAnchor(),
+exception:                              ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\auth\RegisterScreen.kt:252:56: warning: 'val Icons.Filled.Message: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Message.
+exception:                     leadingIcon = { Icon(Icons.Default.Message, contentDescription = null) },
+exception:                                                        ^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\chatbot\HRChatbotScreen.kt:127:44: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\chatbot\HRChatbotScreen.kt:250:44: warning: 'val Icons.Filled.Send: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Send.
+exception:                         Icon(Icons.Default.Send, contentDescription = "Send")
+exception:                                            ^^^^
+exception: app\src\main\java\com\ems\android\ui\components\CommonComponents.kt:375:33: warning: 'val 
+outlinedButtonBorder: BorderStroke' is deprecated. Please use the version that takes an `enabled` param to get the 
+`BorderStroke` with the correct opacity.
+exception:         border = ButtonDefaults.outlinedButtonBorder.copy(
+exception:                                 ^^^^^^^^^^^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\EmployeeDashboard.kt:109:42: warning: 'val 
+Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.EventNote.
+exception:                     icon = Icons.Default.EventNote,
+exception:                                          ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\EmployeeDashboard.kt:284:59: warning: 'val 
+Icons.Filled.Login: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Login.
+exception:                                             Icons.Default.Login,
+exception:                                                           ^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\EmployeeDashboard.kt:299:63: warning: 'val 
+Icons.Filled.Logout: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Logout.
+exception:                                                 Icons.Default.Logout,
+exception:                                                               ^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\HRDashboard.kt:118:42: warning: 'val Icons.Filled.EventNote: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+exception:                     icon = Icons.Default.EventNote,
+exception:                                          ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\MainScreen.kt:73:37: warning: 'val Icons.Filled.EventNote: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+exception:         selectedIcon = Icons.Filled.EventNote,
+exception:                                     ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\MainScreen.kt:74:41: warning: 'val Icons.Outlined.EventNote: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.EventNote.
+exception:         unselectedIcon = Icons.Outlined.EventNote
+exception:                                         ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\MainScreen.kt:431:44: warning: 'val Icons.Filled.ArrowBack: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\dashboard\ProfileScreen.kt:293:46: warning: 'val Icons.Filled.Help: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Help.
+exception:                         icon = Icons.Default.Help,
+exception:                                              ^^^^
+exception: app\src\main\java\com\ems\android\ui\employee\AddEditEmployeeScreen.kt:176:26: warning: 'fun 
+Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+exception:                         .menuAnchor(),
+exception:                          ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\employee\AddEditEmployeeScreen.kt:208:26: warning: 'fun 
+Modifier.menuAnchor(): Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+exception:                         .menuAnchor(),
+exception:                          ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\employee\AddEditEmployeeScreen.kt:239:35: warning: condition is always 
+'true'.
+exception:                     if (isEdit && employeeId != null) {
+exception:                                   ^^^^^^^^^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\employee\EmployeeDirectoryScreen.kt:80:40: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                        ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\feedback\FeedbackScreen.kt:117:44: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\goals\GoalsScreen.kt:90:44: warning: 'val Icons.Filled.ArrowBack: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\leave\LeaveScreen.kt:259:39: warning: 'val Icons.Filled.EventNote: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.EventNote.
+exception:                         Icons.Default.EventNote,
+exception:                                       ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\leave\LeaveScreen.kt:401:45: warning: 'val outlinedButtonBorder: 
+BorderStroke' is deprecated. Please use the version that takes an `enabled` param to get the `BorderStroke` with the 
+correct opacity.
+exception:                     border = ButtonDefaults.outlinedButtonBorder.copy(
+exception:                                             ^^^^^^^^^^^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\leave\LeaveScreen.kt:630:30: warning: 'fun Modifier.menuAnchor(): 
+Modifier' is deprecated. Use overload that takes MenuAnchorType and enabled parameters.
+exception:                             .menuAnchor(),
+exception:                              ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\monitoring\HRAnalyticsScreen.kt:48:40: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                        ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\monitoring\HRAnalyticsScreen.kt:122:42: warning: 'val 
+Icons.Filled.TrendingDown: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.TrendingDown.
+exception:                     icon = Icons.Default.TrendingDown,
+exception:                                          ^^^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\monitoring\HRAnalyticsScreen.kt:130:42: warning: 'val 
+Icons.Filled.TrendingUp: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.TrendingUp.
+exception:                     icon = Icons.Default.TrendingUp,
+exception:                                          ^^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\notifications\NotificationsScreen.kt:70:44: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\notifications\NotificationsScreen.kt:158:39: warning: 'val 
+Icons.Filled.EventNote: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.EventNote.
+exception:         "LEAVE" -> Pair(Icons.Default.EventNote, Color(0xFF6366F1))
+exception:                                       ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\payroll\PayrollScreen.kt:83:44: warning: 'val Icons.Filled.ArrowBack: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\reviews\ReviewsScreen.kt:81:44: warning: 'val Icons.Filled.ArrowBack: 
+ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\roles\RolesManagementScreen.kt:244:44: warning: 'val 
+Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at 
+Icons.AutoMirrored.Filled.ArrowBack.
+exception:                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+exception:                                            ^^^^^^^^^
+exception: app\src\main\java\com\ems\android\ui\theme\Theme.kt:87:20: warning: 'var statusBarColor: Int' is 
+deprecated. Deprecated in Java.
+exception:             window.statusBarColor = colorScheme.primary.toArgb()
+exception:                    ^^^^^^^^^^^^^^
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+
+> Task :app:hiltJavaCompileDebug
+warning: Kapt support in Moshi Kotlin Code Gen is deprecated and will be removed in 2.0. Please migrate to KSP. 
+https://github.com/square/moshi#codegen
+1 warning
+
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:transformDebugClassesWithAsm
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics UP-TO-DATE
+
+> Task :app:mergeProjectDexDebug
+ERROR: E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10: D8: 
+java.nio.file.FileSystemException: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex: The process cannot access the 
+file because it is being used by another process
+com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives: 
+	at com.android.builder.dexing.D8DexArchiveMerger.getMergingExceptionToRethrow(D8DexArchiveMerger.java:223)
+	at com.android.builder.dexing.D8DexArchiveMerger.mergeDexArchives(D8DexArchiveMerger.java:211)
+	at com.android.build.gradle.internal.tasks.DexMergingWorkAction.merge(DexMergingTask.kt:894)
+	at com.android.build.gradle.internal.tasks.DexMergingWorkAction.run(DexMergingTask.kt:846)
+	at com.android.build.gradle.internal.profile.ProfileAwareWorkAction.execute(ProfileAwareWorkAction.kt:74)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperati
+onRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperati
+onRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQ
+ueue.java:195)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQue
+ue.java:128)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.ja
+va:170)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:267)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:131)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:136)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue
+.java:165)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java
+:134)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1095)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:619)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+Caused by: com.android.tools.r8.CompilationFailedException: Compilation failed to complete, origin: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex
+	at Version.fakeStackEntry(Version_8.7.14.java:0)
+	at com.android.tools.r8.T.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:5)
+	at com.android.tools.r8.internal.yu.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:82)
+	at com.android.tools.r8.internal.yu.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:32)
+	at com.android.tools.r8.internal.yu.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:31)
+	at com.android.tools.r8.internal.yu.b(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:2)
+	at com.android.tools.r8.D8.run(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:11)
+	at com.android.builder.dexing.D8DexArchiveMerger.mergeDexArchives(D8DexArchiveMerger.java:209)
+	... 37 more
+Caused by: java.nio.file.FileSystemException: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex: The process cannot access the 
+file because it is being used by another process
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:92)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.implDelete(WindowsFileSystemProvider.java:269)
+	at java.base/sun.nio.fs.AbstractFileSystemProvider.delete(AbstractFileSystemProvider.java:105)
+	at java.base/java.nio.file.Files.delete(Files.java:1049)
+	at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60d
+afd01d4f0be74a4392c:4)
+	at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.accept(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3b
+fb60dafd01d4f0be74a4392c:8)
+	at com.android.tools.r8.dex.k.b(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:57)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:2)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:17)
+	at com.google.common.util.concurrent.TrustedListenableFutureTask$TrustedFutureInterruptibleTask.runInterruptibly(Trust
+edListenableFutureTask.java:131)
+	at com.google.common.util.concurrent.InterruptibleTask.run(InterruptibleTask.java:75)
+	at com.google.common.util.concurrent.TrustedListenableFutureTask.run(TrustedListenableFutureTask.java:82)
+	at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:327)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148)
+	at com.google.common.util.concurrent.AbstractListeningExecutorService.submit(AbstractListeningExecutorService.java:79)
+	at com.google.common.util.concurrent.AbstractListeningExecutorService.submit(AbstractListeningExecutorService.java:37)
+	at 
+com.android.tools.r8.internal.fp0.submit(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+	at com.android.tools.r8.internal.Ro0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:19)
+	at com.android.tools.r8.internal.Yw.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:3)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at com.android.tools.r8.internal.Yw.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:2)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:10)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:5)
+	at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+	at com.android.tools.r8.dex.k.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:147)
+	at com.android.tools.r8.dex.k.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:272)
+	at com.android.tools.r8.D8.d(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:154)
+	at com.android.tools.r8.D8.b(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+	at com.android.tools.r8.internal.yu.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:28)
+	... 40 more
+	Suppressed: java.lang.RuntimeException: com.android.tools.r8.internal.g: java.nio.file.FileSystemException: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex: The process cannot access the 
+file because it is being used by another process
+		at com.android.tools.r8.internal.bd0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:29)
+		at com.android.tools.r8.dex.k.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:283)
+		... 43 more
+	Caused by: com.android.tools.r8.internal.g: java.nio.file.FileSystemException: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex: The process cannot access the 
+file because it is being used by another process
+		at com.android.tools.r8.internal.bd0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:21)
+		at 
+com.android.tools.r8.internal.bd0.error(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+		at com.android.tools.r8.DexIndexedConsumer$DirectoryConsumer.accept(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3
+bfb60dafd01d4f0be74a4392c:10)
+		at com.android.tools.r8.dex.k.b(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:57)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:2)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:17)
+		at com.google.common.util.concurrent.TrustedListenableFutureTask$TrustedFutureInterruptibleTask.runInterruptibly(Trus
+tedListenableFutureTask.java:131)
+		at com.google.common.util.concurrent.InterruptibleTask.run(InterruptibleTask.java:75)
+		at com.google.common.util.concurrent.TrustedListenableFutureTask.run(TrustedListenableFutureTask.java:82)
+		at com.google.common.util.concurrent.MoreExecutors$DirectExecutorService.execute(MoreExecutors.java:327)
+		at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148)
+		at 
+com.google.common.util.concurrent.AbstractListeningExecutorService.submit(AbstractListeningExecutorService.java:79)
+		at 
+com.google.common.util.concurrent.AbstractListeningExecutorService.submit(AbstractListeningExecutorService.java:37)
+		at 
+com.android.tools.r8.internal.fp0.submit(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+		at com.android.tools.r8.internal.Ro0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:19)
+		at com.android.tools.r8.internal.Yw.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:3)
+		at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+		at com.android.tools.r8.internal.Yw.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:2)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:10)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:5)
+		at com.android.tools.r8.internal.ep0.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:1)
+		at com.android.tools.r8.dex.k.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:147)
+		at com.android.tools.r8.dex.k.a(R8_8.7.14_009e48a89188f1e41c83325f16b217a3b855dc3bfb60dafd01d4f0be74a4392c:272)
+		... 43 more
+	Caused by: [CIRCULAR REFERENCE: java.nio.file.FileSystemException: 
+E:\EMS\android\app\build\intermediates\dex\debug\mergeProjectDexDebug\10\classes.dex: The process cannot access the 
+file because it is being used by another process]
+
+
+> Task :app:mergeProjectDexDebug FAILED
+w: Detected multiple Kotlin daemon sessions at 
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:mergeProjectDexDebug'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.DexMergingTaskDelegate
+   > There was a failure while executing work items
+      > A failure occurred while executing com.android.build.gradle.internal.tasks.DexMergingWorkAction
+         > com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives: 
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 14m 46s
+40 actionable tasks: 10 executed, 30 up-to-date

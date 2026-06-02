@@ -10,6 +10,7 @@ router.use(authenticate);
 // Self-service routes
 router.post('/check-in', attendanceController.checkIn.bind(attendanceController));
 router.post('/check-out', attendanceController.checkOut.bind(attendanceController));
+router.get('/status', attendanceController.getAttendanceStatus.bind(attendanceController));
 router.get('/my', attendanceController.getMyAttendance.bind(attendanceController));
 
 // Admin routes

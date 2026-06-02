@@ -44,6 +44,13 @@ class DashboardViewModel @Inject constructor(
     private val _recentActivities = MutableStateFlow<List<ActivityLog>>(emptyList())
     val recentActivities: StateFlow<List<ActivityLog>> = _recentActivities.asStateFlow()
     
+    // NEW: Employee list for dashboard
+    private val _employees = MutableStateFlow<List<EmployeeDetail>>(emptyList())
+    val employees: StateFlow<List<EmployeeDetail>> = _employees.asStateFlow()
+    
+    private val _totalEmployees = MutableStateFlow(0)
+    val totalEmployees: StateFlow<Int> = _totalEmployees.asStateFlow()
+    
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     
@@ -69,73 +76,150 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             
-            // Load attendance status
-            try {
-                val attendanceResponse = apiService.getAttendanceStatus()
-                if (attendanceResponse.isSuccessful) {
-                    _attendanceStatus.value = attendanceResponse.body()
+            val userRole = _user.value?.role
+            val jobs = listOf(
+                launch {
+                    try {
+                        val attendanceResponse = apiService.getAttendanceStatus()
+                        if (attendanceResponse.isSuccessful && attendanceResponse.body() != null) {
+                            _attendanceStatus.value = attendanceResponse.body()
+                        } else {
+                            // Fallback to getMyAttendance
+                            val historyResponse = apiService.getMyAttendance()
+                            if (historyResponse.isSuccessful && historyResponse.body() != null) {
+                                val records = historyResponse.body()!!.records
+                                val today = java.time.LocalDate.now()
+                                val todayRecord = records.find { record ->
+                                    try {
+                                        val dateInstant = java.time.Instant.parse(record.date)
+                                        val recordLocalDate = dateInstant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                                        recordLocalDate == today
+                                    } catch (e: Exception) {
+                                        record.date.startsWith(today.toString())
+                                    }
+                                }
+                                val sessions = todayRecord?.sessions ?: emptyList()
+                                val currentSession = sessions.find { it.checkOut == null }
+                                val isClockedIn = currentSession != null
+                                
+                                _attendanceStatus.value = AttendanceStatusResponse(
+                                    success = true,
+                                    isClockedIn = isClockedIn,
+                                    currentSession = currentSession,
+                                    todaySessions = sessions
+                                )
+                            }
+                        }
+                    } catch (e: Exception) {
+                        try {
+                            val historyResponse = apiService.getMyAttendance()
+                            if (historyResponse.isSuccessful && historyResponse.body() != null) {
+                                val records = historyResponse.body()!!.records
+                                val today = java.time.LocalDate.now()
+                                val todayRecord = records.find { record ->
+                                    try {
+                                        val dateInstant = java.time.Instant.parse(record.date)
+                                        val recordLocalDate = dateInstant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                                        recordLocalDate == today
+                                    } catch (e: Exception) {
+                                        record.date.startsWith(today.toString())
+                                    }
+                                }
+                                val sessions = todayRecord?.sessions ?: emptyList()
+                                val currentSession = sessions.find { it.checkOut == null }
+                                val isClockedIn = currentSession != null
+                                
+                                _attendanceStatus.value = AttendanceStatusResponse(
+                                    success = true,
+                                    isClockedIn = isClockedIn,
+                                    currentSession = currentSession,
+                                    todaySessions = sessions
+                                )
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    try {
+                        val balancesResponse = apiService.getMyLeaveBalances()
+                        if (balancesResponse.isSuccessful) {
+                            _leaveBalances.value = balancesResponse.body()?.balances ?: emptyList()
+                        }
+                    } catch (_: Exception) {}
+                },
+                launch {
+                    try {
+                        val holidaysResponse = apiService.getHolidays()
+                        if (holidaysResponse.isSuccessful) {
+                            _holidays.value = holidaysResponse.body()?.holidays ?: emptyList()
+                        }
+                    } catch (_: Exception) {}
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val leaveResponse = apiService.getAllLeaveRequests("PENDING")
+                            if (leaveResponse.isSuccessful) {
+                                _pendingLeaveRequests.value = leaveResponse.body()?.requests ?: emptyList()
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val joinResponse = apiService.getPendingJoinRequests()
+                            if (joinResponse.isSuccessful) {
+                                _pendingJoinRequests.value = joinResponse.body()?.requests ?: emptyList()
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val statsResponse = apiService.getTodayStats()
+                            if (statsResponse.isSuccessful) {
+                                _todayStats.value = statsResponse.body()?.stats
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val deptResponse = apiService.getDepartments()
+                            if (deptResponse.isSuccessful) {
+                                _departments.value = deptResponse.body()?.departments ?: emptyList()
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                        try {
+                            val employeesResponse = apiService.getEmployees()
+                            if (employeesResponse.isSuccessful) {
+                                val employeeList = employeesResponse.body()?.employees ?: emptyList()
+                                _employees.value = employeeList
+                                _totalEmployees.value = employeesResponse.body()?.total ?: employeeList.size
+                            }
+                        } catch (_: Exception) {}
+                    }
+                },
+                launch {
+                    if (userRole in listOf("Admin", "ADMIN")) {
+                        try {
+                            val activitiesResponse = apiService.getRecentActivities()
+                            if (activitiesResponse.isSuccessful) {
+                                _recentActivities.value = activitiesResponse.body()?.activities ?: emptyList()
+                            }
+                        } catch (_: Exception) {}
+                    }
                 }
-            } catch (_: Exception) {}
+            )
             
-            // Load leave balances
-            try {
-                val balancesResponse = apiService.getMyLeaveBalances()
-                if (balancesResponse.isSuccessful) {
-                    _leaveBalances.value = balancesResponse.body()?.balances ?: emptyList()
-                }
-            } catch (_: Exception) {}
-            
-            // Load holidays
-            try {
-                val holidaysResponse = apiService.getHolidays()
-                if (holidaysResponse.isSuccessful) {
-                    _holidays.value = holidaysResponse.body()?.holidays ?: emptyList()
-                }
-            } catch (_: Exception) {}
-            
-            // Load pending requests for HR/Admin
-            if (_user.value?.role in listOf("ADMIN", "HR_MANAGER")) {
-                try {
-                    val leaveResponse = apiService.getAllLeaveRequests("PENDING")
-                    if (leaveResponse.isSuccessful) {
-                        _pendingLeaveRequests.value = leaveResponse.body()?.requests ?: emptyList()
-                    }
-                } catch (_: Exception) {}
-                
-                try {
-                    val joinResponse = apiService.getPendingJoinRequests()
-                    if (joinResponse.isSuccessful) {
-                        _pendingJoinRequests.value = joinResponse.body()?.requests ?: emptyList()
-                    }
-                } catch (_: Exception) {}
-                
-                // Load today's stats
-                try {
-                    val statsResponse = apiService.getTodayStats()
-                    if (statsResponse.isSuccessful) {
-                        _todayStats.value = statsResponse.body()?.stats
-                    }
-                } catch (_: Exception) {}
-                
-                // Load departments
-                try {
-                    val deptResponse = apiService.getDepartments()
-                    if (deptResponse.isSuccessful) {
-                        _departments.value = deptResponse.body()?.departments ?: emptyList()
-                    }
-                } catch (_: Exception) {}
-            }
-            
-            // Load recent activities for Admin
-            if (_user.value?.role == "ADMIN") {
-                try {
-                    val activitiesResponse = apiService.getRecentActivities()
-                    if (activitiesResponse.isSuccessful) {
-                        _recentActivities.value = activitiesResponse.body()?.activities ?: emptyList()
-                    }
-                } catch (_: Exception) {}
-            }
-            
+            jobs.forEach { it.join() }
             _isLoading.value = false
         }
     }
@@ -146,10 +230,31 @@ class DashboardViewModel @Inject constructor(
             try {
                 val response = apiService.checkIn()
                 if (response.isSuccessful && response.body() != null) {
-                    _clockInOutResult.value = Resource.Success(response.body()!!)
+                    val body = response.body()!!
+                    _clockInOutResult.value = Resource.Success(body)
+                    // Update locally for instant UI update
+                    _attendanceStatus.value = AttendanceStatusResponse(
+                        success = true,
+                        isClockedIn = true,
+                        currentSession = body.session,
+                        todaySessions = _attendanceStatus.value?.todaySessions?.toMutableList()?.apply {
+                            body.session?.let { add(it) }
+                        } ?: emptyList()
+                    )
                     refreshDashboardData()
                 } else {
-                    _clockInOutResult.value = Resource.Error("Failed to clock in")
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage = try {
+                        errorBody?.let {
+                            if (it.contains("message")) {
+                                val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                                regex.find(it)?.groupValues?.get(1) ?: it
+                            } else it
+                        } ?: "Failed to clock in"
+                    } catch (e: Exception) {
+                        errorBody ?: "Failed to clock in"
+                    }
+                    _clockInOutResult.value = Resource.Error(errorMessage)
                 }
             } catch (e: Exception) {
                 _clockInOutResult.value = Resource.Error(e.message ?: "Clock in failed")
@@ -163,10 +268,31 @@ class DashboardViewModel @Inject constructor(
             try {
                 val response = apiService.checkOut()
                 if (response.isSuccessful && response.body() != null) {
-                    _clockInOutResult.value = Resource.Success(response.body()!!)
+                    val body = response.body()!!
+                    _clockInOutResult.value = Resource.Success(body)
+                    // Update locally for instant UI update
+                    _attendanceStatus.value = AttendanceStatusResponse(
+                        success = true,
+                        isClockedIn = false,
+                        currentSession = null,
+                        todaySessions = _attendanceStatus.value?.todaySessions?.map { session ->
+                            if (session.id == body.session?.id) body.session else session
+                        } ?: emptyList()
+                    )
                     refreshDashboardData()
                 } else {
-                    _clockInOutResult.value = Resource.Error("Failed to clock out")
+                    val errorBody = response.errorBody()?.string()
+                    val errorMessage = try {
+                        errorBody?.let {
+                            if (it.contains("message")) {
+                                val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                                regex.find(it)?.groupValues?.get(1) ?: it
+                            } else it
+                        } ?: "Failed to clock out"
+                    } catch (e: Exception) {
+                        errorBody ?: "Failed to clock out"
+                    }
+                    _clockInOutResult.value = Resource.Error(errorMessage)
                 }
             } catch (e: Exception) {
                 _clockInOutResult.value = Resource.Error(e.message ?: "Clock out failed")

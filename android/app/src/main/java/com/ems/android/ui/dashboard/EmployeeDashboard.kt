@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,6 +23,9 @@ import com.ems.android.ui.components.ClockInOutCard
 import com.ems.android.ui.components.LeaveBalanceCard
 import com.ems.android.ui.components.QuickActionButton
 import com.ems.android.ui.components.WelcomeCard
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import com.ems.android.utils.Resource
 import com.ems.android.ui.theme.Primary
 import com.ems.android.ui.theme.Success
 import java.time.LocalDate
@@ -38,9 +42,29 @@ fun EmployeeDashboard(
     val leaveBalances by viewModel.leaveBalances.collectAsState()
     val holidays by viewModel.holidays.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val clockInOutResult by viewModel.clockInOutResult.collectAsState()
+    
+    val context = LocalContext.current
     
     LaunchedEffect(Unit) {
         viewModel.refreshDashboardData()
+    }
+    
+    LaunchedEffect(clockInOutResult) {
+        clockInOutResult?.let { result ->
+            when (result) {
+                is Resource.Success -> {
+                    val msg = result.data?.message ?: "Successfully clocked ${if (result.data?.session?.checkOut == null) "in" else "out"}!"
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                    viewModel.clearClockResult()
+                }
+                is Resource.Error -> {
+                    Toast.makeText(context, "Failed to clock: ${result.message}", Toast.LENGTH_LONG).show()
+                    viewModel.clearClockResult()
+                }
+                else -> {}
+            }
+        }
     }
     
     Column(
@@ -96,7 +120,8 @@ fun EmployeeDashboard(
                 isClockedIn = attendanceStatus?.isClockedIn == true,
                 currentSession = attendanceStatus?.currentSession,
                 onClockIn = { viewModel.clockIn() },
-                onClockOut = { viewModel.clockOut() }
+                onClockOut = { viewModel.clockOut() },
+                isLoading = clockInOutResult is Resource.Loading
             )
             
             // Quick Actions
@@ -106,7 +131,7 @@ fun EmployeeDashboard(
             ) {
                 QuickActionButton(
                     text = "Apply Leave",
-                    icon = Icons.Default.EventNote,
+                    icon = Icons.AutoMirrored.Filled.EventNote,
                     onClick = { },
                     modifier = Modifier.weight(1f)
                 )
@@ -281,7 +306,7 @@ fun EmployeeDashboard(
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(
-                                            Icons.Default.Login,
+                                            Icons.AutoMirrored.Filled.Login,
                                             contentDescription = null,
                                             modifier = Modifier.size(16.dp),
                                             tint = Success
@@ -296,7 +321,7 @@ fun EmployeeDashboard(
                                     session.checkOut?.let { checkOut ->
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             Icon(
-                                                Icons.Default.Logout,
+                                                Icons.AutoMirrored.Filled.Logout,
                                                 contentDescription = null,
                                                 modifier = Modifier.size(16.dp),
                                                 tint = MaterialTheme.colorScheme.error

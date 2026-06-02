@@ -65,6 +65,7 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = DarkSurfaceVariant
 )
 
+@Suppress("DEPRECATION")
 @Composable
 fun EMSProTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
