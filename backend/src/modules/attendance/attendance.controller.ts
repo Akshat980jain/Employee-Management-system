@@ -108,6 +108,18 @@ export class AttendanceController {
         }
     }
 
+    async getTodayStats(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const stats = await attendanceService.getTodayStats(req.user!.organizationId);
+            res.json({
+                success: true,
+                stats: stats,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async createManualAttendance(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const input = createAttendanceSchema.parse(req.body);

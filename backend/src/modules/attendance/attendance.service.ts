@@ -215,6 +215,45 @@ export class AttendanceService {
         }).populate('employeeId', 'firstName lastName employeeId');
     }
 
+    async getTodayStats(organizationId: string) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+
+        // Get all active/probation/on-leave employees in the organization
+        const activeEmployees = await Employee.find({ 
+            organizationId, 
+            status: { $in: ['ACTIVE', 'ON_PROBATION', 'ON_LEAVE', 'HIRED'] } 
+        }).select('_id status');
+        
+        const total = activeEmployees.length;
+        const employeeIds = activeEmployees.map(e => e._id);
+
+        // Get today's attendance records
+        const todayAttendance = await Attendance.find({
+            employeeId: { $in: employeeIds },
+            date: { $gte: today, $lt: tomorrow }
+        });
+
+        // Get today's on-leave count
+        const onLeaveCount = activeEmployees.filter(e => e.status === 'ON_LEAVE').length;
+
+        const presentCount = todayAttendance.filter(r => r.checkIn && r.status !== 'ABSENT').length;
+        const lateCount = todayAttendance.filter(r => r.isLate).length;
+        
+        // Absent are those active employees who are not on leave and have not checked in
+        const checkedInEmployeeIds = new Set(todayAttendance.filter(r => r.checkIn).map(r => r.employeeId.toString()));
+        const absentCount = activeEmployees.filter(e => e.status !== 'ON_LEAVE' && !checkedInEmployeeIds.has(e._id.toString())).length;
+
+        return {
+            present: presentCount,
+            absent: Math.max(0, absentCount),
+            onLeave: onLeaveCount,
+            late: lateCount,
+            total: total
+        };
+    }
+
     async createManualAttendance(organizationId: string, input: CreateAttendanceInput) {
         return Attendance.create(input);
     }

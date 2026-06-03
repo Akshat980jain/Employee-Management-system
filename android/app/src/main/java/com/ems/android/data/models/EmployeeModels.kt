@@ -10,7 +10,7 @@ data class EmployeeDetail(
     @Json(name = "firstName") val firstName: String,
     @Json(name = "lastName") val lastName: String,
     @Json(name = "email") val email: String,
-    @Json(name = "role") val role: String,
+    @Json(name = "role") val role: String? = null,
     @Json(name = "phone") val phone: String? = null,
     @Json(name = "avatar") val avatar: String? = null,
     @Json(name = "department") val department: DepartmentDetails? = null,
@@ -31,9 +31,29 @@ data class EmployeeDetailResponse(
 @JsonClass(generateAdapter = true)
 data class EmployeeListResponse(
     @Json(name = "success") val success: Boolean,
+    @Json(name = "data") val data: EmployeeListResponseData? = null
+) {
+    val employees: List<EmployeeDetail>
+        get() = data?.employees ?: emptyList()
+        
+    val total: Int
+        get() = data?.pagination?.total ?: data?.employees?.size ?: 0
+}
+
+@JsonClass(generateAdapter = true)
+data class EmployeeListResponseData(
     @Json(name = "employees") val employees: List<EmployeeDetail> = emptyList(),
-    @Json(name = "total") val total: Int = 0
+    @Json(name = "pagination") val pagination: EmployeePagination? = null
 )
+
+@JsonClass(generateAdapter = true)
+data class EmployeePagination(
+    @Json(name = "total") val total: Int = 0,
+    @Json(name = "page") val page: Int = 1,
+    @Json(name = "limit") val limit: Int = 20,
+    @Json(name = "totalPages") val totalPages: Int = 1
+)
+
 
 // Create/Update Employee Request
 @JsonClass(generateAdapter = true)

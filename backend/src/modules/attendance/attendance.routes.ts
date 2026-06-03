@@ -16,6 +16,7 @@ router.get('/my', attendanceController.getMyAttendance.bind(attendanceController
 // Admin routes
 router.get('/', authorizeAny('attendance:read'), attendanceController.getAttendance.bind(attendanceController));
 router.get('/today', authorizeAny('attendance:read'), attendanceController.getTodayAttendance.bind(attendanceController));
+router.get('/today-stats', authorizeAny('attendance:read'), attendanceController.getTodayStats.bind(attendanceController));
 router.get('/stats', authorizeAny('attendance:read'), attendanceController.getStats.bind(attendanceController));
 router.get('/staff-monitoring', authorizeAny('attendance:read'), attendanceController.getStaffMonitoring.bind(attendanceController));
 router.post('/', authorize('attendance:create'), attendanceController.createManualAttendance.bind(attendanceController));

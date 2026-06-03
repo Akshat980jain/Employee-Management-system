@@ -56,7 +56,7 @@ data class DepartmentDetails(
 @JsonClass(generateAdapter = true)
 data class DepartmentsResponse(
     @Json(name = "success") val success: Boolean,
-    @Json(name = "departments") val departments: List<DepartmentDetails> = emptyList()
+    @Json(name = "data") val departments: List<DepartmentDetails> = emptyList()
 )
 
 // Generic API Response

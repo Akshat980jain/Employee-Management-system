@@ -1,5 +1,6 @@
 package com.ems.android.ui.dashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ems.android.data.api.ApiService
@@ -16,6 +17,10 @@ class DashboardViewModel @Inject constructor(
     private val apiService: ApiService,
     private val tokenManager: TokenManager
 ) : ViewModel() {
+    
+    companion object {
+        private const val TAG = "DashboardViewModel"
+    }
     
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user.asStateFlow()
@@ -76,7 +81,11 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             
-            val userRole = _user.value?.role
+            val roleStr = _user.value?.role?.uppercase()
+            val isAdminOrHR = roleStr == null || roleStr in listOf("ADMIN", "HR_MANAGER", "HR MANAGER", "ADMINISTRATOR")
+            val isAdmin = roleStr == null || roleStr == "ADMIN" || roleStr == "ADMINISTRATOR"
+            Log.d(TAG, "refreshDashboardData: user=${_user.value?.email}, roleStr=$roleStr, isAdminOrHR=$isAdminOrHR")
+            
             val jobs = listOf(
                 launch {
                     try {
@@ -111,6 +120,7 @@ class DashboardViewModel @Inject constructor(
                             }
                         }
                     } catch (e: Exception) {
+                        Log.e(TAG, "getAttendanceStatus failed, trying fallback", e)
                         try {
                             val historyResponse = apiService.getMyAttendance()
                             if (historyResponse.isSuccessful && historyResponse.body() != null) {
@@ -136,7 +146,9 @@ class DashboardViewModel @Inject constructor(
                                     todaySessions = sessions
                                 )
                             }
-                        } catch (_: Exception) {}
+                        } catch (e2: Exception) {
+                            Log.e(TAG, "getMyAttendance fallback also failed", e2)
+                        }
                     }
                 },
                 launch {
@@ -145,7 +157,7 @@ class DashboardViewModel @Inject constructor(
                         if (balancesResponse.isSuccessful) {
                             _leaveBalances.value = balancesResponse.body()?.balances ?: emptyList()
                         }
-                    } catch (_: Exception) {}
+                    } catch (e: Exception) { Log.e(TAG, "getMyLeaveBalances failed", e) }
                 },
                 launch {
                     try {
@@ -153,68 +165,77 @@ class DashboardViewModel @Inject constructor(
                         if (holidaysResponse.isSuccessful) {
                             _holidays.value = holidaysResponse.body()?.holidays ?: emptyList()
                         }
-                    } catch (_: Exception) {}
+                    } catch (e: Exception) { Log.e(TAG, "getHolidays failed", e) }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                    if (isAdminOrHR) {
                         try {
                             val leaveResponse = apiService.getAllLeaveRequests("PENDING")
                             if (leaveResponse.isSuccessful) {
                                 _pendingLeaveRequests.value = leaveResponse.body()?.requests ?: emptyList()
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getAllLeaveRequests failed", e) }
                     }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                    if (isAdminOrHR) {
                         try {
                             val joinResponse = apiService.getPendingJoinRequests()
                             if (joinResponse.isSuccessful) {
                                 _pendingJoinRequests.value = joinResponse.body()?.requests ?: emptyList()
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getPendingJoinRequests failed", e) }
                     }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                    if (isAdminOrHR) {
                         try {
                             val statsResponse = apiService.getTodayStats()
+                            Log.d(TAG, "getTodayStats response: isSuccessful=${statsResponse.isSuccessful}, code=${statsResponse.code()}, body=${statsResponse.body()}")
                             if (statsResponse.isSuccessful) {
                                 _todayStats.value = statsResponse.body()?.stats
+                            } else {
+                                Log.e(TAG, "getTodayStats failed: ${statsResponse.code()} ${statsResponse.errorBody()?.string()}")
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getTodayStats exception", e) }
                     }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                    if (isAdminOrHR) {
                         try {
                             val deptResponse = apiService.getDepartments()
+                            Log.d(TAG, "getDepartments response: isSuccessful=${deptResponse.isSuccessful}, code=${deptResponse.code()}, depts=${deptResponse.body()?.departments?.size}")
                             if (deptResponse.isSuccessful) {
                                 _departments.value = deptResponse.body()?.departments ?: emptyList()
+                            } else {
+                                Log.e(TAG, "getDepartments failed: ${deptResponse.code()} ${deptResponse.errorBody()?.string()}")
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getDepartments exception", e) }
                     }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")) {
+                    if (isAdminOrHR) {
                         try {
                             val employeesResponse = apiService.getEmployees()
+                            Log.d(TAG, "getEmployees response: isSuccessful=${employeesResponse.isSuccessful}, code=${employeesResponse.code()}, employees=${employeesResponse.body()?.employees?.size}, total=${employeesResponse.body()?.total}")
                             if (employeesResponse.isSuccessful) {
                                 val employeeList = employeesResponse.body()?.employees ?: emptyList()
                                 _employees.value = employeeList
                                 _totalEmployees.value = employeesResponse.body()?.total ?: employeeList.size
+                            } else {
+                                Log.e(TAG, "getEmployees failed: ${employeesResponse.code()} ${employeesResponse.errorBody()?.string()}")
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getEmployees exception", e) }
                     }
                 },
                 launch {
-                    if (userRole in listOf("Admin", "ADMIN")) {
+                    if (isAdmin) {
                         try {
                             val activitiesResponse = apiService.getRecentActivities()
                             if (activitiesResponse.isSuccessful) {
                                 _recentActivities.value = activitiesResponse.body()?.activities ?: emptyList()
                             }
-                        } catch (_: Exception) {}
+                        } catch (e: Exception) { Log.e(TAG, "getRecentActivities failed", e) }
                     }
                 }
             )

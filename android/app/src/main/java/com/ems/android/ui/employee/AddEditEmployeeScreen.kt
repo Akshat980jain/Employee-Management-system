@@ -51,7 +51,7 @@ fun AddEditEmployeeScreen(
             lastName = selectedEmployee!!.lastName
             email = selectedEmployee!!.email
             phone = selectedEmployee!!.phone ?: ""
-            selectedRole = selectedEmployee!!.role
+            selectedRole = selectedEmployee!!.role ?: "EMPLOYEE"
             selectedDepartment = selectedEmployee!!.department
         }
     }
