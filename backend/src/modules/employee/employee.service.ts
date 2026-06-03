@@ -28,7 +28,7 @@ export class EmployeeService {
         const limit = filters?.limit || 20;
         const skip = (page - 1) * limit;
 
-        const [employees, total] = await Promise.all([
+        const [employeesRaw, total] = await Promise.all([
             Employee.find(query)
                 .populate('departmentId', 'name')
                 .populate('managerId', 'firstName lastName')
@@ -36,9 +36,15 @@ export class EmployeeService {
                 .skip(skip)
                 .limit(limit)
                 .sort({ createdAt: -1 })
-                .select('-__v'),
+                .select('-__v')
+                .lean(),
             Employee.countDocuments(query),
         ]);
+
+        const employees = employeesRaw.map((emp: any) => ({
+            ...emp,
+            avatar: emp.userId?.avatar || null
+        }));
 
         return {
             employees,
@@ -52,10 +58,19 @@ export class EmployeeService {
     }
 
     async getEmployee(employeeId: string, organizationId: string) {
-        return Employee.findOne({ _id: employeeId, organizationId })
+        const employee = await Employee.findOne({ _id: employeeId, organizationId })
             .populate('departmentId', 'name')
             .populate('managerId', 'firstName lastName email')
-            .select('-__v');
+            .populate('userId', 'avatar')
+            .select('-__v')
+            .lean();
+
+        if (!employee) return null;
+
+        return {
+            ...employee,
+            avatar: (employee as any).userId?.avatar || null
+        };
     }
 
     async createEmployee(organizationId: string, input: CreateEmployeeInput) {

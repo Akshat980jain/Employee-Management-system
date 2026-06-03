@@ -1,9 +1,12 @@
 package com.ems.android.ui.employee
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
@@ -11,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,21 +36,6 @@ fun EmployeeListScreen(
     val selectedDepartment by viewModel.selectedDepartment.collectAsState()
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Employees") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { viewModel.loadEmployees() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddEmployee) {
                 Icon(Icons.Default.PersonAdd, contentDescription = "Add Employee")
@@ -58,6 +47,46 @@ fun EmployeeListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Compact Header Row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = onNavigateBack,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(4.dp))
+                
+                Text(
+                    text = "Employees",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f)
+                )
+                
+                IconButton(
+                    onClick = { viewModel.loadEmployees() },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "Refresh",
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
             // Search Bar
             OutlinedTextField(
                 value = searchQuery,
@@ -126,9 +155,12 @@ fun EmployeeListScreen(
                     }
                 }
             } else {
-                LazyColumn(
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     items(employees) { employee ->
                         EmployeeCard(
@@ -149,91 +181,116 @@ fun EmployeeCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        onClick = onClick
+        onClick = onClick,
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Avatar
-            Card(
-                modifier = Modifier.size(48.dp),
-                shape = MaterialTheme.shapes.extraLarge
+            // Avatar/Initials Block at the top (styled like the web screen cards)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .background(
+                        color = when (employee.role) {
+                            "ADMIN" -> Color(0xFF6366F1) // Indigo
+                            "HR_MANAGER" -> Color(0xFF8B5CF6) // Violet
+                            else -> Color(0xFF8B5CF6) // Default purple
+                        }
+                    ),
+                contentAlignment = Alignment.Center
             ) {
                 if (employee.avatar != null) {
                     AsyncImage(
                         model = employee.avatar,
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = androidx.compose.ui.layout.ContentScale.Crop
                     )
                 } else {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "${employee.firstName.firstOrNull() ?: ""}${employee.lastName.firstOrNull() ?: ""}",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    Text(
+                        text = "${employee.firstName.firstOrNull() ?: ""}${employee.lastName.firstOrNull() ?: ""}".uppercase(),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
             }
             
-            Spacer(modifier = Modifier.width(16.dp))
-            
-            Column(modifier = Modifier.weight(1f)) {
+            // Text Details below
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "${employee.firstName} ${employee.lastName}",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
+                
+                Spacer(modifier = Modifier.height(2.dp))
+                
                 Text(
-                    text = employee.email,
+                    text = when (employee.role) {
+                        "ADMIN" -> "Administrator"
+                        "HR_MANAGER" -> "HR Manager"
+                        else -> "Employee"
+                    },
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                
+                Spacer(modifier = Modifier.height(6.dp))
+                
+                // Status Badge (ACTIVE / INACTIVE)
+                val isActive = employee.status == "ACTIVE"
+                Surface(
+                    shape = MaterialTheme.shapes.extraSmall,
+                    color = if (isActive) Color(0xFFE6F4EA) else Color(0xFFFCE8E6),
+                    modifier = Modifier.padding(bottom = 8.dp)
                 ) {
-                    employee.department?.let { dept ->
-                        AssistChip(
-                            onClick = { },
-                            label = { Text(dept.name, style = MaterialTheme.typography.labelSmall) },
-                            modifier = Modifier.height(24.dp)
-                        )
-                    }
                     Text(
-                        text = when (employee.role) {
-                            "ADMIN" -> "Admin"
-                            "HR_MANAGER" -> "HR"
-                            else -> "Employee"
-                        },
+                        text = if (isActive) "ACTIVE" else "INACTIVE",
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = if (isActive) Color(0xFF137333) else Color(0xFFC5221F),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                // Email contact info
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = employee.email,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 }
             }
-            
-            // Status Indicator
-            if (employee.status != "ACTIVE") {
-                Icon(
-                    Icons.Default.Block,
-                    contentDescription = "Inactive",
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            
-            Icon(
-                Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
     }
 }
