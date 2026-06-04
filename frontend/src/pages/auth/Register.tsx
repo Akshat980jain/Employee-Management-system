@@ -3,22 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ShieldAlert, Briefcase, BadgeInfo, Check, ChevronDown, Plus, UserPlus } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { PublicOrganization } from '../../types';
-import api from '../../services/api';
+import api, { getErrorMessage } from '../../services/api';
 import toast from 'react-hot-toast';
+import logo from '../../logo.png';
 import styles from './Register.module.css';
 
 // Reusable custom node-link logo matching the images
 const ProEmpowerLogo = ({ size = 28 }: { size?: number }) => (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="32" height="32" rx="8" fill="#2E31E6" />
-        <circle cx="16" cy="16" r="3.5" stroke="white" strokeWidth="2.5" />
-        <circle cx="10" cy="10" r="2.5" stroke="white" strokeWidth="2" />
-        <circle cx="22" cy="10" r="2.5" stroke="white" strokeWidth="2" />
-        <circle cx="16" cy="23" r="2.5" stroke="white" strokeWidth="2" />
-        <line x1="11.5" y1="11.5" x2="13.5" y2="13.5" stroke="white" strokeWidth="2" />
-        <line x1="20.5" y1="11.5" x2="18.5" y2="13.5" stroke="white" strokeWidth="2" />
-        <line x1="16" y1="20.5" x2="16" y2="18.5" stroke="white" strokeWidth="2" />
-    </svg>
+    <img src={logo} alt="StaffSphere Logo" style={{ width: size, height: size, objectFit: 'contain', borderRadius: '6px' }} />
 );
 
 const Register = () => {
@@ -127,7 +119,7 @@ const Register = () => {
                 navigate('/dashboard');
             }
         } catch (error: any) {
-            toast.error(error.response?.data?.error?.message || 'Registration failed');
+            toast.error(getErrorMessage(error, 'Registration failed'));
         }
     };
 

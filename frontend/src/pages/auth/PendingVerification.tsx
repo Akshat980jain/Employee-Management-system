@@ -4,6 +4,7 @@ import { Clock, CheckCircle, XCircle, LogOut, RefreshCw, Building } from 'lucide
 import { useAuthStore } from '../../store/authStore';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
+import logo from '../../logo.png';
 import styles from './PendingVerification.module.css';
 
 interface JoinRequestInfo {
@@ -107,8 +108,8 @@ const PendingVerification = () => {
         <div className={styles.container}>
             <div className={styles.card}>
                 <div className={styles.header}>
-                    <div className={styles.logoSection}>
-                        <span className={styles.dots}>●●●</span>
+                    <div className={styles.logoSection} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img src={logo} alt="StaffSphere Logo" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '6px' }} />
                         <span className={styles.logoText}>StaffSphere</span>
                     </div>
                 </div>

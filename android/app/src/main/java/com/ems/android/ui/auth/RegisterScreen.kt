@@ -1,6 +1,9 @@
 package com.ems.android.ui.auth
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.ems.android.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -100,33 +103,13 @@ val GoogleIconVectorRegister = ImageVector.Builder(
 
 @Composable
 fun ProEmpowerLogoRegister(modifier: Modifier = Modifier, size: Dp = 28.dp) {
-    Box(
+    Image(
+        painter = painterResource(id = R.drawable.logo),
+        contentDescription = "StaffSphere Logo",
         modifier = modifier
             .size(size)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF2E31E6)),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize().padding(4.dp)) {
-            val w = this.size.width
-            val h = this.size.height
-            val center = Offset(w / 2f, h / 2f)
-            val tl = Offset(w * 0.3125f, h * 0.3125f)
-            val tr = Offset(w * 0.6875f, h * 0.3125f)
-            val b = Offset(w * 0.5f, h * 0.71875f)
-            
-            // Draw lines between nodes
-            drawLine(color = Color.White, start = tl, end = center, strokeWidth = 1.5.dp.toPx())
-            drawLine(color = Color.White, start = tr, end = center, strokeWidth = 1.5.dp.toPx())
-            drawLine(color = Color.White, start = b, end = center, strokeWidth = 1.5.dp.toPx())
-            
-            // Draw circular nodes
-            drawCircle(color = Color.White, center = center, radius = w * 0.14f, style = Stroke(width = 2.dp.toPx()))
-            drawCircle(color = Color.White, center = tl, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
-            drawCircle(color = Color.White, center = tr, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
-            drawCircle(color = Color.White, center = b, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
-        }
-    }
+    )
 }
 
 data class RoleCardOption(

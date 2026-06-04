@@ -65,4 +65,21 @@ api.interceptors.response.use(
     }
 );
 
+export function getErrorMessage(error: any, fallback: string = 'Request failed'): string {
+    const responseData = error?.response?.data;
+    if (responseData) {
+        if (typeof responseData === 'object' && responseData.error?.message) {
+            return responseData.error.message;
+        }
+        if (typeof responseData === 'string') {
+            if (responseData.includes('<!DOCTYPE html>') || responseData.includes('<html')) {
+                const status = error.response?.status ? ` (${error.response.status})` : '';
+                return `Server is temporarily unavailable${status}. Please try again later.`;
+            }
+            return responseData;
+        }
+    }
+    return error?.message || fallback;
+}
+
 export default api;

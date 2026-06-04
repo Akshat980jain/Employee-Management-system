@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import logo from '../../logo.png';
 import {
     LayoutDashboard,
     Users,
@@ -240,8 +241,8 @@ const Sidebar = () => {
 
             {/* Company Branding */}
             <div className={styles.branding}>
-                <div className={styles.brandingLogo}>
-                    <span>●●●</span>
+                <div className={styles.brandingLogo} style={{ background: 'transparent' }}>
+                    <img src={logo} alt="StaffSphere Logo" style={{ width: '24px', height: '24px', objectFit: 'contain', borderRadius: '4px' }} />
                 </div>
                 <span className={styles.brandingName}>StaffSphere</span>
                 <span className={styles.brandingVersion}>v1.0.0</span>
