@@ -1,24 +1,33 @@
 package com.ems.android.ui.auth
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -26,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +45,144 @@ import com.ems.android.ui.components.ErrorType
 import com.ems.android.ui.theme.GradientEnd
 import com.ems.android.ui.theme.GradientStart
 import com.ems.android.ui.theme.Primary
+
+// Reusable Google G icon vector matching the web version
+val GoogleIconVector = ImageVector.Builder(
+    name = "GoogleIcon",
+    defaultWidth = 18.dp,
+    defaultHeight = 18.dp,
+    viewportWidth = 18f,
+    viewportHeight = 18f
+).apply {
+    path(fill = SolidColor(Color(0xFF4285F4))) {
+        moveTo(16.51f, 8f)
+        horizontalLineTo(8.98f)
+        verticalLineTo(11.0f)
+        horizontalLineTo(13.28f)
+        curveTo(13.1f, 12.0f, 12.54f, 12.48f, 11.68f, 13.04f)
+        verticalLineTo(15.05f)
+        horizontalLineTo(14.28f)
+        curveTo(15.78f, 13.67f, 16.66f, 11.62f, 16.66f, 9.18f)
+        curveTo(16.66f, 8.61f, 16.61f, 8.52f, 16.51f, 8.0f)
+        close()
+    }
+    path(fill = SolidColor(Color(0xFF34A853))) {
+        moveTo(8.98f, 17f)
+        curveTo(11.14f, 17f, 12.95f, 16.28f, 14.28f, 15.06f)
+        lineTo(11.68f, 13.06f)
+        curveTo(10.96f, 13.54f, 10.06f, 13.82f, 8.98f, 13.82f)
+        curveTo(6.89f, 13.82f, 5.12f, 12.41f, 4.49f, 10.52f)
+        horizontalLineTo(1.83f)
+        verticalLineTo(12.59f)
+        curveTo(3.18f, 15.27f, 5.96f, 17f, 8.98f, 17f)
+        close()
+    }
+    path(fill = SolidColor(Color(0xFFFBBC05))) {
+        moveTo(4.49f, 10.52f)
+        curveTo(4.33f, 10.04f, 4.24f, 9.53f, 4.24f, 9.0f)
+        curveTo(4.24f, 8.47f, 4.33f, 7.96f, 4.49f, 7.48f)
+        verticalLineTo(5.41f)
+        horizontalLineTo(1.83f)
+        curveTo(1.29f, 6.49f, 0.98f, 7.71f, 0.98f, 9.0f)
+        curveTo(0.98f, 10.29f, 1.29f, 11.51f, 1.83f, 12.59f)
+        lineTo(4.49f, 10.52f)
+        close()
+    }
+    path(fill = SolidColor(Color(0xFFEA4335))) {
+        moveTo(8.98f, 3.58f)
+        curveTo(10.3f, 3.58f, 11.48f, 4.03f, 12.42f, 4.93f)
+        lineTo(15.0f, 2.34f)
+        curveTo(13.43f, 0.89f, 11.43f, 0f, 8.98f, 0f)
+        curveTo(5.96f, 0f, 3.18f, 1.73f, 1.83f, 4.41f)
+        lineTo(4.49f, 6.48f)
+        curveTo(5.12f, 4.59f, 6.89f, 3.58f, 8.98f, 3.58f)
+        close()
+    }
+}.build()
+
+@Composable
+fun ProEmpowerLogo(modifier: Modifier = Modifier, size: Dp = 32.dp) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF2E31E6)),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize().padding(4.dp)) {
+            val w = this.size.width
+            val h = this.size.height
+            val center = Offset(w / 2f, h / 2f)
+            val tl = Offset(w * 0.3125f, h * 0.3125f)
+            val tr = Offset(w * 0.6875f, h * 0.3125f)
+            val b = Offset(w * 0.5f, h * 0.71875f)
+            
+            // Draw lines between nodes
+            drawLine(color = Color.White, start = tl, end = center, strokeWidth = 1.5.dp.toPx())
+            drawLine(color = Color.White, start = tr, end = center, strokeWidth = 1.5.dp.toPx())
+            drawLine(color = Color.White, start = b, end = center, strokeWidth = 1.5.dp.toPx())
+            
+            // Draw circular nodes
+            drawCircle(color = Color.White, center = center, radius = w * 0.14f, style = Stroke(width = 2.dp.toPx()))
+            drawCircle(color = Color.White, center = tl, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
+            drawCircle(color = Color.White, center = tr, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
+            drawCircle(color = Color.White, center = b, radius = w * 0.10f, style = Stroke(width = 1.5.dp.toPx()))
+        }
+    }
+}
+
+@Composable
+fun FeatureItemCompose(
+    icon: ImageVector,
+    title: String,
+    desc: String,
+    isDark: Boolean
+) {
+    val iconWrapperBg = if (isDark) Color(0xFF1E293B) else Color.White
+    val iconWrapperBorder = if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0)
+    val iconTint = if (isDark) Color(0xFF818CF8) else Color(0xFF2E31E6)
+    val textColorPrimary = if (isDark) Color.White else Color(0xFF0F172A)
+    val textColorSecondary = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(iconWrapperBg)
+                .border(1.dp, iconWrapperBorder, RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconTint,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = textColorPrimary,
+                    fontSize = 14.sp
+                )
+            )
+            Text(
+                text = desc,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = textColorSecondary,
+                    fontSize = 12.sp
+                )
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +197,30 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
+    
+    // Dynamic theme state detection
+    val isDark = isSystemInDarkTheme()
+    
+    val pageBg = if (isDark) Color(0xFF0F172A) else Color(0xFFF8FAFC)
+    val cardBg = if (isDark) Color(0xFF1E293B) else Color.White
+    val topSectionBg = if (isDark) Color(0xFF151F32) else Color(0xFFF8FAFC)
+    val dividerColor = if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0)
+    val textColorPrimary = if (isDark) Color.White else Color(0xFF0F172A)
+    val textColorSecondary = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
+    val inputLabelColor = if (isDark) Color(0xFFCBD5E1) else Color(0xFF334155)
+    
+    val inputBg = if (isDark) Color(0xFF0F172A) else Color.White
+    val inputBorder = if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0)
+    val inputFocusedBorder = if (isDark) Color(0xFF818CF8) else Color(0xFF2E31E6)
+    val inputText = if (isDark) Color.White else Color(0xFF0F172A)
+    val inputPlaceholder = if (isDark) Color(0xFF64748B) else Color(0xFF94A3B8)
+    
+    val checkboxBorder = if (isDark) Color(0xFF818CF8) else Color(0xFF2E31E6)
+    val checkboxUnselectedBorder = if (isDark) Color(0xFF475569) else Color(0xFFCBD5E1)
+    val checkboxDot = if (isDark) Color(0xFF818CF8) else Color(0xFF2E31E6)
+    
+    val buttonBg = if (isDark) Color(0xFF4F46E5) else Color(0xFF2E31E6)
+    val linkText = if (isDark) Color(0xFF818CF8) else Color(0xFF2E31E6)
     
     // Show error dialog when error occurs
     LaunchedEffect(state.error) {
@@ -93,96 +265,256 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(pageBg)
+            .verticalScroll(rememberScrollState())
+            .padding(vertical = 40.dp, horizontal = 16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .widthIn(max = 440.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = cardBg),
+            border = BorderStroke(1.dp, dividerColor),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
-            
-            // Logo Icon
-            Box(
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(MaterialTheme.shapes.large)
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(GradientStart, GradientEnd)
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "E",
-                    style = MaterialTheme.typography.displayMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // App Title
-            Text(
-                text = "Enterprise EMS",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = Primary
-            )
-            
-            Text(
-                text = "Employee Management System",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            
-            Spacer(modifier = Modifier.height(48.dp))
-            
-            // Login Card
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Top Section
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(topSectionBg)
                         .padding(24.dp)
                 ) {
+                    // Branding Row
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        ProEmpowerLogo(size = 32.dp)
+                        Text(
+                            text = "ProEmpower",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = textColorPrimary,
+                                fontSize = 20.sp,
+                                letterSpacing = (-0.5).sp
+                            )
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(36.dp))
+                    
+                    // Hero Statement
                     Text(
-                        text = "Welcome Back",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = "Empowering the modern workforce.",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = textColorPrimary,
+                            fontSize = 24.sp,
+                            lineHeight = 30.sp,
+                            letterSpacing = (-0.5).sp
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "A unified platform for performance, engagement, and AI-driven growth insights.",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = textColorSecondary,
+                            lineHeight = 20.sp
+                        )
                     )
                     
+                    Spacer(modifier = Modifier.height(36.dp))
+                    
+                    // Features list
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(18.dp)
+                    ) {
+                        FeatureItemCompose(
+                            icon = Icons.Default.Groups,
+                            title = "Integrated Management",
+                            desc = "Seamless employee lifecycles",
+                            isDark = isDark
+                        )
+                        FeatureItemCompose(
+                            icon = Icons.AutoMirrored.Filled.TrendingUp,
+                            title = "Dynamic Reviews",
+                            desc = "Data-backed performance tracking",
+                            isDark = isDark
+                        )
+                        FeatureItemCompose(
+                            icon = Icons.Default.AutoAwesome,
+                            title = "AI Insights",
+                            desc = "Predictive talent analytics",
+                            isDark = isDark
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(36.dp))
+                    
+                    // Stats Row
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(36.dp)
+                    ) {
+                        Column {
+                            Text(
+                                text = "500+",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = textColorPrimary,
+                                    fontSize = 22.sp
+                                )
+                            )
+                            Text(
+                                text = "ENTERPRISES",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = textColorSecondary,
+                                    letterSpacing = 1.sp,
+                                    fontSize = 9.sp
+                                )
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .width(1.dp)
+                                .height(28.dp)
+                                .background(dividerColor)
+                        )
+                        Column {
+                            Text(
+                                text = "99.9%",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = textColorPrimary,
+                                    fontSize = 22.sp
+                                )
+                            )
+                            Text(
+                                text = "RELIABILITY",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = textColorSecondary,
+                                    letterSpacing = 1.sp,
+                                    fontSize = 9.sp
+                                )
+                            )
+                        }
+                    }
+                }
+                
+                // Horizontal Divider Line separating top and bottom halves
+                HorizontalDivider(color = dividerColor, thickness = 1.dp)
+                
+                // Bottom Section
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(cardBg)
+                        .padding(24.dp)
+                ) {
+                    // Sign-in Header
                     Text(
                         text = "Sign in to your account",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = textColorPrimary,
+                            fontSize = 22.sp,
+                            letterSpacing = (-0.5).sp
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Enter your workspace credentials to continue.",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = textColorSecondary,
+                            fontSize = 14.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
                     )
                     
                     Spacer(modifier = Modifier.height(24.dp))
                     
-                    // Email Field
+                    // Continue with Google Button
+                    OutlinedButton(
+                        onClick = { /* Google Sign In stub */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, dividerColor),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = cardBg,
+                            contentColor = textColorPrimary
+                        )
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = GoogleIconVector,
+                                contentDescription = null,
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = "Continue with Google",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 14.sp,
+                                    color = textColorPrimary
+                                )
+                            )
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // OR divider
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = dividerColor, thickness = 1.dp)
+                        Text(
+                            text = "WORK EMAIL",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = textColorSecondary,
+                                letterSpacing = 1.sp,
+                                fontSize = 10.sp
+                            ),
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        HorizontalDivider(modifier = Modifier.weight(1f), color = dividerColor, thickness = 1.dp)
+                    }
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // Work Email Field
+                    Text(
+                        text = "Work Email",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = inputLabelColor,
+                            fontSize = 14.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = { viewModel.updateLoginEmail(it) },
-                        label = { Text("Email Address") },
-                        leadingIcon = { 
-                            Icon(
-                                Icons.Default.Email, 
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            ) 
-                        },
+                        placeholder = { Text("name@company.com", color = inputPlaceholder) },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -192,34 +524,56 @@ fun LoginScreen(
                             onNext = { focusManager.moveFocus(FocusDirection.Down) }
                         ),
                         singleLine = true,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = RoundedCornerShape(8.dp),
                         isError = state.error != null,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            focusedTextColor = inputText,
+                            unfocusedTextColor = inputText,
+                            focusedContainerColor = inputBg,
+                            unfocusedContainerColor = inputBg,
+                            focusedBorderColor = inputFocusedBorder,
+                            unfocusedBorderColor = inputBorder,
+                            errorBorderColor = MaterialTheme.colorScheme.error
                         )
                     )
                     
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     
                     // Password Field
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Password",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = inputLabelColor,
+                                fontSize = 14.sp
+                            )
+                        )
+                        Text(
+                            text = "Forgot?",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = linkText,
+                                fontSize = 14.sp
+                            ),
+                            modifier = Modifier.clickable { /* Forgot password stub */ }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = state.password,
                         onValueChange = { viewModel.updateLoginPassword(it) },
-                        label = { Text("Password") },
-                        leadingIcon = { 
-                            Icon(
-                                Icons.Default.Lock, 
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            ) 
-                        },
+                        placeholder = { Text("••••••••", color = inputPlaceholder) },
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
-                                    if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                    imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                                     contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    tint = inputPlaceholder
                                 )
                             }
                         },
@@ -236,104 +590,156 @@ fun LoginScreen(
                             }
                         ),
                         singleLine = true,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = RoundedCornerShape(8.dp),
                         isError = state.error != null,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            focusedTextColor = inputText,
+                            unfocusedTextColor = inputText,
+                            focusedContainerColor = inputBg,
+                            unfocusedContainerColor = inputBg,
+                            focusedBorderColor = inputFocusedBorder,
+                            unfocusedBorderColor = inputBorder,
+                            errorBorderColor = MaterialTheme.colorScheme.error
                         )
                     )
                     
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     
-                    // Remember me & Forgot Password Row
+                    // Circular Checkbox Custom Implementation
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { rememberMe = !rememberMe }
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = rememberMe,
-                                onCheckedChange = { rememberMe = it },
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = Primary
+                        Box(
+                            modifier = Modifier
+                                .size(18.dp)
+                                .border(
+                                    width = 1.5.dp,
+                                    color = if (rememberMe) checkboxBorder else checkboxUnselectedBorder,
+                                    shape = CircleShape
                                 )
-                            )
-                            Text(
-                                text = "Remember me",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                                .background(inputBg, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (rememberMe) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .background(checkboxDot, CircleShape)
+                                )
+                            }
                         }
-                        
-                        TextButton(onClick = { /* TODO: Forgot password */ }) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Keep me signed in",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = inputLabelColor,
+                                fontSize = 14.sp
+                            )
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // Sign In Button
+                    Button(
+                        onClick = { viewModel.login() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        enabled = !state.isLoading,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = buttonBg,
+                            contentColor = Color.White,
+                            disabledContainerColor = buttonBg.copy(alpha = 0.5f),
+                            disabledContentColor = Color.White.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        if (state.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
                             Text(
-                                text = "Forgot Password?",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Primary
+                                text = "Sign In",
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
+                                )
                             )
                         }
                     }
                     
                     Spacer(modifier = Modifier.height(24.dp))
                     
-                    // Login Button with gradient
-                    Button(
-                        onClick = { viewModel.login() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        enabled = !state.isLoading,
-                        shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Primary
-                        )
+                    // Register Link
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (state.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                strokeWidth = 2.dp
+                        Text(
+                            text = "New to ProEmpower? ",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = textColorSecondary,
+                                fontSize = 14.sp
                             )
-                        } else {
+                        )
+                        Text(
+                            text = "Create an account",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = linkText,
+                                fontSize = 14.sp
+                            ),
+                            modifier = Modifier.clickable { onNavigateToRegister() }
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(40.dp))
+                    
+                    // Footer Badge
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = null,
+                                tint = textColorSecondary,
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "LOGIN",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                letterSpacing = 1.sp
+                                text = "Enterprise SSO & Encryption Enabled",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = textColorSecondary,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
                             )
                         }
+                        Text(
+                            text = "© 2024 ProEmpower. All rights reserved.",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = if (isDark) Color(0xFF475569) else Color(0xFF94A3B8),
+                                fontSize = 12.sp
+                            )
+                        )
                     }
                 }
             }
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Register Link
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Don't have an account? ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                TextButton(onClick = onNavigateToRegister) {
-                    Text(
-                        text = "Sign Up",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Primary
-                    )
-                }
-            }
-            
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

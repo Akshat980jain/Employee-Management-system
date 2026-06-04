@@ -1,11 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Shield, Users, BarChart3, Lock, UserCircle, Building, ChevronDown, Plus, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, ShieldAlert, Briefcase, BadgeInfo, Check, ChevronDown, Plus, UserPlus } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { PublicOrganization } from '../../types';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import styles from './Register.module.css';
+
+// Reusable custom node-link logo matching the images
+const ProEmpowerLogo = ({ size = 28 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#2E31E6" />
+        <circle cx="16" cy="16" r="3.5" stroke="white" strokeWidth="2.5" />
+        <circle cx="10" cy="10" r="2.5" stroke="white" strokeWidth="2" />
+        <circle cx="22" cy="10" r="2.5" stroke="white" strokeWidth="2" />
+        <circle cx="16" cy="23" r="2.5" stroke="white" strokeWidth="2" />
+        <line x1="11.5" y1="11.5" x2="13.5" y2="13.5" stroke="white" strokeWidth="2" />
+        <line x1="20.5" y1="11.5" x2="18.5" y2="13.5" stroke="white" strokeWidth="2" />
+        <line x1="16" y1="20.5" x2="16" y2="18.5" stroke="white" strokeWidth="2" />
+    </svg>
+);
 
 const Register = () => {
     const navigate = useNavigate();
@@ -14,6 +28,7 @@ const Register = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [organizations, setOrganizations] = useState<PublicOrganization[]>([]);
     const [isLoadingOrgs, setIsLoadingOrgs] = useState(false);
+    
     // Organization mode: 'join' = join existing, 'create' = create new
     const [organizationMode, setOrganizationMode] = useState<'join' | 'create'>('join');
     const [formData, setFormData] = useState({
@@ -60,9 +75,9 @@ const Register = () => {
     }, [formData.role]);
 
     const roles = [
-        { value: 'Admin', label: 'Admin', description: 'Full system access' },
-        { value: 'HR Manager', label: 'HR Manager', description: 'Employee & leave management' },
-        { value: 'Employee', label: 'Employee', description: 'Join existing organization' },
+        { value: 'Admin', label: 'Admin', description: 'Full organizational control', icon: ShieldAlert },
+        { value: 'HR Manager', label: 'HR Manager', description: 'Manage people & roles', icon: Briefcase },
+        { value: 'Employee', label: 'Employee', description: 'Join existing team', icon: BadgeInfo },
     ];
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -116,73 +131,26 @@ const Register = () => {
         }
     };
 
-    const features = [
-        { icon: Users, text: 'Complete Employee Management' },
-        { icon: BarChart3, text: 'Performance Tracking & Reviews' },
-        { icon: Shield, text: 'AI-Powered HR Analytics' },
-        { icon: Lock, text: 'Secure Role-Based Access' },
-    ];
-
     return (
         <div className={styles.container}>
-            {/* Left Panel - Gradient */}
-            <div className={styles.leftPanel}>
-                <div className={styles.leftContent}>
-                    <div className={styles.logo}>
-                        <span className={styles.dots}>●●●</span>
-                        <span className={styles.logoText}>EMS</span>
-                    </div>
-
-                    <div className={styles.heroSection}>
-                        <h1>Transform Your<br />HR Operations</h1>
-                        <p>
-                            AI-powered employee management system for modern
-                            organizations. Streamline HR, boost performance,
-                            predict attrition.
-                        </p>
-                    </div>
-
-                    <div className={styles.features}>
-                        {features.map((feature, index) => {
-                            const Icon = feature.icon;
-                            return (
-                                <div key={index} className={styles.featureItem}>
-                                    <div className={styles.featureIcon}>
-                                        <Icon size={20} />
-                                    </div>
-                                    <span>{feature.text}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    <div className={styles.stats}>
-                        <div className={styles.statItem}>
-                            <span className={styles.statValue}>500+</span>
-                            <span className={styles.statLabel}>Companies</span>
-                        </div>
-                        <div className={styles.statItem}>
-                            <span className={styles.statValue}>50K+</span>
-                            <span className={styles.statLabel}>Employees</span>
-                        </div>
-                        <div className={styles.statItem}>
-                            <span className={styles.statValue}>99.9%</span>
-                            <span className={styles.statLabel}>Uptime</span>
-                        </div>
-                    </div>
+            {/* Top Navigation Header bar */}
+            <header className={styles.headerBar}>
+                <div className={styles.headerContent}>
+                    <ProEmpowerLogo size={26} />
+                    <span className={styles.logoTextMain}>ProEmpower<span className={styles.logoTextSub}>EMS</span></span>
                 </div>
-            </div>
+            </header>
 
-            {/* Right Panel - Register Form */}
-            <div className={styles.rightPanel}>
+            {/* Centered Registration Panel */}
+            <div className={styles.mainContent}>
                 <div className={styles.formCard}>
                     <div className={styles.formHeader}>
-                        <h2>Create your account</h2>
-                        <p>Get started with your free account today</p>
+                        <h2>Create your workspace</h2>
+                        <p>Join 500+ modern organizations boosting their HR efficiency.</p>
                     </div>
 
-                    <button className={styles.googleBtn}>
-                        <svg width="18" height="18" viewBox="0 0 18 18">
+                    <button type="button" className={styles.googleBtn}>
+                        <svg width="18" height="18" viewBox="0 0 18 18" style={{ marginRight: '8px' }}>
                             <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
                             <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
                             <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z" />
@@ -192,13 +160,14 @@ const Register = () => {
                     </button>
 
                     <div className={styles.divider}>
-                        <span>OR CONTINUE WITH EMAIL</span>
+                        <span>OR REGISTER WITH EMAIL</span>
                     </div>
 
                     <form onSubmit={handleSubmit}>
                         <div className={styles.formGroup}>
-                            <label>Full Name</label>
+                            <label htmlFor="fullName">Full Name</label>
                             <input
+                                id="fullName"
                                 type="text"
                                 placeholder="John Doe"
                                 value={formData.fullName}
@@ -208,8 +177,9 @@ const Register = () => {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Work Email</label>
+                            <label htmlFor="email">Work Email</label>
                             <input
+                                id="email"
                                 type="email"
                                 placeholder="name@company.com"
                                 value={formData.email}
@@ -218,40 +188,49 @@ const Register = () => {
                             />
                         </div>
 
+                        {/* Redesigned Vertical Stack Role Options */}
                         <div className={styles.formGroup}>
-                            <label>
-                                <UserCircle size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
-                                Select Your Role
-                            </label>
-                            <div className={styles.roleSelector}>
-                                {roles.map((role) => (
-                                    <button
-                                        key={role.value}
-                                        type="button"
-                                        className={`${styles.roleOption} ${formData.role === role.value ? styles.roleSelected : ''}`}
-                                        onClick={() => setFormData({ ...formData, role: role.value })}
-                                    >
-                                        <span className={styles.roleLabel}>{role.label}</span>
-                                        <span className={styles.roleDesc}>{role.description}</span>
-                                    </button>
-                                ))}
+                            <label>Select Your Role</label>
+                            <div className={styles.roleSelectorVertical}>
+                                {roles.map((role) => {
+                                    const RoleIcon = role.icon;
+                                    const isSelected = formData.role === role.value;
+                                    return (
+                                        <button
+                                            key={role.value}
+                                            type="button"
+                                            className={`${styles.roleCard} ${isSelected ? styles.roleCardSelected : ''}`}
+                                            onClick={() => setFormData({ ...formData, role: role.value })}
+                                        >
+                                            <div className={styles.roleCardLeft}>
+                                                <div className={`${styles.roleIconWrapper} ${isSelected ? styles.roleIconSelected : ''}`}>
+                                                    <RoleIcon size={18} />
+                                                </div>
+                                                <div className={styles.roleCardText}>
+                                                    <h4>{role.label}</h4>
+                                                    <p>{role.description}</p>
+                                                </div>
+                                            </div>
+                                            <div className={`${styles.roleCheck} ${isSelected ? styles.roleCheckActive : ''}`}>
+                                                {isSelected && <Check size={14} strokeWidth={3} className={styles.checkIcon} />}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
                         {/* Organization Mode Selector - Only for Admin/HR Manager */}
                         {formData.role !== 'Employee' && (
                             <div className={styles.formGroup}>
-                                <label>
-                                    <Building size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
-                                    Organization
-                                </label>
+                                <label>Organization Management</label>
                                 <div className={styles.modeSelector}>
                                     <button
                                         type="button"
                                         className={`${styles.modeOption} ${organizationMode === 'join' ? styles.modeSelected : ''}`}
                                         onClick={() => setOrganizationMode('join')}
                                     >
-                                        <UserPlus size={18} />
+                                        <UserPlus size={16} />
                                         <span>Join Existing</span>
                                     </button>
                                     <button
@@ -259,7 +238,7 @@ const Register = () => {
                                         className={`${styles.modeOption} ${organizationMode === 'create' ? styles.modeSelected : ''}`}
                                         onClick={() => setOrganizationMode('create')}
                                     >
-                                        <Plus size={18} />
+                                        <Plus size={16} />
                                         <span>Create New</span>
                                     </button>
                                 </div>
@@ -269,14 +248,10 @@ const Register = () => {
                         {/* Organization Selection - Join Existing */}
                         {organizationMode === 'join' && (
                             <div className={styles.formGroup}>
-                                <label>
-                                    {formData.role === 'Employee' && (
-                                        <Building size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
-                                    )}
-                                    Select Organization to Join
-                                </label>
+                                <label htmlFor="organizationId">Join Organization</label>
                                 <div className={styles.selectWrapper}>
                                     <select
+                                        id="organizationId"
                                         value={formData.organizationId}
                                         onChange={(e) => setFormData({ ...formData, organizationId: e.target.value })}
                                         required
@@ -295,13 +270,11 @@ const Register = () => {
                                 </div>
                                 {organizations.length === 0 && !isLoadingOrgs && (
                                     <p className={styles.helpText}>
-                                        {formData.role === 'Employee'
-                                            ? 'No organizations found. Please contact an Admin to create one first.'
-                                            : 'No organizations found. Select "Create New" to register a new organization.'}
+                                        No organizations found. Please select "Create New" or contact your admin.
                                     </p>
                                 )}
                                 <p className={styles.infoText}>
-                                    Your request will be sent to the organization's Admin or HR for approval.
+                                    Organization admins must approve your membership request.
                                 </p>
                             </div>
                         )}
@@ -309,8 +282,9 @@ const Register = () => {
                         {/* Organization Name - Create New */}
                         {organizationMode === 'create' && (
                             <div className={styles.formGroup}>
-                                <label>New Organization Name</label>
+                                <label htmlFor="organizationName">New Organization Name</label>
                                 <input
+                                    id="organizationName"
                                     type="text"
                                     placeholder="Enter your organization name"
                                     value={formData.organizationName}
@@ -321,11 +295,12 @@ const Register = () => {
                         )}
 
                         <div className={styles.formGroup}>
-                            <label>Password</label>
+                            <label htmlFor="password">Password</label>
                             <div className={styles.passwordWrapper}>
                                 <input
+                                    id="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    placeholder="Create a strong password"
+                                    placeholder="••••••••"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     required
@@ -335,17 +310,18 @@ const Register = () => {
                                     className={styles.eyeBtn}
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Confirm Password</label>
+                            <label htmlFor="confirmPassword">Confirm Password</label>
                             <div className={styles.passwordWrapper}>
                                 <input
+                                    id="confirmPassword"
                                     type={showConfirmPassword ? 'text' : 'password'}
-                                    placeholder="Confirm your password"
+                                    placeholder="••••••••"
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                     required
@@ -355,7 +331,7 @@ const Register = () => {
                                     className={styles.eyeBtn}
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 >
-                                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                 </button>
                             </div>
                         </div>
@@ -366,18 +342,28 @@ const Register = () => {
                     </form>
 
                     <p className={styles.termsText}>
-                        By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                        By signing up, you agree to our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>
                     </p>
 
                     <p className={styles.loginLink}>
-                        Already have an account? <Link to="/login">Sign in</Link>
+                        Already have a professional account? <Link to="/login">Log In</Link>
                     </p>
                 </div>
-
-                <div className={styles.footer}>
-                    <p>© 2026 Performance Management System. All rights reserved.</p>
-                </div>
             </div>
+
+            {/* Bottom Footer bar */}
+            <footer className={styles.footerBar}>
+                <div className={styles.footerBranding}>
+                    <ProEmpowerLogo size={20} />
+                    <span>ProEmpower EMS</span>
+                </div>
+                <div className={styles.footerLinks}>
+                    <a href="#">Security</a>
+                    <a href="#">Legal</a>
+                    <a href="#">System Status</a>
+                </div>
+                <p className={styles.copyrightText}>© 2024 ProEmpower. All rights reserved.</p>
+            </footer>
         </div>
     );
 };
