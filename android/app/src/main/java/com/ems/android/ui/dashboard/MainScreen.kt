@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.activity.compose.BackHandler
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -257,7 +258,10 @@ fun MainScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
             bottomBar = {
-                NavigationBar {
+                NavigationBar(
+                    modifier = Modifier.height(60.dp),
+                    windowInsets = WindowInsets(0, 0, 0, 0)
+                ) {
                     bottomNavItems.forEach { item ->
                         val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                         
@@ -265,11 +269,19 @@ fun MainScreen(
                             icon = {
                                 Icon(
                                     if (selected) item.selectedIcon else item.unselectedIcon,
-                                    contentDescription = item.title
+                                    contentDescription = item.title,
+                                    modifier = Modifier.size(20.dp)
                                 )
                             },
-                            label = { Text(item.title) },
+                            label = { 
+                                Text(
+                                    item.title, 
+                                    fontSize = 11.sp,
+                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                                ) 
+                            },
                             selected = selected,
+                            alwaysShowLabel = true,
                             onClick = {
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.findStartDestination().id) {

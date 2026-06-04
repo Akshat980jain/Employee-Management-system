@@ -111,7 +111,7 @@ const Login = () => {
                         {/* Top Branding (Left Aligned in mockup) */}
                         <div className={styles.logo}>
                             <ProEmpowerLogo size={32} />
-                            <span className={styles.logoText}>ProEmpower</span>
+                            <span className={styles.logoText}>StaffSphere</span>
                         </div>
 
                         {/* Hero Section (Left Aligned) */}
@@ -325,7 +325,7 @@ const Login = () => {
                         )}
 
                         <p className={styles.signupLink}>
-                            New to ProEmpower? <Link to="/register">Create an account</Link>
+                            New to StaffSphere? <Link to="/register">Create an account</Link>
                         </p>
                         
                         <div className={styles.cardFooter}>
@@ -333,7 +333,7 @@ const Login = () => {
                                 <Lock size={12} />
                                 <span>Enterprise SSO & Encryption Enabled</span>
                             </div>
-                            <p>© 2024 ProEmpower. All rights reserved.</p>
+                            <p>© 2024 StaffSphere. All rights reserved.</p>
                         </div>
                     </div>
                 </div>

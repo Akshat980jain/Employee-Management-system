@@ -243,7 +243,7 @@ const Sidebar = () => {
                 <div className={styles.brandingLogo}>
                     <span>●●●</span>
                 </div>
-                <span className={styles.brandingName}>EMS Pro</span>
+                <span className={styles.brandingName}>StaffSphere</span>
                 <span className={styles.brandingVersion}>v1.0.0</span>
             </div>
 

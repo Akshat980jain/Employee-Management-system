@@ -109,7 +109,7 @@ const PendingVerification = () => {
                 <div className={styles.header}>
                     <div className={styles.logoSection}>
                         <span className={styles.dots}>●●●</span>
-                        <span className={styles.logoText}>EMS</span>
+                        <span className={styles.logoText}>StaffSphere</span>
                     </div>
                 </div>
 

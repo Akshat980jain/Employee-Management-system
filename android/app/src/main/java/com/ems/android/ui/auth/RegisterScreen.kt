@@ -247,10 +247,7 @@ fun RegisterScreen(
             Text(
                 text = buildAnnotatedString {
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = headerLogoTextMain)) {
-                        append("ProEmpower")
-                    }
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = headerLogoTextSub)) {
-                        append("EMS")
+                        append("StaffSphere")
                     }
                 },
                 fontSize = 18.sp,
@@ -963,7 +960,7 @@ fun RegisterScreen(
                 ProEmpowerLogoRegister(size = 20.dp)
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "ProEmpower EMS",
+                    text = "StaffSphere",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = footerLogoText
@@ -979,7 +976,7 @@ fun RegisterScreen(
                 Text(text = "System Status", fontSize = 13.sp, color = footerLinkText)
             }
             Text(
-                text = "© 2024 ProEmpower. All rights reserved.",
+                text = "© 2024 StaffSphere. All rights reserved.",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = footerCopyrightText,
                     fontSize = 12.sp

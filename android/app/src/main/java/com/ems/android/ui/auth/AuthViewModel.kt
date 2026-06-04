@@ -2,8 +2,7 @@ package com.ems.android.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ems.android.data.models.RegisterRequest
-import com.ems.android.data.models.User
+import com.ems.android.data.models.*
 import com.ems.android.data.repository.AuthRepository
 import com.ems.android.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

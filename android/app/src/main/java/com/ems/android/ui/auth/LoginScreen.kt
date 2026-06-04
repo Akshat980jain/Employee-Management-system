@@ -45,6 +45,7 @@ import com.ems.android.ui.components.ErrorType
 import com.ems.android.ui.theme.GradientEnd
 import com.ems.android.ui.theme.GradientStart
 import com.ems.android.ui.theme.Primary
+import com.ems.android.data.models.*
 
 // Reusable Google G icon vector matching the web version
 val GoogleIconVector = ImageVector.Builder(
@@ -205,6 +206,9 @@ fun LoginScreen(
     var dialogEmail by remember { mutableStateOf("") }
     var dialogResetToken by remember { mutableStateOf("") }
     var dialogNewPassword by remember { mutableStateOf("") }
+    var dialogConfirmPassword by remember { mutableStateOf("") }
+    var newPasswordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
     var dialogError by remember { mutableStateOf<String?>(null) }
     
     val forgotState by viewModel.forgotPasswordState.collectAsState()
@@ -243,6 +247,9 @@ fun LoginScreen(
                     dialogEmail = ""
                     dialogResetToken = ""
                     dialogNewPassword = ""
+                    dialogConfirmPassword = ""
+                    newPasswordVisible = false
+                    confirmPasswordVisible = false
                     viewModel.clearResetPasswordState()
                 }
                 is com.ems.android.utils.Resource.Error -> {
@@ -349,7 +356,7 @@ fun LoginScreen(
                     ) {
                         ProEmpowerLogo(size = 32.dp)
                         Text(
-                            text = "ProEmpower",
+                            text = "StaffSphere",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = textColorPrimary,
@@ -739,7 +746,7 @@ fun LoginScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "New to ProEmpower? ",
+                            text = "New to StaffSphere? ",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = textColorSecondary,
                                 fontSize = 14.sp
@@ -786,7 +793,7 @@ fun LoginScreen(
                             )
                         }
                         Text(
-                            text = "© 2024 ProEmpower. All rights reserved.",
+                            text = "© 2024 StaffSphere. All rights reserved.",
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = if (isDark) Color(0xFF475569) else Color(0xFF94A3B8),
                                 fontSize = 12.sp
@@ -803,6 +810,13 @@ fun LoginScreen(
             onDismissRequest = { 
                 if (forgotState !is com.ems.android.utils.Resource.Loading && resetState !is com.ems.android.utils.Resource.Loading) {
                     showForgotPasswordDialog = false 
+                    dialogStep = ResetStep.EMAIL
+                    dialogEmail = ""
+                    dialogResetToken = ""
+                    dialogNewPassword = ""
+                    dialogConfirmPassword = ""
+                    newPasswordVisible = false
+                    confirmPasswordVisible = false
                     dialogError = null
                 }
             },
@@ -872,7 +886,41 @@ fun LoginScreen(
                             value = dialogNewPassword,
                             onValueChange = { dialogNewPassword = it; dialogError = null },
                             label = { Text("New Password") },
-                            visualTransformation = PasswordVisualTransformation(),
+                            trailingIcon = {
+                                IconButton(onClick = { newPasswordVisible = !newPasswordVisible }) {
+                                    Icon(
+                                        imageVector = if (newPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = if (newPasswordVisible) "Hide password" else "Show password",
+                                        tint = inputPlaceholder
+                                    )
+                                }
+                            },
+                            visualTransformation = if (newPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            )
+                        )
+                        OutlinedTextField(
+                            value = dialogConfirmPassword,
+                            onValueChange = { dialogConfirmPassword = it; dialogError = null },
+                            label = { Text("Confirm New Password") },
+                            trailingIcon = {
+                                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                    Icon(
+                                        imageVector = if (confirmPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = if (confirmPasswordVisible) "Hide password" else "Show password",
+                                        tint = inputPlaceholder
+                                    )
+                                }
+                            },
+                            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             colors = OutlinedTextFieldDefaults.colors(
@@ -897,10 +945,12 @@ fun LoginScreen(
                                 dialogError = "Email is required"
                             }
                         } else {
-                            if (dialogResetToken.isNotBlank() && dialogNewPassword.isNotBlank()) {
-                                viewModel.resetPassword(dialogEmail, dialogResetToken, dialogNewPassword)
-                            } else {
+                            if (dialogResetToken.isBlank() || dialogNewPassword.isBlank() || dialogConfirmPassword.isBlank()) {
                                 dialogError = "All fields are required"
+                            } else if (dialogNewPassword != dialogConfirmPassword) {
+                                dialogError = "Passwords do not match"
+                            } else {
+                                viewModel.resetPassword(dialogEmail, dialogResetToken, dialogNewPassword)
                             }
                         }
                     },
@@ -921,6 +971,12 @@ fun LoginScreen(
                             dialogStep = ResetStep.EMAIL
                         } else {
                             showForgotPasswordDialog = false
+                            dialogEmail = ""
+                            dialogResetToken = ""
+                            dialogNewPassword = ""
+                            dialogConfirmPassword = ""
+                            newPasswordVisible = false
+                            confirmPasswordVisible = false
                             dialogError = null
                         }
                     },

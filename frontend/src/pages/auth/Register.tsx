@@ -137,7 +137,7 @@ const Register = () => {
             <header className={styles.headerBar}>
                 <div className={styles.headerContent}>
                     <ProEmpowerLogo size={26} />
-                    <span className={styles.logoTextMain}>ProEmpower<span className={styles.logoTextSub}>EMS</span></span>
+                    <span className={styles.logoTextMain}>StaffSphere</span>
                 </div>
             </header>
 
@@ -355,14 +355,14 @@ const Register = () => {
             <footer className={styles.footerBar}>
                 <div className={styles.footerBranding}>
                     <ProEmpowerLogo size={20} />
-                    <span>ProEmpower EMS</span>
+                    <span>StaffSphere</span>
                 </div>
                 <div className={styles.footerLinks}>
                     <a href="#">Security</a>
                     <a href="#">Legal</a>
                     <a href="#">System Status</a>
                 </div>
-                <p className={styles.copyrightText}>© 2024 ProEmpower. All rights reserved.</p>
+                <p className={styles.copyrightText}>© 2024 StaffSphere. All rights reserved.</p>
             </footer>
         </div>
     );

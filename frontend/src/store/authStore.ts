@@ -134,7 +134,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
             fetchUser: async () => {
                 try {
-                    set({ isLoading: true });
+                    const hasCachedSession = get().isAuthenticated && get().user;
+                    if (!hasCachedSession) {
+                        set({ isLoading: true });
+                    }
                     const response = await api.get('/auth/me');
                     const userData = response.data.data;
 
@@ -147,16 +150,23 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         isLoading: false,
                         pendingVerification: userData.isVerified === false,
                     });
-                } catch (error) {
-                    set({
-                        user: null,
-                        organization: null,
-                        isAuthenticated: false,
-                        isVerified: true,
-                        isLoading: false,
-                        permissions: [],
-                        pendingVerification: false,
-                    });
+                } catch (error: any) {
+                    const isAuthError = error.response?.status === 401 || error.response?.status === 403;
+                    if (isAuthError) {
+                        set({
+                            user: null,
+                            organization: null,
+                            accessToken: null,
+                            refreshToken: null,
+                            isAuthenticated: false,
+                            isVerified: true,
+                            isLoading: false,
+                            permissions: [],
+                            pendingVerification: false,
+                        });
+                    } else {
+                        set({ isLoading: false });
+                    }
                 }
             },
 
@@ -232,6 +242,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             onRehydrateStorage: () => (state) => {
                 if (state) {
                     if (state.accessToken) {
+                        if (state.isAuthenticated && state.user) {
+                            state.isLoading = false;
+                        }
                         state.fetchUser();
                     } else {
                         state.isLoading = false;

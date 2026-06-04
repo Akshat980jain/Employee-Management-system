@@ -6,8 +6,8 @@ export async function sendResetOtpEmail(
     otp: string
 ): Promise<boolean> {
     const apiKey = process.env.BREVO_API_KEY;
-    const senderEmail = process.env.BREVO_SENDER_EMAIL || 'noreply@proempower.com';
-    const senderName = process.env.BREVO_SENDER_NAME || 'ProEmpower System';
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || 'noreply@staffsphere.com';
+    const senderName = process.env.BREVO_SENDER_NAME || 'StaffSphere System';
 
     if (!apiKey || apiKey === 'your_brevo_api_key_here') {
         console.warn(`[MAILER WARNING] Brevo API Key not configured. Fallback: OTP for ${recipientEmail} is ${otp}`);
@@ -33,10 +33,10 @@ export async function sendResetOtpEmail(
                         name: recipientName
                     }
                 ],
-                subject: 'ProEmpower Password Reset OTP',
+                subject: 'StaffSphere Password Reset OTP',
                 htmlContent: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-                        <h2 style="color: #2E31E6; text-align: center;">ProEmpower Security</h2>
+                        <h2 style="color: #2E31E6; text-align: center;">StaffSphere Security</h2>
                         <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
                         <p>Hello ${recipientName},</p>
                         <p>We received a request to reset your password. Please use the following 6-digit One-Time Password (OTP) to proceed with your password reset:</p>
@@ -47,7 +47,7 @@ export async function sendResetOtpEmail(
                         </div>
                         <p style="color: #64748b; font-size: 14px;">This code is valid for 1 hour. If you did not request a password reset, please ignore this email or contact support if you have concerns.</p>
                         <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-                        <p style="font-size: 12px; color: #94a3b8; text-align: center;">© 2024 ProEmpower. All rights reserved.</p>
+                        <p style="font-size: 12px; color: #94a3b8; text-align: center;">© 2024 StaffSphere. All rights reserved.</p>
                     </div>
                 `
             })
