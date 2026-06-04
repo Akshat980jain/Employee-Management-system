@@ -13,6 +13,7 @@ interface AuthState {
     isLoading: boolean;
     permissions: string[];
     pendingVerification: boolean;
+    rememberMe: boolean;
 }
 
 interface AuthActions {
@@ -24,6 +25,7 @@ interface AuthActions {
     hasPermission: (permission: string) => boolean;
     hasAnyPermission: (...permissions: string[]) => boolean;
     checkVerificationStatus: () => Promise<boolean>;
+    setRememberMe: (rememberMe: boolean) => void;
 }
 
 interface RegisterData {
@@ -52,6 +54,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             isLoading: true,
             permissions: [],
             pendingVerification: false,
+            rememberMe: false,
+
+            setRememberMe: (rememberMe: boolean) => set({ rememberMe }),
 
             login: async (email: string, password: string) => {
                 try {
@@ -187,7 +192,32 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }),
         {
             name: 'ems-auth',
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => ({
+                getItem: (name: string) => {
+                    const local = localStorage.getItem(name);
+                    if (local) return local;
+                    return sessionStorage.getItem(name);
+                },
+                setItem: (name: string, value: string) => {
+                    try {
+                        const parsed = JSON.parse(value);
+                        const rememberMe = parsed?.state?.rememberMe;
+                        if (rememberMe) {
+                            localStorage.setItem(name, value);
+                            sessionStorage.removeItem(name);
+                        } else {
+                            sessionStorage.setItem(name, value);
+                            localStorage.removeItem(name);
+                        }
+                    } catch (e) {
+                        localStorage.setItem(name, value);
+                    }
+                },
+                removeItem: (name: string) => {
+                    localStorage.removeItem(name);
+                    sessionStorage.removeItem(name);
+                }
+            })),
             partialize: (state) => ({
                 accessToken: state.accessToken,
                 refreshToken: state.refreshToken,
@@ -197,6 +227,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 isAuthenticated: state.isAuthenticated,
                 isVerified: state.isVerified,
                 pendingVerification: state.pendingVerification,
+                rememberMe: state.rememberMe,
             }),
             onRehydrateStorage: () => (state) => {
                 if (state) {

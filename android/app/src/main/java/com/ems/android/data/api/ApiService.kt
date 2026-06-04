@@ -19,6 +19,12 @@ interface ApiService {
     @GET("api/auth/me")
     suspend fun getCurrentUser(): Response<AuthResponse>
     
+    @POST("api/auth/forgot-password")
+    suspend fun forgotPassword(@Body request: ForgotPasswordRequest): Response<AuthResponse>
+    
+    @POST("api/auth/reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): Response<ApiResponse>
+    
     // ==================== ORGANIZATIONS ====================
     @GET("api/organizations/search")
     suspend fun searchOrganizations(

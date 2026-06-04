@@ -22,7 +22,7 @@ class AuthRepository @Inject constructor(
         private const val TAG = "AuthRepository"
     }
     
-    fun login(email: String, password: String): Flow<Resource<AuthResponse>> = flow {
+    fun login(email: String, password: String, rememberMe: Boolean = false): Flow<Resource<AuthResponse>> = flow {
         emit(Resource.Loading())
         Log.d(TAG, "Attempting login for: $email")
         
@@ -39,7 +39,8 @@ class AuthRepository @Inject constructor(
                 if (authResponse.success && accessToken != null && userData != null) {
                     tokenManager.saveToken(accessToken)
                     tokenManager.saveUser(userData)
-                    Log.d(TAG, "Token and user saved")
+                    tokenManager.saveRememberMe(rememberMe)
+                    Log.d(TAG, "Token, user and rememberMe saved")
                 }
                 emit(Resource.Success(authResponse))
             } else {
@@ -151,6 +152,60 @@ class AuthRepository @Inject constructor(
     fun getStoredUser(): Flow<User?> = tokenManager.getUser()
     
     fun isLoggedIn(): Flow<Boolean> = tokenManager.isLoggedIn()
+    
+    suspend fun checkStartupSession() {
+        tokenManager.checkStartupClear()
+    }
+    
+    fun forgotPassword(email: String): Flow<Resource<AuthResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.forgotPassword(ForgotPasswordRequest(email))
+            if (response.isSuccessful && response.body() != null) {
+                emit(Resource.Success(response.body()!!))
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = try {
+                    errorBody?.let { 
+                        if (it.contains("message")) {
+                            val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                            regex.find(it)?.groupValues?.get(1) ?: it
+                        } else it
+                    } ?: "Request failed (${response.code()})"
+                } catch (e: Exception) {
+                    errorBody ?: "Request failed (${response.code()})"
+                }
+                emit(Resource.Error(errorMessage))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "Network error"))
+        }
+    }
+
+    fun resetPassword(email: String, token: String, newPassword: String): Flow<Resource<ApiResponse>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.resetPassword(ResetPasswordRequest(email, token, newPassword))
+            if (response.isSuccessful && response.body() != null) {
+                emit(Resource.Success(response.body()!!))
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = try {
+                    errorBody?.let { 
+                        if (it.contains("message")) {
+                            val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                            regex.find(it)?.groupValues?.get(1) ?: it
+                        } else it
+                    } ?: "Reset failed (${response.code()})"
+                } catch (e: Exception) {
+                    errorBody ?: "Reset failed (${response.code()})"
+                }
+                emit(Resource.Error(errorMessage))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "Network error"))
+        }
+    }
     
     fun searchOrganizations(query: String): Flow<Resource<List<OrganizationSearchResult>>> = flow {
         emit(Resource.Loading())

@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.ems.android.data.models.User
 import com.squareup.moshi.Moshi
@@ -24,6 +25,34 @@ class TokenManager @Inject constructor(
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
         private val USER_KEY = stringPreferencesKey("user_data")
+        private val REMEMBER_ME_KEY = booleanPreferencesKey("remember_me")
+    }
+    
+    private var startupChecked = false
+
+    suspend fun checkStartupClear() {
+        if (!startupChecked) {
+            startupChecked = true
+            context.dataStore.edit { preferences ->
+                val rememberMe = preferences[REMEMBER_ME_KEY] ?: false
+                if (!rememberMe) {
+                    preferences.remove(TOKEN_KEY)
+                    preferences.remove(USER_KEY)
+                }
+            }
+        }
+    }
+
+    fun getRememberMe(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[REMEMBER_ME_KEY] ?: false
+        }
+    }
+
+    suspend fun saveRememberMe(rememberMe: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[REMEMBER_ME_KEY] = rememberMe
+        }
     }
     
     fun getToken(): Flow<String?> {

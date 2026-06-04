@@ -46,6 +46,8 @@ export interface IUser extends Document {
     mustChangePassword: boolean;
     organizationId: mongoose.Types.ObjectId;
     pendingOrganizationId?: mongoose.Types.ObjectId;  // For unverified employees
+    passwordResetToken?: string;
+    passwordResetExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
     lastLoginAt?: Date;
@@ -67,6 +69,8 @@ const UserSchema = new Schema<IUser>({
     mustChangePassword: { type: Boolean, default: false },
     organizationId: { type: Schema.Types.ObjectId, ref: 'Organization', required: true },
     pendingOrganizationId: { type: Schema.Types.ObjectId, ref: 'Organization' },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
     lastLoginAt: Date,
     lastLoginIp: String,
 }, { timestamps: true });

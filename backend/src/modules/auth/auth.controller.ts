@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from './auth.service.js';
-import { registerSchema, loginSchema, refreshTokenSchema } from './auth.dto.js';
+import { registerSchema, loginSchema, refreshTokenSchema, forgotPasswordSchema, resetPasswordSchema } from './auth.dto.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { AuthRequest } from '../../middleware/auth.js';
 import { User, Role, UserRole, Organization } from '../../models/index.js';
@@ -190,6 +190,41 @@ export class AuthController {
                 }
             });
         } catch (error) {
+            next(error);
+        }
+    }
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email } = forgotPasswordSchema.parse(req.body);
+            const result = await authService.forgotPassword(email);
+
+            res.json({
+                success: true,
+                message: result.message,
+                data: result.token ? { token: result.token } : null
+            });
+        } catch (error: any) {
+            if (error.name === 'ZodError') {
+                return next(ApiError.badRequest('Validation failed', error.errors));
+            }
+            next(error);
+        }
+    }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const input = resetPasswordSchema.parse(req.body);
+            const result = await authService.resetPassword(input);
+
+            res.json({
+                success: true,
+                message: result.message
+            });
+        } catch (error: any) {
+            if (error.name === 'ZodError') {
+                return next(ApiError.badRequest('Validation failed', error.errors));
+            }
             next(error);
         }
     }

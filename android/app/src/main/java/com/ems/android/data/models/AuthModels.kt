@@ -105,3 +105,15 @@ data class ApiError(
     @Json(name = "message") val message: String? = null,
     @Json(name = "error") val error: String? = null
 )
+
+@JsonClass(generateAdapter = true)
+data class ForgotPasswordRequest(
+    @Json(name = "email") val email: String
+)
+
+@JsonClass(generateAdapter = true)
+data class ResetPasswordRequest(
+    @Json(name = "email") val email: String,
+    @Json(name = "token") val token: String,
+    @Json(name = "password") val password: String
+)

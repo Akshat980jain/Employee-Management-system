@@ -61,6 +61,7 @@ class AuthViewModel @Inject constructor(
     
     private fun checkLoginStatus() {
         viewModelScope.launch {
+            authRepository.checkStartupSession()
             authRepository.isLoggedIn().collect { isLoggedIn ->
                 if (isLoggedIn) {
                     authRepository.getStoredUser().collect { user ->
@@ -80,7 +81,7 @@ class AuthViewModel @Inject constructor(
         _loginState.update { it.copy(password = password, error = null) }
     }
     
-    fun login() {
+    fun login(rememberMe: Boolean = false) {
         val state = _loginState.value
         if (state.email.isBlank() || state.password.isBlank()) {
             _loginState.update { it.copy(error = "Please fill all fields") }
@@ -88,7 +89,7 @@ class AuthViewModel @Inject constructor(
         }
         
         viewModelScope.launch {
-            authRepository.login(state.email, state.password).collect { result ->
+            authRepository.login(state.email, state.password, rememberMe).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _loginState.update { it.copy(isLoading = true, error = null) }
@@ -243,5 +244,36 @@ class AuthViewModel @Inject constructor(
     fun clearError() {
         _loginState.update { it.copy(error = null) }
         _registerState.update { it.copy(error = null) }
+    }
+    
+    // Forgot/Reset Password flows
+    private val _forgotPasswordState = MutableStateFlow<Resource<AuthResponse>?>(null)
+    val forgotPasswordState: StateFlow<Resource<AuthResponse>?> = _forgotPasswordState.asStateFlow()
+
+    private val _resetPasswordState = MutableStateFlow<Resource<ApiResponse>?>(null)
+    val resetPasswordState: StateFlow<Resource<ApiResponse>?> = _resetPasswordState.asStateFlow()
+
+    fun forgotPassword(email: String) {
+        viewModelScope.launch {
+            authRepository.forgotPassword(email).collect { result ->
+                _forgotPasswordState.value = result
+            }
+        }
+    }
+
+    fun resetPassword(email: String, token: String, newPassword: String) {
+        viewModelScope.launch {
+            authRepository.resetPassword(email, token, newPassword).collect { result ->
+                _resetPasswordState.value = result
+            }
+        }
+    }
+
+    fun clearForgotPasswordState() {
+        _forgotPasswordState.value = null
+    }
+
+    fun clearResetPasswordState() {
+        _resetPasswordState.value = null
     }
 }

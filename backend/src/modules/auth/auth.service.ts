@@ -2,7 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { Organization, User, Role, UserRole, Session, LeaveType, Shift, Employee, JoinRequest } from '../../models/index.js';
-import { RegisterInput, LoginInput } from './auth.dto.js';
+import { RegisterInput, LoginInput, ResetPasswordInput } from './auth.dto.js';
+import { sendResetOtpEmail } from '../../utils/mailer.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { emitToOrganization } from '../../config/socket.js';
 
@@ -421,6 +422,65 @@ export class AuthService {
         const refreshToken = uuidv4();
 
         return { accessToken, refreshToken };
+    }
+
+    async forgotPassword(email: string) {
+        const user = await User.findOne({ email });
+        if (!user) {
+            console.log(`[FORGOT PASSWORD] Requested email not registered: ${email}`);
+            return { message: 'Reset code sent if email exists' };
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashedOtp = await bcrypt.hash(otp, 6);
+        user.passwordResetToken = hashedOtp;
+        user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
+        await user.save();
+
+        console.log(`[FORGOT PASSWORD] Generated OTP code for ${email}: ${otp}`);
+
+        const sent = await sendResetOtpEmail(user.email, user.firstName, otp);
+        if (!sent) {
+            console.warn(`[FORGOT PASSWORD FALLBACK] Email failed. Code: ${otp}`);
+        }
+
+        return {
+            message: 'Verification code sent to your email',
+            token: process.env.NODE_ENV !== 'production' ? otp : undefined
+        };
+    }
+
+    async resetPassword(input: ResetPasswordInput) {
+        const user = await User.findOne({ email: input.email });
+        if (!user) {
+            throw ApiError.notFound('User not found');
+        }
+
+        if (!user.passwordResetToken || !user.passwordResetExpires) {
+            throw ApiError.badRequest('No password reset requested');
+        }
+
+        if (new Date(user.passwordResetExpires) < new Date()) {
+            user.passwordResetToken = undefined;
+            user.passwordResetExpires = undefined;
+            await user.save();
+            throw ApiError.badRequest('Verification code expired');
+        }
+
+        const isTokenValid = await bcrypt.compare(input.token, user.passwordResetToken);
+        if (!isTokenValid) {
+            throw ApiError.unauthorized('Invalid verification code');
+        }
+
+        user.passwordHash = await bcrypt.hash(input.password, BCRYPT_ROUNDS);
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        user.failedLoginAttempts = 0;
+        user.lockedUntil = undefined;
+        user.passwordChangedAt = new Date();
+        await user.save();
+
+        return { message: 'Password reset successful' };
     }
 }
 

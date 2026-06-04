@@ -184,6 +184,8 @@ fun FeatureItemCompose(
     }
 }
 
+enum class ResetStep { EMAIL, RESET }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -197,6 +199,59 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
+    
+    var showForgotPasswordDialog by remember { mutableStateOf(false) }
+    var dialogStep by remember { mutableStateOf(ResetStep.EMAIL) }
+    var dialogEmail by remember { mutableStateOf("") }
+    var dialogResetToken by remember { mutableStateOf("") }
+    var dialogNewPassword by remember { mutableStateOf("") }
+    var dialogError by remember { mutableStateOf<String?>(null) }
+    
+    val forgotState by viewModel.forgotPasswordState.collectAsState()
+    val resetState by viewModel.resetPasswordState.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    
+    LaunchedEffect(forgotState) {
+        forgotState?.let { resource ->
+            when (resource) {
+                is com.ems.android.utils.Resource.Success -> {
+                    val devToken = resource.data?.getAccessToken() ?: resource.data?.token
+                    if (devToken != null) {
+                        dialogResetToken = devToken
+                        android.widget.Toast.makeText(context, "Dev Mode: Code autofilled: $devToken", android.widget.Toast.LENGTH_LONG).show()
+                    } else {
+                        android.widget.Toast.makeText(context, "Verification code sent!", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                    dialogStep = ResetStep.RESET
+                    viewModel.clearForgotPasswordState()
+                }
+                is com.ems.android.utils.Resource.Error -> {
+                    dialogError = resource.message ?: "Failed to send reset code"
+                }
+                else -> {}
+            }
+        }
+    }
+    
+    LaunchedEffect(resetState) {
+        resetState?.let { resource ->
+            when (resource) {
+                is com.ems.android.utils.Resource.Success -> {
+                    android.widget.Toast.makeText(context, "Password reset successfully!", android.widget.Toast.LENGTH_SHORT).show()
+                    showForgotPasswordDialog = false
+                    dialogStep = ResetStep.EMAIL
+                    dialogEmail = ""
+                    dialogResetToken = ""
+                    dialogNewPassword = ""
+                    viewModel.clearResetPasswordState()
+                }
+                is com.ems.android.utils.Resource.Error -> {
+                    dialogError = resource.message ?: "Failed to reset password"
+                }
+                else -> {}
+            }
+        }
+    }
     
     // Dynamic theme state detection
     val isDark = isSystemInDarkTheme()
@@ -560,7 +615,7 @@ fun LoginScreen(
                                 color = linkText,
                                 fontSize = 14.sp
                             ),
-                            modifier = Modifier.clickable { /* Forgot password stub */ }
+                            modifier = Modifier.clickable { showForgotPasswordDialog = true }
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -645,7 +700,7 @@ fun LoginScreen(
                     
                     // Sign In Button
                     Button(
-                        onClick = { viewModel.login() },
+                        onClick = { viewModel.login(rememberMe) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
@@ -741,5 +796,140 @@ fun LoginScreen(
                 }
             }
         }
+    }
+    
+    if (showForgotPasswordDialog) {
+        AlertDialog(
+            onDismissRequest = { 
+                if (forgotState !is com.ems.android.utils.Resource.Loading && resetState !is com.ems.android.utils.Resource.Loading) {
+                    showForgotPasswordDialog = false 
+                    dialogError = null
+                }
+            },
+            title = {
+                Text(
+                    text = if (dialogStep == ResetStep.EMAIL) "Forgot Password" else "Reset Password",
+                    fontWeight = FontWeight.Bold,
+                    color = textColorPrimary
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (dialogError != null) {
+                        Text(
+                            text = dialogError!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    
+                    if (dialogStep == ResetStep.EMAIL) {
+                        Text(
+                            text = "Enter your work email address to receive a password reset code.",
+                            color = textColorSecondary,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        OutlinedTextField(
+                            value = dialogEmail,
+                            onValueChange = { dialogEmail = it; dialogError = null },
+                            label = { Text("Email Address") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            )
+                        )
+                    } else {
+                        Text(
+                            text = "Enter the 6-digit code sent to your email and choose a new password.",
+                            color = textColorSecondary,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        OutlinedTextField(
+                            value = dialogResetToken,
+                            onValueChange = { dialogResetToken = it; dialogError = null },
+                            label = { Text("Verification Code") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            )
+                        )
+                        OutlinedTextField(
+                            value = dialogNewPassword,
+                            onValueChange = { dialogNewPassword = it; dialogError = null },
+                            label = { Text("New Password") },
+                            visualTransformation = PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            )
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (dialogStep == ResetStep.EMAIL) {
+                            if (dialogEmail.isNotBlank()) {
+                                viewModel.forgotPassword(dialogEmail)
+                            } else {
+                                dialogError = "Email is required"
+                            }
+                        } else {
+                            if (dialogResetToken.isNotBlank() && dialogNewPassword.isNotBlank()) {
+                                viewModel.resetPassword(dialogEmail, dialogResetToken, dialogNewPassword)
+                            } else {
+                                dialogError = "All fields are required"
+                            }
+                        }
+                    },
+                    enabled = forgotState !is com.ems.android.utils.Resource.Loading && resetState !is com.ems.android.utils.Resource.Loading,
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonBg)
+                ) {
+                    if (forgotState is com.ems.android.utils.Resource.Loading || resetState is com.ems.android.utils.Resource.Loading) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White)
+                    } else {
+                        Text(text = if (dialogStep == ResetStep.EMAIL) "Send Code" else "Reset Password")
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        if (dialogStep == ResetStep.RESET) {
+                            dialogStep = ResetStep.EMAIL
+                        } else {
+                            showForgotPasswordDialog = false
+                            dialogError = null
+                        }
+                    },
+                    enabled = forgotState !is com.ems.android.utils.Resource.Loading && resetState !is com.ems.android.utils.Resource.Loading
+                ) {
+                    Text(text = if (dialogStep == ResetStep.RESET) "Back" else "Cancel", color = textColorSecondary)
+                }
+            },
+            containerColor = cardBg
+        )
     }
 }

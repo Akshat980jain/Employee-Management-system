@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
+import api from '../../services/api';
 import styles from './Login.module.css';
 
 // Reusable custom node-link logo matching the images
@@ -21,9 +22,14 @@ const ProEmpowerLogo = ({ size = 32 }: { size?: number }) => (
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login, isLoading } = useAuthStore();
+    const { login, isLoading, rememberMe, setRememberMe } = useAuthStore();
     const [showPassword, setShowPassword] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
+    const [mode, setMode] = useState<'login' | 'forgot' | 'reset'>('login');
+    const [forgotEmail, setForgotEmail] = useState('');
+    const [resetToken, setResetToken] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [isSubmittingForgot, setIsSubmittingForgot] = useState(false);
+    const [isSubmittingReset, setIsSubmittingReset] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -38,6 +44,44 @@ const Login = () => {
             navigate('/dashboard');
         } catch (error: any) {
             toast.error(error.response?.data?.error?.message || 'Login failed');
+        }
+    };
+
+    const handleForgotSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmittingForgot(true);
+        try {
+            const response = await api.post('/auth/forgot-password', { email: forgotEmail });
+            toast.success(response.data.message || 'Verification code sent!');
+            if (response.data.data?.token) {
+                setResetToken(response.data.data.token);
+                toast.success(`Dev Mode: Code autofilled ${response.data.data.token}`, { duration: 6000 });
+            }
+            setMode('reset');
+        } catch (error: any) {
+            toast.error(error.response?.data?.error?.message || error.response?.data?.message || 'Failed to request reset');
+        } finally {
+            setIsSubmittingForgot(false);
+        }
+    };
+
+    const handleResetSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmittingReset(true);
+        try {
+            await api.post('/auth/reset-password', {
+                email: forgotEmail,
+                token: resetToken,
+                password: newPassword
+            });
+            toast.success('Password reset successfully! Please sign in.');
+            setMode('login');
+            setNewPassword('');
+            setResetToken('');
+        } catch (error: any) {
+            toast.error(error.response?.data?.error?.message || error.response?.data?.message || 'Failed to reset password');
+        } finally {
+            setIsSubmittingReset(false);
         }
     };
 
@@ -114,77 +158,171 @@ const Login = () => {
                     <div className={styles.bottomSection}>
                         {/* Sign-in Form section (Centered Headers) */}
                         <div className={styles.formHeader}>
-                            <h2>Sign in to your account</h2>
-                            <p>Enter your workspace credentials to continue.</p>
+                            {mode === 'login' && (
+                                <>
+                                    <h2>Sign in to your account</h2>
+                                    <p>Enter your workspace credentials to continue.</p>
+                                </>
+                            )}
+                            {mode === 'forgot' && (
+                                <>
+                                    <h2>Forgot your password?</h2>
+                                    <p>Enter your work email to receive a reset code.</p>
+                                </>
+                            )}
+                            {mode === 'reset' && (
+                                <>
+                                    <h2>Reset your password</h2>
+                                    <p>Enter the code sent to your email and your new password.</p>
+                                </>
+                            )}
                         </div>
 
-                        <button type="button" className={styles.googleBtn}>
-                            <svg width="18" height="18" viewBox="0 0 18 18" style={{ marginRight: '8px' }}>
-                                <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
-                                <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
-                                <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z" />
-                                <path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59A8 8 0 0 0 1.83 5.4l2.67 2.07a4.8 4.8 0 0 1 4.48-3.9z" />
-                            </svg>
-                            Continue with Google
-                        </button>
+                        {mode === 'login' && (
+                            <>
+                                <button type="button" className={styles.googleBtn}>
+                                    <svg width="18" height="18" viewBox="0 0 18 18" style={{ marginRight: '8px' }}>
+                                        <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
+                                        <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
+                                        <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z" />
+                                        <path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59A8 8 0 0 0 1.83 5.4l2.67 2.07a4.8 4.8 0 0 1 4.48-3.9z" />
+                                    </svg>
+                                    Continue with Google
+                                </button>
 
-                        <div className={styles.divider}>
-                            <span>WORK EMAIL</span>
-                        </div>
-
-                        <form onSubmit={handleSubmit}>
-                            <div className={styles.formGroup}>
-                                <label htmlFor="email">Work Email</label>
-                                <input
-                                    id="email"
-                                    type="email"
-                                    placeholder="name@company.com"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    required
-                                />
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <div className={styles.labelRow}>
-                                    <label htmlFor="password">Password</label>
-                                    <a href="#" className={styles.forgotLink}>Forgot?</a>
+                                <div className={styles.divider}>
+                                    <span>WORK EMAIL</span>
                                 </div>
-                                <div className={styles.passwordWrapper}>
+
+                                <form onSubmit={handleSubmit}>
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="email">Work Email</label>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            placeholder="name@company.com"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <div className={styles.labelRow}>
+                                            <label htmlFor="password">Password</label>
+                                            <a href="#" onClick={(e) => { e.preventDefault(); setMode('forgot'); }} className={styles.forgotLink}>Forgot?</a>
+                                        </div>
+                                        <div className={styles.passwordWrapper}>
+                                            <input
+                                                id="password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                placeholder="••••••••"
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                className={styles.eyeBtn}
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.rememberRow}>
+                                        <label className={styles.checkbox}>
+                                            <input
+                                                type="checkbox"
+                                                checked={rememberMe}
+                                                onChange={(e) => setRememberMe(e.target.checked)}
+                                            />
+                                            <span className={styles.checkmark}></span>
+                                            Keep me signed in
+                                        </label>
+                                    </div>
+
+                                    <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+                                        {isLoading ? 'Signing In...' : 'Sign In'}
+                                    </button>
+                                </form>
+                            </>
+                        )}
+
+                        {mode === 'forgot' && (
+                            <form onSubmit={handleForgotSubmit}>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="forgotEmail">Work Email</label>
                                     <input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        placeholder="••••••••"
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                        id="forgotEmail"
+                                        type="email"
+                                        placeholder="name@company.com"
+                                        value={forgotEmail}
+                                        onChange={(e) => setForgotEmail(e.target.value)}
                                         required
                                     />
-                                    <button
-                                        type="button"
-                                        className={styles.eyeBtn}
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                    </button>
                                 </div>
-                            </div>
 
-                            <div className={styles.rememberRow}>
-                                <label className={styles.checkbox}>
+                                <button type="submit" className={styles.submitBtn} disabled={isSubmittingForgot}>
+                                    {isSubmittingForgot ? 'Sending Code...' : 'Send Verification Code'}
+                                </button>
+
+                                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                                    <a href="#" onClick={(e) => { e.preventDefault(); setMode('login'); }} className={styles.forgotLink}>
+                                        Back to Sign In
+                                    </a>
+                                </div>
+                            </form>
+                        )}
+
+                        {mode === 'reset' && (
+                            <form onSubmit={handleResetSubmit}>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="resetToken">Verification Code</label>
                                     <input
-                                        type="checkbox"
-                                        checked={rememberMe}
-                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        id="resetToken"
+                                        type="text"
+                                        placeholder="6-digit code"
+                                        maxLength={6}
+                                        value={resetToken}
+                                        onChange={(e) => setResetToken(e.target.value)}
+                                        required
                                     />
-                                    <span className={styles.checkmark}></span>
-                                    Keep me signed in
-                                </label>
-                            </div>
+                                </div>
 
-                            <button type="submit" className={styles.submitBtn} disabled={isLoading}>
-                                {isLoading ? 'Signing In...' : 'Sign In'}
-                            </button>
-                        </form>
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="newPassword">New Password</label>
+                                    <div className={styles.passwordWrapper}>
+                                        <input
+                                            id="newPassword"
+                                            type={showPassword ? 'text' : 'password'}
+                                            placeholder="••••••••"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            className={styles.eyeBtn}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" className={styles.submitBtn} disabled={isSubmittingReset}>
+                                    {isSubmittingReset ? 'Resetting Password...' : 'Reset Password'}
+                                </button>
+
+                                <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                                    <a href="#" onClick={(e) => { e.preventDefault(); setMode('login'); }} className={styles.forgotLink}>
+                                        Cancel & Back to Sign In
+                                    </a>
+                                </div>
+                            </form>
+                        )}
 
                         <p className={styles.signupLink}>
                             New to ProEmpower? <Link to="/register">Create an account</Link>
