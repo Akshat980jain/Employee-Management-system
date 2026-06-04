@@ -9,7 +9,7 @@ import logo from '../../logo.png';
 import styles from './Register.module.css';
 
 // Reusable custom node-link logo matching the images
-const ProEmpowerLogo = ({ size = 28 }: { size?: number }) => (
+const StaffSphereLogo = ({ size = 28 }: { size?: number }) => (
     <img src={logo} alt="StaffSphere Logo" style={{ width: size, height: size, objectFit: 'contain', borderRadius: '6px' }} />
 );
 
@@ -128,7 +128,7 @@ const Register = () => {
             {/* Top Navigation Header bar */}
             <header className={styles.headerBar}>
                 <div className={styles.headerContent}>
-                    <ProEmpowerLogo size={26} />
+                    <StaffSphereLogo size={26} />
                     <span className={styles.logoTextMain}>StaffSphere</span>
                 </div>
             </header>
@@ -346,7 +346,7 @@ const Register = () => {
             {/* Bottom Footer bar */}
             <footer className={styles.footerBar}>
                 <div className={styles.footerBranding}>
-                    <ProEmpowerLogo size={20} />
+                    <StaffSphereLogo size={20} />
                     <span>StaffSphere</span>
                 </div>
                 <div className={styles.footerLinks}>

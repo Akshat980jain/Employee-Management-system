@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock } from 'lucide-react';
+import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock, TriangleAlert } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 import api, { getErrorMessage } from '../../services/api';
@@ -8,7 +8,7 @@ import logo from '../../logo.png';
 import styles from './Login.module.css';
 
 // Reusable custom node-link logo matching the images
-const ProEmpowerLogo = ({ size = 32 }: { size?: number }) => (
+const StaffSphereLogo = ({ size = 32 }: { size?: number }) => (
     <img src={logo} alt="StaffSphere Logo" style={{ width: size, height: size, objectFit: 'contain', borderRadius: '8px' }} />
 );
 
@@ -22,6 +22,8 @@ const Login = () => {
     const [newPassword, setNewPassword] = useState('');
     const [isSubmittingForgot, setIsSubmittingForgot] = useState(false);
     const [isSubmittingReset, setIsSubmittingReset] = useState(false);
+    const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
+    const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -57,6 +59,39 @@ const Login = () => {
         }
     };
 
+    const handleOtpDigitChange = (index: number, value: string) => {
+        const digit = value.replace(/\D/g, '').slice(-1);
+        const newDigits = [...otpDigits];
+        newDigits[index] = digit;
+        setOtpDigits(newDigits);
+        const combined = newDigits.join('');
+        setResetToken(combined);
+        if (digit && index < 5) {
+            otpRefs.current[index + 1]?.focus();
+        }
+    };
+
+    const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
+            otpRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        if (pasted.length > 0) {
+            const newDigits = [...otpDigits];
+            for (let i = 0; i < 6; i++) {
+                newDigits[i] = pasted[i] || '';
+            }
+            setOtpDigits(newDigits);
+            setResetToken(pasted);
+            const nextEmpty = Math.min(pasted.length, 5);
+            otpRefs.current[nextEmpty]?.focus();
+        }
+    };
+
     const handleResetSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmittingReset(true);
@@ -70,6 +105,7 @@ const Login = () => {
             setMode('login');
             setNewPassword('');
             setResetToken('');
+            setOtpDigits(['', '', '', '', '', '']);
         } catch (error: any) {
             toast.error(getErrorMessage(error, 'Failed to reset password'));
         } finally {
@@ -95,6 +131,110 @@ const Login = () => {
         },
     ];
 
+    // OTP Reset screen — full standalone card matching email design
+    if (mode === 'reset') {
+        return (
+            <div className={styles.otpPageBg}>
+                <div className={styles.otpCard}>
+                    {/* Card top accent bar */}
+                    <div className={styles.otpAccentBar} />
+
+                    {/* Header */}
+                    <div className={styles.otpCardHeader}>
+                        <Lock size={26} className={styles.otpLockIcon} />
+                        <span className={styles.otpCardTitle}>StaffSphere Security</span>
+                    </div>
+
+                    <div className={styles.otpCardDivider} />
+
+                    {/* Body */}
+                    <div className={styles.otpCardBody}>
+                        <p className={styles.otpCodeLabel}>Verification Code</p>
+
+                        {/* 6-digit OTP pill */}
+                        <div className={styles.otpPill}>
+                            {otpDigits.map((digit, i) => (
+                                <input
+                                    key={i}
+                                    id={`otp-digit-${i}`}
+                                    ref={(el) => { otpRefs.current[i] = el; }}
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={1}
+                                    value={digit}
+                                    onChange={(e) => handleOtpDigitChange(i, e.target.value)}
+                                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                                    onPaste={handleOtpPaste}
+                                    className={styles.otpDigitInput}
+                                    autoFocus={i === 0}
+                                    autoComplete="one-time-code"
+                                />
+                            ))}
+                        </div>
+
+                        <p className={styles.otpDescription}>
+                            Please enter this 6-digit code to complete your password reset
+                            for <strong>{forgotEmail}</strong>. The code expires in 10 minutes.
+                        </p>
+
+                        {/* Warning banner */}
+                        <div className={styles.otpWarningBanner}>
+                            <TriangleAlert size={16} className={styles.otpWarningIcon} />
+                            <p>If you did not request this code, please ignore this email or contact support.</p>
+                        </div>
+
+                        {/* New password field */}
+                        <div className={styles.otpNewPassSection}>
+                            <label htmlFor="newPasswordOtp" className={styles.otpNewPassLabel}>New Password</label>
+                            <div className={styles.passwordWrapper}>
+                                <input
+                                    id="newPasswordOtp"
+                                    type={showPassword ? 'text' : 'password'}
+                                    placeholder="Enter your new password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                    className={styles.otpNewPassInput}
+                                />
+                                <button
+                                    type="button"
+                                    className={styles.eyeBtn}
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            className={styles.otpSubmitBtn}
+                            disabled={isSubmittingReset || otpDigits.join('').length < 6 || !newPassword}
+                            onClick={(e: any) => handleResetSubmit(e)}
+                        >
+                            {isSubmittingReset ? 'Resetting Password…' : 'Reset Password'}
+                        </button>
+
+                        <div className={styles.otpBackLink}>
+                            <a href="#" onClick={(e) => { e.preventDefault(); setMode('login'); setOtpDigits(['','','','','','']); setResetToken(''); }}>
+                                ← Back to Sign In
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className={styles.otpCardFooter}>
+                        <p className={styles.otpFooterBrand}>StaffSphere Security</p>
+                        <p className={styles.otpFooterCopy}>All rights reserved © 2024 StaffSphere Inc.</p>
+                        <p className={styles.otpFooterLinks}>
+                            <a href="#">Support</a> | <a href="#">Terms</a> | <a href="#">Privacy</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.mainContent}>
@@ -102,7 +242,7 @@ const Login = () => {
                     <div className={styles.topSection}>
                         {/* Top Branding (Left Aligned in mockup) */}
                         <div className={styles.logo}>
-                            <ProEmpowerLogo size={32} />
+                            <StaffSphereLogo size={32} />
                             <span className={styles.logoText}>StaffSphere</span>
                         </div>
 
@@ -268,53 +408,7 @@ const Login = () => {
                             </form>
                         )}
 
-                        {mode === 'reset' && (
-                            <form onSubmit={handleResetSubmit}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="resetToken">Verification Code</label>
-                                    <input
-                                        id="resetToken"
-                                        type="text"
-                                        placeholder="6-digit code"
-                                        maxLength={6}
-                                        value={resetToken}
-                                        onChange={(e) => setResetToken(e.target.value)}
-                                        required
-                                    />
-                                </div>
-
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="newPassword">New Password</label>
-                                    <div className={styles.passwordWrapper}>
-                                        <input
-                                            id="newPassword"
-                                            type={showPassword ? 'text' : 'password'}
-                                            placeholder="••••••••"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                            required
-                                        />
-                                        <button
-                                            type="button"
-                                            className={styles.eyeBtn}
-                                            onClick={() => setShowPassword(!showPassword)}
-                                        >
-                                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <button type="submit" className={styles.submitBtn} disabled={isSubmittingReset}>
-                                    {isSubmittingReset ? 'Resetting Password...' : 'Reset Password'}
-                                </button>
-
-                                <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                                    <a href="#" onClick={(e) => { e.preventDefault(); setMode('login'); }} className={styles.forgotLink}>
-                                        Cancel & Back to Sign In
-                                    </a>
-                                </div>
-                            </form>
-                        )}
+                        {/* reset mode is handled as early return above */}
 
                         <p className={styles.signupLink}>
                             New to StaffSphere? <Link to="/register">Create an account</Link>

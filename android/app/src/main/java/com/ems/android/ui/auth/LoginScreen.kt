@@ -105,7 +105,7 @@ val GoogleIconVector = ImageVector.Builder(
 }.build()
 
 @Composable
-fun ProEmpowerLogo(modifier: Modifier = Modifier, size: Dp = 32.dp) {
+fun StaffSphereLogo(modifier: Modifier = Modifier, size: Dp = 32.dp) {
     Image(
         painter = painterResource(id = R.drawable.logo),
         contentDescription = "StaffSphere Logo",
@@ -337,7 +337,7 @@ fun LoginScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        ProEmpowerLogo(size = 32.dp)
+                        StaffSphereLogo(size = 32.dp)
                         Text(
                             text = "StaffSphere",
                             style = MaterialTheme.typography.titleLarge.copy(

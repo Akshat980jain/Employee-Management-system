@@ -102,7 +102,7 @@ val GoogleIconVectorRegister = ImageVector.Builder(
 }.build()
 
 @Composable
-fun ProEmpowerLogoRegister(modifier: Modifier = Modifier, size: Dp = 28.dp) {
+fun StaffSphereLogoRegister(modifier: Modifier = Modifier, size: Dp = 28.dp) {
     Image(
         painter = painterResource(id = R.drawable.logo),
         contentDescription = "StaffSphere Logo",
@@ -225,7 +225,7 @@ fun RegisterScreen(
                 .padding(horizontal = 24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ProEmpowerLogoRegister(size = 26.dp)
+            StaffSphereLogoRegister(size = 26.dp)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = buildAnnotatedString {
@@ -940,7 +940,7 @@ fun RegisterScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                ProEmpowerLogoRegister(size = 20.dp)
+                StaffSphereLogoRegister(size = 20.dp)
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "StaffSphere",
