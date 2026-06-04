@@ -641,19 +641,5 @@ fun CorrectionRequestDialog(
 }
 
 private fun formatTime(isoString: String): String {
-    return try {
-        val timePart = isoString.substringAfter("T").substringBefore(".")
-        val parts = timePart.split(":")
-        if (parts.size >= 2) {
-            val hour = parts[0].toInt()
-            val minute = parts[1]
-            val period = if (hour >= 12) "PM" else "AM"
-            val displayHour = if (hour > 12) hour - 12 else if (hour == 0) 12 else hour
-            "$displayHour:$minute $period"
-        } else {
-            isoString
-        }
-    } catch (e: Exception) {
-        isoString
-    }
+    return com.ems.android.utils.DateTimeUtils.formatToLocalTime(isoString)
 }

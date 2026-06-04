@@ -286,7 +286,7 @@ fun AdminDashboard(
                         )
                         Text(
                             text = if (attendanceStatus?.isClockedIn == true) 
-                                "Since ${attendanceStatus?.currentSession?.checkIn?.take(16) ?: "N/A"}" 
+                                "Since ${attendanceStatus?.currentSession?.checkIn?.let { com.ems.android.utils.DateTimeUtils.formatToLocalTime(it) } ?: "N/A"}" 
                             else 
                                 "Tap to start your work day",
                             style = MaterialTheme.typography.bodySmall,
@@ -611,7 +611,7 @@ fun AdminDashboard(
                                         )
                                     }
                                     Text(
-                                        text = activity.createdAt.take(16),
+                                        text = com.ems.android.utils.DateTimeUtils.formatToLocalDateTime(activity.createdAt),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                     )

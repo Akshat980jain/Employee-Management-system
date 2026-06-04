@@ -313,7 +313,7 @@ fun EmployeeDashboard(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = session.checkIn.take(16).replace("T", " "),
+                                            text = com.ems.android.utils.DateTimeUtils.formatToLocalDateTime(session.checkIn),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
@@ -328,7 +328,7 @@ fun EmployeeDashboard(
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(
-                                                text = checkOut.take(16).replace("T", " "),
+                                                text = com.ems.android.utils.DateTimeUtils.formatToLocalDateTime(checkOut),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
