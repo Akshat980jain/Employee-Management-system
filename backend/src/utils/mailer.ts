@@ -7,8 +7,9 @@ export async function sendResetOtpEmail(
 ): Promise<boolean> {
     const apiKey = process.env.BREVO_API_KEY;
     const senderEmail = process.env.BREVO_SENDER_EMAIL || 'noreply@staffsphere.com';
-    const senderName = process.env.BREVO_SENDER_NAME || 'StaffSphere System';
-    const brandName = senderName.endsWith(' System') ? senderName.slice(0, -7) : senderName;
+    // Hardcode the name to StaffSphere to prevent stale environment variables (like ProEmpower) from overriding it
+    const senderName = 'StaffSphere System';
+    const brandName = 'StaffSphere';
 
     if (!apiKey || apiKey === 'your_brevo_api_key_here') {
         console.warn(`[MAILER WARNING] Brevo API Key not configured. Fallback: OTP for ${recipientEmail} is ${otp}`);
