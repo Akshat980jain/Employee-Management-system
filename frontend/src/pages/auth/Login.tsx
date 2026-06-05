@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock, TriangleAlert } from 'lucide-react';
+import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 import api, { getErrorMessage } from '../../services/api';
@@ -179,7 +179,7 @@ const Login = () => {
 
                         {/* Warning banner */}
                         <div className={styles.otpWarningBanner}>
-                            <TriangleAlert size={16} className={styles.otpWarningIcon} />
+                            <AlertTriangle size={16} className={styles.otpWarningIcon} />
                             <p>If you did not request this code, please ignore this email or contact support.</p>
                         </div>
 
@@ -302,12 +302,7 @@ const Login = () => {
                                     <p>Enter your work email to receive a reset code.</p>
                                 </>
                             )}
-                            {mode === 'reset' && (
-                                <>
-                                    <h2>Reset your password</h2>
-                                    <p>Enter the code sent to your email and your new password.</p>
-                                </>
-                            )}
+
                         </div>
 
                         {mode === 'login' && (
