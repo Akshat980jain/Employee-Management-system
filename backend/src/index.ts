@@ -41,7 +41,10 @@ const PORT = process.env.PORT || 3000;
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    crossOriginEmbedderPolicy: false,
+}));
 
 // CORS - allow both localhost and deployed frontend
 const allowedOrigins = [
