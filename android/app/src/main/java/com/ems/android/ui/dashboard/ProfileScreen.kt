@@ -23,6 +23,7 @@ import com.ems.android.ui.theme.GradientEnd
 import com.ems.android.ui.theme.GradientStart
 import com.ems.android.ui.theme.Primary
 import kotlinx.coroutines.launch
+import com.ems.android.ui.components.LocalThemeController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +31,7 @@ fun ProfileScreen(
     onLogout: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
+    val themeController = LocalThemeController.current
     val user by viewModel.user.collectAsState()
     val scope = rememberCoroutineScope()
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -77,7 +79,6 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Gradient Header
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,6 +89,20 @@ fun ProfileScreen(
                     )
                 )
         ) {
+            // Theme toggle button at top right
+            IconButton(
+                onClick = { themeController.toggleTheme() },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(8.dp)
+            ) {
+                Icon(
+                    imageVector = if (themeController.isDark) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = "Toggle Theme",
+                    tint = Color.White
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()

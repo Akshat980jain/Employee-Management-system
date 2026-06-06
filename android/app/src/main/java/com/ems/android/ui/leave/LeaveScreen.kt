@@ -20,9 +20,12 @@ import com.ems.android.ui.components.LeaveBalanceCard
 import com.ems.android.ui.dashboard.PendingRequestCard
 import com.ems.android.ui.theme.*
 
+import com.ems.android.ui.components.SharedHeader
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaveScreen(
+    onOpenDrawer: () -> Unit = {},
     viewModel: LeaveViewModel = hiltViewModel()
 ) {
     val leaveTypes by viewModel.leaveTypes.collectAsState()
@@ -138,22 +141,20 @@ fun LeaveScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
-            TopAppBar(
-                title = { 
-                    Text(
-                        "Leave Management",
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
+            SharedHeader(
+                title = "Leave Management",
+                navigationIcon = Icons.Default.Menu,
+                onNavigationClick = onOpenDrawer,
                 actions = {
-                    IconButton(onClick = { viewModel.loadLeaveData() }) {
+                    IconButton(
+                        onClick = { viewModel.loadLeaveData() },
+                        modifier = Modifier.size(36.dp)
+                    ) {
                         Icon(
                             Icons.Default.Refresh, 
                             contentDescription = "Refresh",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

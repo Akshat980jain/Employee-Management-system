@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ems.android.ui.components.SharedHeader
 
 data class Feedback(
     val id: String,
@@ -110,16 +111,6 @@ fun FeedbackScreen(
     }
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Feedback") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showSubmitDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Submit Feedback")
@@ -131,6 +122,11 @@ fun FeedbackScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            SharedHeader(
+                title = "Feedback",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack
+            )
             // Stats Row
             Row(
                 modifier = Modifier

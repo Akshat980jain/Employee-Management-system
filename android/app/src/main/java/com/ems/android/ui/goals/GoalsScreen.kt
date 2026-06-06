@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ems.android.ui.components.SharedHeader
 
 data class Goal(
     val id: String,
@@ -83,16 +84,6 @@ fun GoalsScreen(
     }
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Goals & Objectives") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddGoalDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Goal")
@@ -104,6 +95,11 @@ fun GoalsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            SharedHeader(
+                title = "Goals & Objectives",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack
+            )
             // Tabs
             TabRow(selectedTabIndex = selectedTab) {
                 tabs.forEachIndexed { index, title ->

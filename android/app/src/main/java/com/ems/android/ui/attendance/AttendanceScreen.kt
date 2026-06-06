@@ -33,9 +33,12 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 
+import com.ems.android.ui.components.SharedHeader
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceScreen(
+    onOpenDrawer: () -> Unit = {},
     viewModel: AttendanceViewModel = hiltViewModel()
 ) {
     val user by viewModel.attendanceStatus.collectAsState()
@@ -97,11 +100,21 @@ fun AttendanceScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            TopAppBar(
-                title = { Text("Attendance") },
+            SharedHeader(
+                title = "Attendance",
+                navigationIcon = Icons.Default.Menu,
+                onNavigationClick = onOpenDrawer,
                 actions = {
-                    IconButton(onClick = { viewModel.loadAttendanceData() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                    IconButton(
+                        onClick = { viewModel.loadAttendanceData() },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Refresh, 
+                            contentDescription = "Refresh",
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )

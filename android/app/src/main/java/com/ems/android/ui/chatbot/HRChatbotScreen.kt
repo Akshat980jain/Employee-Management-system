@@ -93,54 +93,71 @@ fun HRChatbotScreen(
         }
     }
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { 
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFF6366F1)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Default.SmartToy,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text("HR Assistant", fontWeight = FontWeight.SemiBold)
-                            Text(
-                                text = if (isTyping) "Typing..." else "Online",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (isTyping) Color(0xFFF59E0B) else Color(0xFF10B981)
-                            )
-                        }
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { messages.clear(); messages.add(ChatMessage("1", "Hello! I'm your HR Assistant. How can I help you today?", false, "Now")) }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "New Chat")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // Custom SharedHeader-style row preserving bot avatar + status
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = onNavigateBack,
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        modifier = Modifier.size(22.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF6366F1)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.SmartToy,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "HR Assistant",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = if (isTyping) "Typing..." else "Online",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (isTyping) Color(0xFFF59E0B) else Color(0xFF10B981)
+                    )
+                }
+                IconButton(onClick = {
+                    messages.clear()
+                    messages.add(ChatMessage("1", "Hello! I'm your HR Assistant. How can I help you today?", false, "Now"))
+                }) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "New Chat",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
             // Messages
             LazyColumn(
                 state = listState,

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ems.android.ui.components.SharedHeader
 
 data class PerformanceReview(
     val id: String,
@@ -74,21 +75,6 @@ fun ReviewsScreen(
     }
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Performance Reviews") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { showStartReviewDialog = true }) {
-                        Icon(Icons.Default.PlayCircle, contentDescription = "Start Review Cycle")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { showStartReviewDialog = true },
@@ -102,6 +88,17 @@ fun ReviewsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            SharedHeader(
+                title = "Performance Reviews",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
+                actions = {
+                    IconButton(onClick = { showStartReviewDialog = true }) {
+                        Icon(Icons.Default.PlayCircle, contentDescription = "Start Review Cycle",
+                            tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            )
             // Summary Stats
             Row(
                 modifier = Modifier

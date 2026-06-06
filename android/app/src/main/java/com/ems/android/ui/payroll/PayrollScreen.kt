@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ems.android.ui.components.SharedHeader
 
 data class PayrollEntry(
     val id: String,
@@ -76,21 +77,6 @@ fun PayrollScreen(
     }
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Payroll Management") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { showGenerateDialog = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "Generate Payroll")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { showGenerateDialog = true },
@@ -99,10 +85,23 @@ fun PayrollScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
+        Column(
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
+        ) {
+            SharedHeader(
+                title = "Payroll Management",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
+                actions = {
+                    IconButton(onClick = { showGenerateDialog = true }) {
+                        Icon(Icons.Default.Add, contentDescription = "Generate Payroll",
+                            tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            )
+            LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -171,8 +170,9 @@ fun PayrollScreen(
             }
             
             item { Spacer(modifier = Modifier.height(80.dp)) }
-        }
-    }
+        }  // end LazyColumn
+        }  // end Column
+    }  // end Scaffold
 }
 
 @Composable

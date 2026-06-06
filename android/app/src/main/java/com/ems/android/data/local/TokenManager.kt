@@ -26,6 +26,7 @@ class TokenManager @Inject constructor(
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
         private val USER_KEY = stringPreferencesKey("user_data")
         private val REMEMBER_ME_KEY = booleanPreferencesKey("remember_me")
+        private val DARK_THEME_KEY = booleanPreferencesKey("dark_theme")
     }
     
     private var startupChecked = false
@@ -106,5 +107,17 @@ class TokenManager @Inject constructor(
     
     fun isLoggedIn(): Flow<Boolean> {
         return getToken().map { it != null }
+    }
+
+    fun isDarkTheme(default: Boolean = true): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[DARK_THEME_KEY] ?: default
+        }
+    }
+
+    suspend fun setDarkTheme(isDark: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[DARK_THEME_KEY] = isDark
+        }
     }
 }

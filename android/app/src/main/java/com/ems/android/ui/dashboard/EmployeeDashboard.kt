@@ -31,7 +31,8 @@ import com.ems.android.ui.theme.Success
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.ems.android.ui.components.SharedHeader
+
 @Composable
 fun EmployeeDashboard(
     onLogout: () -> Unit,
@@ -72,23 +73,19 @@ fun EmployeeDashboard(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top App Bar
-        TopAppBar(
-            title = { 
-                Text(
-                    "Dashboard",
-                    fontWeight = FontWeight.SemiBold
-                )
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+        // Standardized Custom Header Row
+        SharedHeader(
+            title = "Dashboard",
             actions = {
-                IconButton(onClick = { viewModel.refreshDashboardData() }) {
+                IconButton(
+                    onClick = { viewModel.refreshDashboardData() },
+                    modifier = Modifier.size(36.dp)
+                ) {
                     Icon(
                         Icons.Default.Refresh, 
                         contentDescription = "Refresh",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        modifier = Modifier.size(22.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

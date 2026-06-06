@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.ui.components.AppError
 import com.ems.android.ui.components.ErrorDialog
 import com.ems.android.ui.components.ErrorType
+import com.ems.android.ui.components.LocalThemeController
 
 // Reusable Google G icon vector matching the web version
 val GoogleIconVectorRegister = ImageVector.Builder(
@@ -134,7 +135,8 @@ fun RegisterScreen(
     var showOrgDropdown by remember { mutableStateOf(false) }
     
     // Dynamic theme state detection
-    val isDark = isSystemInDarkTheme()
+    val themeController = LocalThemeController.current
+    val isDark = themeController.isDark
     
     val pageBg = if (isDark) Color(0xFF0F172A) else Color(0xFFF8FAFC)
     val headerBg = if (isDark) Color(0xFF1E293B) else Color.White
@@ -236,6 +238,18 @@ fun RegisterScreen(
                 fontSize = 18.sp,
                 letterSpacing = (-0.5).sp
             )
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = { themeController.toggleTheme() },
+                modifier = Modifier.size(36.dp)
+            ) {
+                Icon(
+                    imageVector = if (isDark) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = "Toggle Theme",
+                    tint = if (isDark) Color.White else Color(0xFF0F172A),
+                    modifier = Modifier.size(22.dp)
+                )
+            }
         }
         
         // Centered card panel

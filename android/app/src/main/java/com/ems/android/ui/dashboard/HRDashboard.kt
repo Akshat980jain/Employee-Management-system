@@ -17,10 +17,19 @@ import com.ems.android.ui.components.WelcomeCard
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.ems.android.ui.components.SharedHeader
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+
 @Composable
 fun HRDashboard(
     onLogout: () -> Unit,
+    onOpenDrawer: () -> Unit = {},
+    onNavigateToNotifications: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val user by viewModel.user.collectAsState()
@@ -85,11 +94,51 @@ fun HRDashboard(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        TopAppBar(
-            title = { Text("HR Dashboard") },
+        // Standardized Custom Header Row
+        SharedHeader(
+            title = "HR Dashboard",
+            navigationIcon = Icons.Default.Menu,
+            onNavigationClick = onOpenDrawer,
             actions = {
-                IconButton(onClick = { viewModel.refreshDashboardData() }) {
-                    Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                // Notifications with Badge
+                BadgedBox(
+                    badge = {
+                        val pendingCount = pendingLeaveRequests.size + pendingJoinRequests.size
+                        if (pendingCount > 0) {
+                            Badge { Text(pendingCount.toString()) }
+                        }
+                    }
+                ) {
+                    IconButton(
+                        onClick = onNavigateToNotifications,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Notifications, 
+                            contentDescription = "Notifications", 
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+                
+                Spacer(modifier = Modifier.width(4.dp))
+                
+                // Profile Avatar - Teal color to match design
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF14B8A6)) // Teal color
+                        .clickable { onNavigateToProfile() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "${user?.firstName?.firstOrNull() ?: ""}${user?.lastName?.firstOrNull() ?: ""}".uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,6 +15,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -141,7 +146,7 @@ fun MainScreen(
     // Disabled gestures statically to prevent Compose touch interception bug, and use custom scrim click-outside interceptor
     ModalNavigationDrawer(
         drawerState = drawerState,
-        gesturesEnabled = false,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             // Only show drawer content for HR/Admin
             if (isHROrAdmin) {
@@ -192,10 +197,27 @@ fun MainScreen(
                                 .verticalScroll(rememberScrollState())
                         ) {
                             drawerItems.forEach { item ->
+                                val isSelected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true
                                 NavigationDrawerItem(
-                                    icon = { Icon(item.icon, contentDescription = null) },
-                                    label = { Text(item.title) },
-                                    selected = currentDestination?.route == item.route,
+                                    icon = {
+                                        Icon(
+                                            item.icon,
+                                            contentDescription = null,
+                                            tint = if (isSelected)
+                                                MaterialTheme.colorScheme.onSecondaryContainer
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            item.title,
+                                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                                        )
+                                    },
+                                    selected = isSelected,
                                     onClick = {
                                         scope.launch { drawerState.close() }
                                         navController.navigate(item.route) {
@@ -213,11 +235,27 @@ fun MainScreen(
 
                         HorizontalDivider()
 
-                        // Profile & Logout
+                        val isProfileSelected = currentDestination?.hierarchy?.any {
+                            it.route == "profile"
+                        } == true
                         NavigationDrawerItem(
-                            icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                            label = { Text("Profile") },
-                            selected = currentDestination?.route == "profile",
+                            icon = {
+                                Icon(
+                                    Icons.Default.Person,
+                                    contentDescription = null,
+                                    tint = if (isProfileSelected)
+                                        MaterialTheme.colorScheme.onSecondaryContainer
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            label = {
+                                Text(
+                                    "Profile",
+                                    fontWeight = if (isProfileSelected) FontWeight.SemiBold else FontWeight.Normal
+                                )
+                            },
+                            selected = isProfileSelected,
                             onClick = {
                                 scope.launch { drawerState.close() }
                                 navController.navigate("profile") {
@@ -257,49 +295,15 @@ fun MainScreen(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Scaffold(
-            bottomBar = {
-                NavigationBar(
-                    modifier = Modifier.height(60.dp),
-                    windowInsets = WindowInsets(0, 0, 0, 0)
-                ) {
-                    bottomNavItems.forEach { item ->
-                        val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                        
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    if (selected) item.selectedIcon else item.unselectedIcon,
-                                    contentDescription = item.title,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            },
-                            label = { 
-                                Text(
-                                    item.title, 
-                                    fontSize = 11.sp,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
-                                ) 
-                            },
-                            selected = selected,
-                            alwaysShowLabel = true,
-                            onClick = {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        )
-                    }
-                }
-            }
+            // No bottomBar — we use a custom floating bar overlay
         ) { paddingValues ->
             NavHost(
                 navController = navController,
                 startDestination = "dashboard",
-                modifier = Modifier.padding(paddingValues)
+                // Add bottom padding so content isn't hidden behind the floating bar
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(bottom = 88.dp)
             ) {
                 composable("dashboard") {
                     when (user?.role) {
@@ -313,17 +317,26 @@ fun MainScreen(
                             onNavigateToProfile = { navController.navigate("profile") },
                             onOpenDrawer = { scope.launch { drawerState.open() } }
                         )
-                        "HR Manager", "HR_MANAGER" -> HRDashboard(onLogout = onLogout)
+                        "HR Manager", "HR_MANAGER" -> HRDashboard(
+                            onLogout = onLogout,
+                            onOpenDrawer = { scope.launch { drawerState.open() } },
+                            onNavigateToNotifications = { navController.navigate("notifications") },
+                            onNavigateToProfile = { navController.navigate("profile") }
+                        )
                         else -> EmployeeDashboard(onLogout = onLogout)
                     }
                 }
                 
                 composable("attendance") {
-                    AttendanceScreen()
+                    AttendanceScreen(
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
+                    )
                 }
                 
                 composable("leave") {
-                    LeaveScreen()
+                    LeaveScreen(
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
+                    )
                 }
                 
                 composable("profile") {
@@ -395,7 +408,8 @@ fun MainScreen(
                 composable("settings") {
                     SettingsScreen(
                         onNavigateBack = { navController.popBackStack() },
-                        onLogout = onLogout
+                        onLogout = onLogout,
+                        onOpenDrawer = { scope.launch { drawerState.open() } }
                     )
                 }
                 
@@ -449,23 +463,94 @@ fun MainScreen(
                 }
             }
             }
-            
-            // Custom click-outside dismiss overlay when drawer is open
-            if (drawerState.isOpen) {
-                Box(
+
+            // ── Floating Pill Bottom Navigation Bar ──────────────────────────
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+            ) {
+                Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(androidx.compose.ui.graphics.Color.Transparent)
-                        .clickable(
-                            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                            indication = null
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 24.dp,
+                            shape = RoundedCornerShape(32.dp),
+                            ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
+                            spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f)
+                        )
+                        .clip(RoundedCornerShape(32.dp))
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.surface,
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        )
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    bottomNavItems.forEach { item ->
+                        val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(24.dp))
+                                .clickable {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
+                                .padding(vertical = 6.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(3.dp)
                         ) {
-                            scope.launch {
-                                drawerState.close()
+                            // Active pill behind icon
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(
+                                        if (selected)
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                        else
+                                            Color.Transparent
+                                    )
+                                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                                    contentDescription = item.title,
+                                    modifier = Modifier.size(22.dp),
+                                    tint = if (selected)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
+                            Text(
+                                text = item.title,
+                                fontSize = 10.sp,
+                                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                                color = if (selected)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
-                )
+                    }
+                }
             }
+
+
         }
     }
 }

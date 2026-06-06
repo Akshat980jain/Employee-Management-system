@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.ui.components.AppError
 import com.ems.android.ui.components.ErrorDialog
 import com.ems.android.ui.components.ErrorType
+import com.ems.android.ui.components.LocalThemeController
 import com.ems.android.ui.theme.GradientEnd
 import com.ems.android.ui.theme.GradientStart
 import com.ems.android.ui.theme.Primary
@@ -244,7 +245,8 @@ fun LoginScreen(
     }
     
     // Dynamic theme state detection
-    val isDark = isSystemInDarkTheme()
+    val themeController = LocalThemeController.current
+    val isDark = themeController.isDark
     
     val pageBg = if (isDark) Color(0xFF0F172A) else Color(0xFFF8FAFC)
     val cardBg = if (isDark) Color(0xFF1E293B) else Color.White
@@ -311,14 +313,34 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(pageBg)
-            .verticalScroll(rememberScrollState())
-            .padding(vertical = 40.dp, horizontal = 16.dp),
-        contentAlignment = Alignment.Center
     ) {
-        Card(
+        // Floating Theme Toggle Button at top right
+        IconButton(
+            onClick = { themeController.toggleTheme() },
             modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 440.dp),
+                .align(Alignment.TopEnd)
+                .statusBarsPadding()
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = if (isDark) Icons.Default.LightMode else Icons.Default.DarkMode,
+                contentDescription = "Toggle Theme",
+                tint = if (isDark) Color.White else Color(0xFF0F172A),
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = 40.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = 440.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = cardBg),
             border = BorderStroke(1.dp, dividerColor),
@@ -970,5 +992,6 @@ fun LoginScreen(
             },
             containerColor = cardBg
         )
+    }
     }
 }

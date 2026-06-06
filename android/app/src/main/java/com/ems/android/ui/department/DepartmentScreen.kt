@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.data.models.DepartmentDetails
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.ems.android.ui.components.SharedHeader
+
 @Composable
 fun DepartmentScreen(
     onNavigateBack: () -> Unit,
@@ -101,16 +102,21 @@ fun DepartmentScreen(
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Departments") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
+            SharedHeader(
+                title = "Departments",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { viewModel.loadDepartments() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                    IconButton(
+                        onClick = { viewModel.loadDepartments() },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Refresh, 
+                            contentDescription = "Refresh",
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )

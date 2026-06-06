@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.data.models.StaffAttendance
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.ems.android.ui.components.SharedHeader
+
 @Composable
 fun StaffMonitoringScreen(
     onNavigateBack: () -> Unit,
@@ -38,16 +39,21 @@ fun StaffMonitoringScreen(
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Staff Monitoring") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
+            SharedHeader(
+                title = "Staff Monitoring",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
                 actions = {
-                    IconButton(onClick = { viewModel.loadStaffData() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                    IconButton(
+                        onClick = { viewModel.loadStaffData() },
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Refresh, 
+                            contentDescription = "Refresh",
+                            modifier = Modifier.size(22.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.data.models.TransferRequest
+import com.ems.android.ui.components.SharedHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,28 +37,23 @@ fun IncomingTransfersScreen(
         }
     }
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Incoming Transfers") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { viewModel.loadIncomingTransfers() }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    Scaffold { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            SharedHeader(
+                title = "Incoming Transfers",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
+                actions = {
+                    IconButton(onClick = { viewModel.loadIncomingTransfers() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh",
+                            tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            )
             if (isLoading) {
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }

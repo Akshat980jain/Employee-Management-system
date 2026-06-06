@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ems.android.ui.components.SharedHeader
 
 data class InsightCard(
     val title: String,
@@ -76,30 +77,29 @@ fun AIInsightsScreen(
         )
     }
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("AI Insights") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Refresh")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        LazyColumn(
+    Scaffold { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            SharedHeader(
+                title = "AI Insights",
+                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = onNavigateBack,
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh",
+                            tint = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // Header with Time Range Selector
             item {
                 Row(
@@ -261,8 +261,9 @@ fun AIInsightsScreen(
             }
             
             item { Spacer(modifier = Modifier.height(16.dp)) }
-        }
-    }
+        }  // end LazyColumn
+        }  // end Column
+    }  // end Scaffold
 }
 
 @Composable

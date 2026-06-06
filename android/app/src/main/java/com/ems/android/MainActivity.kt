@@ -20,6 +20,10 @@ import com.ems.android.ui.theme.EMSProTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+import com.ems.android.ui.components.LocalThemeController
+import com.ems.android.ui.components.ThemeController
+import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     
@@ -31,28 +35,42 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         
         setContent {
-            EMSProTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    val isLoggedIn by tokenManager.isLoggedIn().collectAsState(initial = null)
-                    
-                    if (isLoggedIn == null) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.primary
+            val isDarkTheme by tokenManager.isDarkTheme().collectAsState(initial = true)
+            val coroutineScope = rememberCoroutineScope()
+            val themeController = remember(isDarkTheme) {
+                ThemeController(
+                    isDark = isDarkTheme,
+                    toggleTheme = {
+                        coroutineScope.launch {
+                            tokenManager.setDarkTheme(!isDarkTheme)
+                        }
+                    }
+                )
+            }
+            CompositionLocalProvider(LocalThemeController provides themeController) {
+                EMSProTheme(darkTheme = isDarkTheme) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        val navController = rememberNavController()
+                        val isLoggedIn by tokenManager.isLoggedIn().collectAsState(initial = null)
+                        
+                        if (isLoggedIn == null) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        } else {
+                            AppNavigation(
+                                navController = navController,
+                                startDestination = if (isLoggedIn == true) Routes.MAIN else Routes.LOGIN
                             )
                         }
-                    } else {
-                        AppNavigation(
-                            navController = navController,
-                            startDestination = if (isLoggedIn == true) Routes.MAIN else Routes.LOGIN
-                        )
                     }
                 }
             }

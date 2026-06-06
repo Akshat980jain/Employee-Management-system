@@ -17,17 +17,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ems.android.ui.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+import com.ems.android.ui.components.SharedHeader
+import com.ems.android.ui.components.LocalThemeController
+
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit,
+    onOpenDrawer: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
+    val themeController = LocalThemeController.current
     val scope = rememberCoroutineScope()
-    var darkMode by remember { mutableStateOf(false) }
     var notifications by remember { mutableStateOf(true) }
     var showLogoutDialog by remember { mutableStateOf(false) }
+    
+    val user by viewModel.user.collectAsState()
+    val isHROrAdmin = user?.role in listOf("Admin", "HR Manager", "ADMIN", "HR_MANAGER")
     
     if (showLogoutDialog) {
         AlertDialog(
@@ -56,13 +62,10 @@ fun SettingsScreen(
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Settings") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
+            SharedHeader(
+                title = "Settings",
+                navigationIcon = if (isHROrAdmin) Icons.Default.Menu else Icons.AutoMirrored.Filled.ArrowBack,
+                onNavigationClick = if (isHROrAdmin) onOpenDrawer else onNavigateBack
             )
         }
     ) { padding ->
@@ -89,8 +92,8 @@ fun SettingsScreen(
                         icon = Icons.Default.DarkMode,
                         title = "Dark Mode",
                         subtitle = "Use dark theme",
-                        checked = darkMode,
-                        onCheckedChange = { darkMode = it }
+                        checked = themeController.isDark,
+                        onCheckedChange = { themeController.toggleTheme() }
                     )
                 }
             }

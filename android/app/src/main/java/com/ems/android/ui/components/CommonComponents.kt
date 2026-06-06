@@ -23,6 +23,7 @@ import com.ems.android.data.models.LeaveBalance
 import com.ems.android.ui.theme.*
 import java.time.Duration
 import java.time.Instant
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
 fun WelcomeCard(
@@ -395,5 +396,73 @@ fun QuickActionButton(
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Medium
         )
+    }
+}
+
+data class ThemeController(
+    val isDark: Boolean,
+    val toggleTheme: () -> Unit
+)
+
+val LocalThemeController = compositionLocalOf<ThemeController> {
+    error("No ThemeController provided")
+}
+
+@Composable
+fun SharedHeader(
+    title: String,
+    navigationIcon: ImageVector? = null,
+    onNavigationClick: (() -> Unit)? = null,
+    actions: @Composable (RowScope.() -> Unit)? = null
+) {
+    val themeController = LocalThemeController.current
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (navigationIcon != null && onNavigationClick != null) {
+            IconButton(
+                onClick = onNavigationClick,
+                modifier = Modifier.size(36.dp)
+            ) {
+                Icon(
+                    imageVector = navigationIcon,
+                    contentDescription = null,
+                    modifier = Modifier.size(22.dp),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+        } else {
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+
+        if (actions != null) {
+            actions()
+        }
+
+        // Global Theme Switch Toggle Button
+        IconButton(
+            onClick = { themeController.toggleTheme() },
+            modifier = Modifier.size(36.dp)
+        ) {
+            Icon(
+                imageVector = if (themeController.isDark) Icons.Default.LightMode else Icons.Default.DarkMode,
+                contentDescription = "Toggle Theme",
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
