@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Users, BarChart3, ShieldAlert, Lock, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
-import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import api, { getErrorMessage } from '../../services/api';
 import logo from '../../logo.png';
@@ -16,25 +16,6 @@ const StaffSphereLogo = ({ size = 32 }: { size?: number }) => (
 const Login = () => {
     const navigate = useNavigate();
     const { login, googleLogin, isLoading, rememberMe, setRememberMe } = useAuthStore();
-    const handleGoogleLogin = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            if (tokenResponse.access_token) {
-                try {
-                    await googleLogin(tokenResponse.access_token);
-                    toast.success('Welcome back!');
-                    navigate('/dashboard');
-                } catch (error: any) {
-                    toast.error(getErrorMessage(error, 'Google login failed'));
-                }
-            }
-        },
-        onError: () => {
-            toast.error('Google Sign-In failed');
-        },
-        onNonOAuthError: () => {
-            // Popup closed or blocked — ignore silently
-        },
-    });
 
     const [showPassword, setShowPassword] = useState(false);
     const [mode, setMode] = useState<'login' | 'forgot' | 'reset'>('login');
@@ -328,15 +309,30 @@ const Login = () => {
 
                         {mode === 'login' && (
                             <>
-                                <button type="button" className={styles.googleBtn} onClick={() => handleGoogleLogin()}>
-                                    <svg width="18" height="18" viewBox="0 0 18 18" style={{ marginRight: '8px' }}>
-                                        <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
-                                        <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
-                                        <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z" />
-                                        <path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59A8 8 0 0 0 1.83 5.4l2.67 2.07a4.8 4.8 0 0 1 4.48-3.9z" />
-                                    </svg>
-                                    Continue with Google
-                                </button>
+                                <div className={styles.googleBtnWrapper}>
+                                    <GoogleLogin
+                                        onSuccess={async (credentialResponse) => {
+                                            if (credentialResponse.credential) {
+                                                try {
+                                                    await googleLogin(credentialResponse.credential);
+                                                    toast.success('Welcome back!');
+                                                    navigate('/dashboard');
+                                                } catch (error: any) {
+                                                    toast.error(getErrorMessage(error, 'Google login failed'));
+                                                }
+                                            }
+                                        }}
+                                        onError={() => {
+                                            toast.error('Google Sign-In failed');
+                                        }}
+                                        width="380"
+                                        shape="rectangular"
+                                        theme="outline"
+                                        size="large"
+                                        text="continue_with"
+                                        logo_alignment="left"
+                                    />
+                                </div>
 
 
                                 <div className={styles.divider}>
