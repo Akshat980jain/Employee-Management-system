@@ -506,6 +506,12 @@ export class AuthService {
                 }
                 email = payload.email;
             } catch (error: any) {
+                console.error('Google ID token verification failed:', {
+                    error: error.message || error,
+                    configuredClientId: process.env.GOOGLE_CLIENT_ID ? '***' + process.env.GOOGLE_CLIENT_ID.slice(-10) : 'NOT SET',
+                    configuredAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID ? '***' + process.env.GOOGLE_ANDROID_CLIENT_ID.slice(-10) : 'NOT SET',
+                    tokenPreview: token.substring(0, 20) + '...',
+                });
                 throw ApiError.unauthorized('Invalid Google ID token');
             }
         } else {
