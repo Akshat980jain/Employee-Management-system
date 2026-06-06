@@ -491,9 +491,14 @@ export class AuthService {
         if (token.split('.').length === 3) {
             // It's a JWT ID Token (from Android or official GoogleLogin component)
             try {
+                const audienceList = [
+                    process.env.GOOGLE_CLIENT_ID,
+                    process.env.GOOGLE_ANDROID_CLIENT_ID
+                ].filter(Boolean) as string[];
+
                 const ticket = await googleClient.verifyIdToken({
                     idToken: token,
-                    audience: process.env.GOOGLE_CLIENT_ID,
+                    audience: audienceList,
                 });
                 const payload = ticket.getPayload();
                 if (!payload || !payload.email) {
