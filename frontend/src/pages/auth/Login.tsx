@@ -30,7 +30,10 @@ const Login = () => {
         },
         onError: () => {
             toast.error('Google Sign-In failed');
-        }
+        },
+        onNonOAuthError: () => {
+            // Popup closed or blocked — ignore silently
+        },
     });
 
     const [showPassword, setShowPassword] = useState(false);
