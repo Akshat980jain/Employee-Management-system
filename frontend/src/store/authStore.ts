@@ -87,6 +87,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 try {
                     set({ isLoading: true });
                     const response = await api.post('/auth/google-login', { idToken });
+                    console.log('Google login response:', response);
+                    
+                    if (!response.data || typeof response.data !== 'object') {
+                        throw new Error(`Server returned invalid response format (not an object): ${typeof response.data}`);
+                    }
+                    
+                    if (response.data.success === false || !response.data.data) {
+                        const errMsg = response.data.error?.message || response.data.message || 'Unknown server error';
+                        throw new Error(errMsg);
+                    }
+
                     const { user, organization, accessToken, refreshToken } = response.data.data;
 
                     set({
