@@ -16,7 +16,7 @@ const StaffSphereLogo = ({ size = 28 }: { size?: number }) => (
 
 const Register = () => {
     const navigate = useNavigate();
-    const { register, googleLogin, isLoading } = useAuthStore();
+    const { register, isLoading } = useAuthStore();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -145,14 +145,31 @@ const Register = () => {
 
                     <div className={styles.googleBtnWrapper}>
                         <GoogleLogin
-                            onSuccess={async (credentialResponse) => {
+                            onSuccess={(credentialResponse) => {
                                 if (credentialResponse.credential) {
                                     try {
-                                        await googleLogin(credentialResponse.credential);
-                                        toast.success('Welcome back!');
-                                        navigate('/dashboard');
-                                    } catch (error: any) {
-                                        toast.error(getErrorMessage(error, 'Google login failed'));
+                                        // Decode the JWT payload to extract user info
+                                        const base64Url = credentialResponse.credential.split('.')[1];
+                                        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                                        const jsonPayload = decodeURIComponent(
+                                            atob(base64).split('').map(c =>
+                                                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                                            ).join('')
+                                        );
+                                        const payload = JSON.parse(jsonPayload);
+
+                                        const fullName = payload.name || `${payload.given_name || ''} ${payload.family_name || ''}`.trim();
+                                        const email = payload.email || '';
+
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            fullName: fullName || prev.fullName,
+                                            email: email || prev.email,
+                                        }));
+
+                                        toast.success('Google account details filled! Complete the form below.', { duration: 4000 });
+                                    } catch {
+                                        toast.error('Could not read Google account details');
                                     }
                                 }
                             }}
@@ -163,7 +180,7 @@ const Register = () => {
                             shape="rectangular"
                             theme="outline"
                             size="large"
-                            text="continue_with"
+                            text="signup_with"
                             logo_alignment="left"
                         />
                     </div>
