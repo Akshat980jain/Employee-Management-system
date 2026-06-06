@@ -115,6 +115,35 @@ class AuthViewModel @Inject constructor(
         }
     }
     
+    fun loginWithGoogle(idToken: String, rememberMe: Boolean = false) {
+        viewModelScope.launch {
+            authRepository.loginWithGoogle(idToken, rememberMe).collect { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _loginState.update { it.copy(isLoading = true, error = null) }
+                    }
+                    is Resource.Success -> {
+                        val response = result.data
+                        val accessToken = response?.getAccessToken()
+                        val userData = response?.getUserData()
+                        _loginState.update { 
+                            it.copy(
+                                isLoading = false,
+                                isLoggedIn = response?.success == true && accessToken != null,
+                                pendingApproval = response?.isPendingVerification() == true,
+                                user = userData,
+                                error = if (response?.success != true) response?.message else null
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        _loginState.update { it.copy(isLoading = false, error = result.message) }
+                    }
+                }
+            }
+        }
+    }
+    
     // Register functions
     fun updateRegisterField(
         email: String? = null,

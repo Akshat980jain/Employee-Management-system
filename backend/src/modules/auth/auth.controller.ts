@@ -228,6 +228,29 @@ export class AuthController {
             next(error);
         }
     }
+
+    async googleLogin(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { idToken } = req.body;
+            if (!idToken) {
+                throw ApiError.badRequest('idToken is required');
+            }
+
+            const result = await authService.loginWithGoogle(
+                idToken,
+                req.headers['user-agent'],
+                req.ip
+            );
+
+            res.json({
+                success: true,
+                message: 'Login successful',
+                data: result,
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export const authController = new AuthController();

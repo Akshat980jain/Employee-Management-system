@@ -74,6 +74,56 @@ class AuthRepository @Inject constructor(
         }
     }
     
+    fun loginWithGoogle(idToken: String, rememberMe: Boolean = false): Flow<Resource<AuthResponse>> = flow {
+        emit(Resource.Loading())
+        Log.d(TAG, "Attempting Google login")
+        
+        try {
+            val response = apiService.googleLogin(GoogleLoginRequest(idToken))
+            Log.d(TAG, "Google login response code: ${response.code()}")
+            
+            if (response.isSuccessful && response.body() != null) {
+                val authResponse = response.body()!!
+                val accessToken = authResponse.getAccessToken()
+                val userData = authResponse.getUserData()
+                Log.d(TAG, "Google login success: ${authResponse.success}, has token: ${accessToken != null}")
+                
+                if (authResponse.success && accessToken != null && userData != null) {
+                    tokenManager.saveToken(accessToken)
+                    tokenManager.saveUser(userData)
+                    tokenManager.saveRememberMe(rememberMe)
+                    Log.d(TAG, "Token, user and rememberMe saved")
+                }
+                emit(Resource.Success(authResponse))
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e(TAG, "Google login failed: ${response.code()} - $errorBody")
+                
+                val errorMessage = try {
+                    errorBody?.let { 
+                        if (it.contains("message")) {
+                            val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                            regex.find(it)?.groupValues?.get(1) ?: it
+                        } else it
+                    } ?: "Google login failed (${response.code()})"
+                } catch (e: Exception) {
+                    errorBody ?: "Google login failed (${response.code()})"
+                }
+                
+                emit(Resource.Error(errorMessage))
+            }
+        } catch (e: java.net.SocketTimeoutException) {
+            Log.e(TAG, "Google login timeout", e)
+            emit(Resource.Error("Connection timeout. Please try again."))
+        } catch (e: java.net.UnknownHostException) {
+            Log.e(TAG, "No internet", e)
+            emit(Resource.Error("No internet connection. Please check your network."))
+        } catch (e: Exception) {
+            Log.e(TAG, "Google login error", e)
+            emit(Resource.Error(e.message ?: "Network error: ${e.javaClass.simpleName}"))
+        }
+    }
+    
     fun register(request: RegisterRequest): Flow<Resource<AuthResponse>> = flow {
         emit(Resource.Loading())
         Log.d(TAG, "Attempting registration for: ${request.email}")

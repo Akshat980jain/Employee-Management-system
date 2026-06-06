@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ShieldAlert, Briefcase, BadgeInfo, Check, ChevronDown, Plus, UserPlus } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useGoogleLogin } from '@react-oauth/google';
 import { PublicOrganization } from '../../types';
 import api, { getErrorMessage } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -15,7 +16,24 @@ const StaffSphereLogo = ({ size = 28 }: { size?: number }) => (
 
 const Register = () => {
     const navigate = useNavigate();
-    const { register, isLoading } = useAuthStore();
+    const { register, googleLogin, isLoading } = useAuthStore();
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            if (tokenResponse.access_token) {
+                try {
+                    await googleLogin(tokenResponse.access_token);
+                    toast.success('Welcome back!');
+                    navigate('/dashboard');
+                } catch (error: any) {
+                    toast.error(getErrorMessage(error, 'Google login failed'));
+                }
+            }
+        },
+        onError: () => {
+            toast.error('Google Sign-In failed');
+        }
+    });
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [organizations, setOrganizations] = useState<PublicOrganization[]>([]);
@@ -141,7 +159,7 @@ const Register = () => {
                         <p>Join 500+ modern organizations boosting their HR efficiency.</p>
                     </div>
 
-                    <button type="button" className={styles.googleBtn}>
+                    <button type="button" className={styles.googleBtn} onClick={() => handleGoogleLogin()}>
                         <svg width="18" height="18" viewBox="0 0 18 18" style={{ marginRight: '8px' }}>
                             <path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
                             <path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
@@ -150,6 +168,7 @@ const Register = () => {
                         </svg>
                         Continue with Google
                     </button>
+
 
                     <div className={styles.divider}>
                         <span>OR REGISTER WITH EMAIL</span>

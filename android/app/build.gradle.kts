@@ -107,6 +107,11 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     
+    // Credentials Manager & Google ID
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services)
+    implementation(libs.googleid)
+    
     // WorkManager
     implementation(libs.workmanager)
     implementation(libs.hilt.work)

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
+import { OAuth2Client } from 'google-auth-library';
 import { Organization, User, Role, UserRole, Session, LeaveType, Shift, Employee, JoinRequest } from '../../models/index.js';
 import { RegisterInput, LoginInput, ResetPasswordInput } from './auth.dto.js';
 import { sendResetOtpEmail } from '../../utils/mailer.js';
@@ -481,6 +482,99 @@ export class AuthService {
         await user.save();
 
         return { message: 'Password reset successful' };
+    }
+
+    async loginWithGoogle(token: string, userAgent?: string, ipAddress?: string) {
+        const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        let email: string;
+
+        if (token.split('.').length === 3) {
+            // It's a JWT ID Token (from Android or official GoogleLogin component)
+            try {
+                const ticket = await googleClient.verifyIdToken({
+                    idToken: token,
+                    audience: process.env.GOOGLE_CLIENT_ID,
+                });
+                const payload = ticket.getPayload();
+                if (!payload || !payload.email) {
+                    throw ApiError.unauthorized('Invalid Google ID token payload');
+                }
+                email = payload.email;
+            } catch (error: any) {
+                throw ApiError.unauthorized('Invalid Google ID token');
+            }
+        } else {
+            // It's an Access Token (from custom Web OAuth2 button)
+            try {
+                const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!response.ok) {
+                    throw ApiError.unauthorized('Invalid Google access token');
+                }
+                const data = await response.json() as any;
+                email = data.email;
+                if (!email) {
+                    throw ApiError.unauthorized('Google access token did not return an email');
+                }
+            } catch (error: any) {
+                throw ApiError.unauthorized('Failed to verify Google access token');
+            }
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            throw ApiError.notFound('No account found matching this Google account. Please contact your administrator.');
+        }
+
+        if (!user.isActive) {
+            throw ApiError.unauthorized('Account is deactivated');
+        }
+
+        if (user.isVerified === false) {
+            throw ApiError.unauthorized('Your join request is pending approval. Please wait for an administrator to approve your request.');
+        }
+
+        user.failedLoginAttempts = 0;
+        user.lockedUntil = undefined;
+        user.lastLoginAt = new Date();
+        user.lastLoginIp = ipAddress;
+        await user.save();
+
+        const tokens = await this.generateTokens(
+            user._id.toString(),
+            user.email,
+            user.organizationId.toString()
+        );
+
+        await Session.create({
+            userId: user._id,
+            refreshToken: tokens.refreshToken,
+            userAgent,
+            ipAddress,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        });
+
+        const userRoles = await UserRole.find({ userId: user._id }).populate('roleId');
+        const roles = userRoles.map(ur => (ur.roleId as any)?.name || '');
+        const organization = await Organization.findById(user.organizationId);
+
+        return {
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: roles[0] || 'Employee',
+            },
+            organization: organization ? {
+                id: organization._id,
+                name: organization.name,
+                slug: organization.slug,
+            } : null,
+            ...tokens,
+        };
     }
 }
 

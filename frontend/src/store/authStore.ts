@@ -18,6 +18,7 @@ interface AuthState {
 
 interface AuthActions {
     login: (email: string, password: string) => Promise<void>;
+    googleLogin: (idToken: string) => Promise<void>;
     register: (data: RegisterData) => Promise<{ pendingVerification: boolean }>;
     logout: () => void;
     setTokens: (accessToken: string, refreshToken: string) => void;
@@ -61,6 +62,31 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             login: async (email: string, password: string) => {
                 try {
                     const response = await api.post('/auth/login', { email, password });
+                    const { user, organization, accessToken, refreshToken } = response.data.data;
+
+                    set({
+                        user,
+                        organization,
+                        accessToken,
+                        refreshToken,
+                        isAuthenticated: true,
+                        isVerified: user.isVerified !== false,
+                        isLoading: false,
+                        pendingVerification: user.isVerified === false,
+                    });
+
+                    // Fetch full user with permissions
+                    await get().fetchUser();
+                } catch (error: any) {
+                    set({ isLoading: false });
+                    throw error;
+                }
+            },
+
+            googleLogin: async (idToken: string) => {
+                try {
+                    set({ isLoading: true });
+                    const response = await api.post('/auth/google-login', { idToken });
                     const { user, organization, accessToken, refreshToken } = response.data.data;
 
                     set({

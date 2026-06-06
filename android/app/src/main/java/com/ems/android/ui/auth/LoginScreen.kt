@@ -48,6 +48,14 @@ import com.ems.android.ui.components.ErrorType
 import com.ems.android.ui.components.LocalThemeController
 import com.ems.android.ui.theme.GradientEnd
 import com.ems.android.ui.theme.GradientStart
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.CustomCredential
+import androidx.credentials.exceptions.GetCredentialException
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
+import android.util.Log
 import com.ems.android.ui.theme.Primary
 import com.ems.android.data.models.*
 
@@ -198,6 +206,8 @@ fun LoginScreen(
     val forgotState by viewModel.forgotPasswordState.collectAsState()
     val resetState by viewModel.resetPasswordState.collectAsState()
     val context = androidx.compose.ui.platform.LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val credentialManager = remember { CredentialManager.create(context) }
     
     LaunchedEffect(forgotState) {
         forgotState?.let { resource ->
@@ -510,7 +520,42 @@ fun LoginScreen(
                     
                     // Continue with Google Button
                     OutlinedButton(
-                        onClick = { /* Google Sign In stub */ },
+                        onClick = {
+                            coroutineScope.launch {
+                                try {
+                                    val googleWebClientId = context.getString(R.string.google_web_client_id)
+                                    val googleIdOption = GetGoogleIdOption.Builder()
+                                        .setFilterByAuthorizedAccounts(false)
+                                        .setServerClientId(googleWebClientId)
+                                        .setAutoSelectEnabled(false)
+                                        .build()
+
+                                    val request = GetCredentialRequest.Builder()
+                                        .addCredentialOption(googleIdOption)
+                                        .build()
+
+                                    val result = credentialManager.getCredential(
+                                        context = context,
+                                        request = request
+                                    )
+
+                                    val credential = result.credential
+                                    if (credential is CustomCredential && 
+                                        credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                        val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                                        val idToken = googleIdTokenCredential.idToken
+                                        viewModel.loginWithGoogle(idToken, rememberMe)
+                                    } else {
+                                        Log.e("Auth", "Unexpected credential type: ${credential.type}")
+                                    }
+                                } catch (e: GetCredentialException) {
+                                    Log.e("Auth", "Google Sign In Failed", e)
+                                    android.widget.Toast.makeText(context, "Google Sign In Failed: ${e.localizedMessage}", android.widget.Toast.LENGTH_LONG).show()
+                                } catch (e: Exception) {
+                                    Log.e("Auth", "Google Sign In Error", e)
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(44.dp),
