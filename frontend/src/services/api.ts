@@ -26,9 +26,41 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
+const BACKEND_URL = isLocalhost
+    ? 'http://localhost:3000'
+    : 'https://ems-backend-q0vm.onrender.com';
+
+function transformAvatars(obj: any): any {
+    if (!obj || typeof obj !== 'object') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => transformAvatars(item));
+    }
+
+    const newObj: any = {};
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const val = obj[key];
+            if (key === 'avatar' && typeof val === 'string' && val.startsWith('/uploads')) {
+                newObj[key] = `${BACKEND_URL}${val}`;
+            } else {
+                newObj[key] = transformAvatars(val);
+            }
+        }
+    }
+    return newObj;
+}
+
+// Response interceptor to handle token refresh and transform relative avatar URLs
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        if (response.data) {
+            response.data = transformAvatars(response.data);
+        }
+        return response;
+    },
     async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 

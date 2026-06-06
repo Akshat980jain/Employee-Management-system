@@ -18,8 +18,12 @@ export function connectSocket(): Socket | null {
         return socket;
     }
 
-    // Connect to backend (same origin in dev, proxied via Vite)
-    socket = io(window.location.origin, {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const backendUrl = isLocalhost
+        ? window.location.origin
+        : 'https://ems-backend-q0vm.onrender.com';
+
+    socket = io(backendUrl, {
         auth: { token },
         transports: ['websocket', 'polling'],
     });
