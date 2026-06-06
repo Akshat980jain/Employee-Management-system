@@ -2,9 +2,10 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/authStore';
 
 // Use hosted backend in production, proxy in development
-const API_BASE_URL = import.meta.env.PROD
-    ? 'https://ems-backend-q0vm.onrender.com/api'
-    : '/api';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocalhost
+    ? '/api'
+    : 'https://ems-backend-q0vm.onrender.com/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
