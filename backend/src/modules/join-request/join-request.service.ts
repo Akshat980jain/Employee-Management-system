@@ -15,6 +15,7 @@ export class JoinRequestService {
 
         return JoinRequest.find(query)
             .populate('userId', 'firstName lastName email avatar createdAt')
+            .populate('organizationId', 'name slug')
             .populate('reviewedBy', 'firstName lastName')
             .sort({ createdAt: -1 });
     }
@@ -24,6 +25,7 @@ export class JoinRequestService {
      */
     async getMyRequests(userId: string) {
         return JoinRequest.find({ userId })
+            .populate('userId', 'firstName lastName email avatar createdAt')
             .populate('organizationId', 'name slug')
             .sort({ createdAt: -1 });
     }
