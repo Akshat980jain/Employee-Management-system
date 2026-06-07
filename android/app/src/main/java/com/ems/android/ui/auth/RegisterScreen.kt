@@ -761,8 +761,13 @@ fun RegisterScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         ExposedDropdownMenuBox(
-                            expanded = showOrgDropdown && organizations.isNotEmpty(),
-                            onExpandedChange = { showOrgDropdown = it }
+                            expanded = showOrgDropdown,
+                            onExpandedChange = { expanded ->
+                                showOrgDropdown = expanded
+                                if (expanded) {
+                                    viewModel.searchOrganizations(state.searchQuery)
+                                }
+                            }
                         ) {
                             OutlinedTextField(
                                 value = state.searchQuery,
@@ -794,32 +799,46 @@ fun RegisterScreen(
                             )
                             
                             ExposedDropdownMenu(
-                                expanded = showOrgDropdown && organizations.isNotEmpty(),
+                                expanded = showOrgDropdown,
                                 onDismissRequest = { showOrgDropdown = false }
                             ) {
-                                organizations.forEach { org ->
+                                if (organizations.isEmpty()) {
                                     DropdownMenuItem(
                                         text = { 
-                                            Column {
-                                                Text(org.name, fontWeight = FontWeight.SemiBold, color = dropdownSelectedText)
-                                                org.industry?.let {
-                                                    Text(
-                                                        text = it,
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = dropdownSelectedDesc
-                                                    )
-                                                }
-                                            }
-                                        },
-                                        onClick = {
-                                            viewModel.updateRegisterField(
-                                                organizationId = org.id,
-                                                organizationName = org.name
+                                            Text(
+                                                text = if (state.searchQuery.length == 1) "Keep typing to search..." else "No organizations found",
+                                                color = dropdownSelectedDesc,
+                                                style = MaterialTheme.typography.bodyMedium
                                             )
-                                            viewModel.searchOrganizations(org.name)
-                                            showOrgDropdown = false
-                                        }
+                                        },
+                                        onClick = {},
+                                        enabled = false
                                     )
+                                } else {
+                                    organizations.forEach { org ->
+                                        DropdownMenuItem(
+                                            text = { 
+                                                Column {
+                                                    Text(org.name, fontWeight = FontWeight.SemiBold, color = dropdownSelectedText)
+                                                    org.industry?.let {
+                                                        Text(
+                                                            text = it,
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = dropdownSelectedDesc
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            onClick = {
+                                                viewModel.updateRegisterField(
+                                                    organizationId = org.id,
+                                                    organizationName = org.name
+                                                )
+                                                viewModel.searchOrganizations(org.name)
+                                                showOrgDropdown = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

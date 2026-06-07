@@ -7,8 +7,8 @@ const router = Router();
 // Public route - no authentication required (for registration dropdown)
 router.get('/public', organizationController.getPublicOrganizations.bind(organizationController));
 
-// Search route - requires authentication
-router.get('/search', authenticate, organizationController.searchOrganizations.bind(organizationController));
+// Search route - public (so registration screen can search/find organizations to join)
+router.get('/search', organizationController.searchOrganizations.bind(organizationController));
 
 // All routes below require authentication
 router.use(authenticate);

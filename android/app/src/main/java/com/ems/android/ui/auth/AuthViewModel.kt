@@ -180,8 +180,7 @@ class AuthViewModel @Inject constructor(
     
     fun searchOrganizations(query: String) {
         _registerState.update { it.copy(searchQuery = query) }
-        if (query.length < 2) {
-            _organizations.value = emptyList()
+        if (query.isNotEmpty() && query.length < 2) {
             return
         }
         
