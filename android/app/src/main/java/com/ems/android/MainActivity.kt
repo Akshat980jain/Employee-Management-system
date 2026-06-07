@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         val navController = rememberNavController()
                         val isLoggedIn by tokenManager.isLoggedIn().collectAsState(initial = null)
+                        val user by tokenManager.getUser().collectAsState(initial = null)
                         
                         if (isLoggedIn == null) {
                             Box(
@@ -66,9 +67,14 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         } else {
+                            val startDestination = when {
+                                isLoggedIn == true && user?.isVerified == false -> Routes.PENDING_VERIFICATION
+                                isLoggedIn == true -> Routes.MAIN
+                                else -> Routes.LOGIN
+                            }
                             AppNavigation(
                                 navController = navController,
-                                startDestination = if (isLoggedIn == true) Routes.MAIN else Routes.LOGIN
+                                startDestination = startDestination
                             )
                         }
                     }

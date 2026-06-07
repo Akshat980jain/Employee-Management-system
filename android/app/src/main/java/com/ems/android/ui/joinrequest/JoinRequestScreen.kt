@@ -26,11 +26,56 @@ fun JoinRequestScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val actionResult by viewModel.actionResult.collectAsState()
     
+    var showRejectDialog by remember { mutableStateOf(false) }
+    var rejectRequestId by remember { mutableStateOf<String?>(null) }
+    var rejectComment by remember { mutableStateOf("") }
+    
     LaunchedEffect(actionResult) {
         if (actionResult != null) {
             kotlinx.coroutines.delay(2000)
             viewModel.clearActionResult()
         }
+    }
+    
+    if (showRejectDialog && rejectRequestId != null) {
+        AlertDialog(
+            onDismissRequest = { 
+                showRejectDialog = false
+                rejectRequestId = null
+                rejectComment = ""
+            },
+            title = { Text("Reject Join Request") },
+            text = {
+                OutlinedTextField(
+                    value = rejectComment,
+                    onValueChange = { rejectComment = it },
+                    label = { Text("Reason (Optional)") },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 2
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.rejectRequest(rejectRequestId!!, rejectComment.ifBlank { null })
+                        showRejectDialog = false
+                        rejectRequestId = null
+                        rejectComment = ""
+                    }
+                ) {
+                    Text("Reject")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { 
+                    showRejectDialog = false
+                    rejectRequestId = null
+                    rejectComment = ""
+                }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
     
     Scaffold(
@@ -99,7 +144,10 @@ fun JoinRequestScreen(
                         JoinRequestCard(
                             request = request,
                             onApprove = { viewModel.approveRequest(request.id) },
-                            onReject = { viewModel.rejectRequest(request.id) }
+                            onReject = { 
+                                rejectRequestId = request.id
+                                showRejectDialog = true
+                            }
                         )
                     }
                 }

@@ -17,8 +17,12 @@ data class LoginUiState(
     val error: String? = null,
     val isLoggedIn: Boolean = false,
     val pendingApproval: Boolean = false,
-    val user: User? = null
+    val user: User? = null,
+    val joinRequestStatus: String? = null,
+    val rejectionReason: String? = null,
+    val joinRequestOrgName: String? = null
 )
+
 
 data class RegisterUiState(
     val email: String = "",
@@ -64,7 +68,13 @@ class AuthViewModel @Inject constructor(
             authRepository.isLoggedIn().collect { isLoggedIn ->
                 if (isLoggedIn) {
                     authRepository.getStoredUser().collect { user ->
-                        _loginState.update { it.copy(isLoggedIn = true, user = user) }
+                        _loginState.update { 
+                            it.copy(
+                                isLoggedIn = true, 
+                                user = user,
+                                pendingApproval = user?.isVerified == false
+                            ) 
+                        }
                     }
                 }
             }
@@ -352,4 +362,50 @@ class AuthViewModel @Inject constructor(
     fun clearResetPasswordState() {
         _resetPasswordState.value = null
     }
+
+    fun checkJoinRequestStatus() {
+        viewModelScope.launch {
+            authRepository.getMyJoinRequests().collect { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _loginState.update { it.copy(isLoading = true) }
+                    }
+                    is Resource.Success -> {
+                        val requests = result.data ?: emptyList()
+                        if (requests.isNotEmpty()) {
+                            val request = requests.first() // Get most recent request
+                            _loginState.update { 
+                                it.copy(
+                                    isLoading = false,
+                                    joinRequestStatus = request.status,
+                                    rejectionReason = request.rejectionReason,
+                                    joinRequestOrgName = request.orgName
+                                )
+                            }
+                            
+                            if (request.status == "APPROVED") {
+                                // Request approved! Refresh local user profile
+                                authRepository.refreshCurrentUser().collect { refreshResult ->
+                                    if (refreshResult is Resource.Success) {
+                                        _loginState.update {
+                                            it.copy(
+                                                pendingApproval = false,
+                                                user = refreshResult.data
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            _loginState.update { it.copy(isLoading = false) }
+                        }
+                    }
+                    is Resource.Error -> {
+                        _loginState.update { it.copy(isLoading = false, error = result.message) }
+                    }
+                }
+            }
+        }
+    }
 }
+

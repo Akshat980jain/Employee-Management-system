@@ -320,4 +320,35 @@ class AuthRepository @Inject constructor(
             emit(Resource.Error(e.message ?: "Network error"))
         }
     }
+
+    fun getMyJoinRequests(): Flow<Resource<List<JoinRequest>>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.getMyJoinRequests()
+            if (response.isSuccessful && response.body() != null) {
+                emit(Resource.Success(response.body()!!.requests))
+            } else {
+                emit(Resource.Error("Failed to fetch join requests"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "Network error"))
+        }
+    }
+    
+    fun refreshCurrentUser(): Flow<Resource<User>> = flow {
+        emit(Resource.Loading())
+        try {
+            val response = apiService.getCurrentUser()
+            if (response.isSuccessful && response.body()?.data?.user != null) {
+                val user = response.body()!!.data!!.user!!
+                tokenManager.saveUser(user)
+                emit(Resource.Success(user))
+            } else {
+                emit(Resource.Error("Failed to refresh user profile"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message ?: "Network error"))
+        }
+    }
 }
+

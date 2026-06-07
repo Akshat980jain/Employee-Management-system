@@ -338,10 +338,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
     
-    fun rejectJoinRequest(requestId: String) {
+    fun rejectJoinRequest(requestId: String, reason: String? = null) {
         viewModelScope.launch {
             try {
-                val response = apiService.rejectJoinRequest(requestId)
+                val response = apiService.rejectJoinRequest(requestId, RejectJoinRequest(reason))
                 if (response.isSuccessful) {
                     _pendingJoinRequests.update { list ->
                         list.filter { it.id != requestId }

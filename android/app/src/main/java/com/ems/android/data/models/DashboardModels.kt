@@ -9,21 +9,31 @@ data class JoinRequest(
     @Json(name = "_id") val id: String,
     @Json(name = "user") val user: User? = null,
     @Json(name = "organization") val organization: Organization? = null,
+    @Json(name = "organizationId") val organizationIdPopulated: Organization? = null,
     @Json(name = "message") val message: String? = null,
     @Json(name = "status") val status: String, // PENDING, APPROVED, REJECTED
+    @Json(name = "rejectionReason") val rejectionReason: String? = null,
     @Json(name = "createdAt") val createdAt: String? = null
-)
+) {
+    val orgName: String
+        get() = organization?.name ?: organizationIdPopulated?.name ?: "Organization"
+}
 
 @JsonClass(generateAdapter = true)
 data class JoinRequestsResponse(
     @Json(name = "success") val success: Boolean,
-    @Json(name = "requests") val requests: List<JoinRequest> = emptyList()
+    @Json(name = "data") val requests: List<JoinRequest> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)
 data class JoinRequestActionResponse(
     @Json(name = "success") val success: Boolean,
     @Json(name = "message") val message: String? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class RejectJoinRequest(
+    @Json(name = "rejectionReason") val rejectionReason: String? = null
 )
 
 // Dashboard Stats Models

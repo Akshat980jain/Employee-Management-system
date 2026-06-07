@@ -97,17 +97,23 @@ interface ApiService {
     ): Response<LeaveRequestResponse>
     
     // ==================== JOIN REQUESTS ====================
-    @GET("api/join-requests/pending")
-    suspend fun getPendingJoinRequests(): Response<JoinRequestsResponse>
+    @GET("api/join-requests")
+    suspend fun getPendingJoinRequests(
+        @Query("status") status: String = "PENDING"
+    ): Response<JoinRequestsResponse>
     
-    @PUT("api/join-requests/{id}/approve")
+    @GET("api/join-requests/my")
+    suspend fun getMyJoinRequests(): Response<JoinRequestsResponse>
+    
+    @POST("api/join-requests/{id}/approve")
     suspend fun approveJoinRequest(
         @Path("id") requestId: String
     ): Response<JoinRequestActionResponse>
     
-    @PUT("api/join-requests/{id}/reject")
+    @POST("api/join-requests/{id}/reject")
     suspend fun rejectJoinRequest(
-        @Path("id") requestId: String
+        @Path("id") requestId: String,
+        @Body body: RejectJoinRequest = RejectJoinRequest()
     ): Response<JoinRequestActionResponse>
     
     // ==================== EMPLOYEES ====================

@@ -69,6 +69,7 @@ fun AdminDashboard(
     var showRejectDialog by remember { mutableStateOf(false) }
     var rejectRequestId by remember { mutableStateOf<String?>(null) }
     var rejectComment by remember { mutableStateOf("") }
+    var isJoinRequestReject by remember { mutableStateOf(false) }
     var showSearchDialog by remember { mutableStateOf(false) }
     var showCreateDepartmentDialog by remember { mutableStateOf(false) }
     
@@ -102,8 +103,9 @@ fun AdminDashboard(
                 showRejectDialog = false
                 rejectRequestId = null
                 rejectComment = ""
+                isJoinRequestReject = false
             },
-            title = { Text("Reject Leave Request") },
+            title = { Text(if (isJoinRequestReject) "Reject Join Request" else "Reject Leave Request") },
             text = {
                 OutlinedTextField(
                     value = rejectComment,
@@ -116,10 +118,15 @@ fun AdminDashboard(
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.rejectLeaveRequest(rejectRequestId!!, rejectComment.ifBlank { null })
+                        if (isJoinRequestReject) {
+                            viewModel.rejectJoinRequest(rejectRequestId!!, rejectComment.ifBlank { null })
+                        } else {
+                            viewModel.rejectLeaveRequest(rejectRequestId!!, rejectComment.ifBlank { null })
+                        }
                         showRejectDialog = false
                         rejectRequestId = null
                         rejectComment = ""
+                        isJoinRequestReject = false
                     }
                 ) {
                     Text("Reject")
@@ -130,6 +137,7 @@ fun AdminDashboard(
                     showRejectDialog = false
                     rejectRequestId = null
                     rejectComment = ""
+                    isJoinRequestReject = false
                 }) {
                     Text("Cancel")
                 }
@@ -638,7 +646,11 @@ fun AdminDashboard(
                         title = "${request.user?.firstName} ${request.user?.lastName}",
                         subtitle = request.user?.email ?: "",
                         onApprove = { viewModel.approveJoinRequest(request.id) },
-                        onReject = { viewModel.rejectJoinRequest(request.id) }
+                        onReject = { 
+                            rejectRequestId = request.id
+                            isJoinRequestReject = true
+                            showRejectDialog = true
+                        }
                     )
                 }
             }

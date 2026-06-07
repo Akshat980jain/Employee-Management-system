@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ems.android.data.api.ApiService
 import com.ems.android.data.models.JoinRequest
+import com.ems.android.data.models.RejectJoinRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -56,10 +57,10 @@ class JoinRequestViewModel @Inject constructor(
         }
     }
     
-    fun rejectRequest(requestId: String) {
+    fun rejectRequest(requestId: String, reason: String? = null) {
         viewModelScope.launch {
             try {
-                val response = apiService.rejectJoinRequest(requestId)
+                val response = apiService.rejectJoinRequest(requestId, RejectJoinRequest(reason))
                 if (response.isSuccessful) {
                     _actionResult.value = "Request rejected"
                     _pendingRequests.update { list ->
