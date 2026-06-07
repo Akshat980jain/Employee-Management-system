@@ -7,6 +7,10 @@ console.log('📁 Loading .env from:', envPath);
 dotenv.config({ path: envPath });
 console.log('🔑 MONGODB_URI loaded:', process.env.MONGODB_URI ? 'Yes (Atlas)' : 'No (will use fallback)');
 
+// Ensure Google OAuth variables are populated from VITE_ prefixed variants if needed
+process.env.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
+process.env.GOOGLE_ANDROID_CLIENT_ID = process.env.GOOGLE_ANDROID_CLIENT_ID || process.env.VITE_GOOGLE_ANDROID_CLIENT_ID;
+
 import express from 'express';
 import { createServer } from 'http';
 import cors from 'cors';

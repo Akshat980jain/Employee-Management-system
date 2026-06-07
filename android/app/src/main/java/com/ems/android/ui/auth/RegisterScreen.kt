@@ -773,7 +773,7 @@ fun RegisterScreen(
                                 placeholder = { Text("Choose an organization", color = inputPlaceholder) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                                    .menuAnchor(MenuAnchorType.PrimaryEditable),
                                 singleLine = true,
                                 shape = RoundedCornerShape(8.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
