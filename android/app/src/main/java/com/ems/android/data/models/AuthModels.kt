@@ -95,7 +95,7 @@ data class OrganizationSearchResult(
 @JsonClass(generateAdapter = true)
 data class OrganizationSearchResponse(
     @Json(name = "success") val success: Boolean,
-    @Json(name = "organizations") val organizations: List<OrganizationSearchResult>
+    @Json(name = "data") val organizations: List<OrganizationSearchResult>
 )
 
 // API Error Response
