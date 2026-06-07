@@ -141,6 +141,8 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
     var showOrgDropdown by remember { mutableStateOf(false) }
+    var googleIdToken by remember { mutableStateOf<String?>(null) }
+    var googleEmail by remember { mutableStateOf<String?>(null) }
     
     val context = androidx.compose.ui.platform.LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -336,7 +338,27 @@ fun RegisterScreen(
                                         credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                                         val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                                         val idToken = googleIdTokenCredential.idToken
-                                        viewModel.loginWithGoogle(idToken)
+                                        
+                                        // Store the token for registration
+                                        googleIdToken = idToken
+                                        
+                                        // Auto-fill name and email from Google profile
+                                        val gFirstName = googleIdTokenCredential.givenName ?: ""
+                                        val gLastName = googleIdTokenCredential.familyName ?: ""
+                                        val gEmail = googleIdTokenCredential.id // This is the email
+                                        
+                                        googleEmail = gEmail
+                                        viewModel.updateRegisterField(
+                                            firstName = gFirstName.ifBlank { null },
+                                            lastName = gLastName.ifBlank { null },
+                                            email = gEmail
+                                        )
+                                        
+                                        android.widget.Toast.makeText(
+                                            context, 
+                                            "Google account linked! Complete the form to register.", 
+                                            android.widget.Toast.LENGTH_SHORT
+                                        ).show()
                                     } else {
                                         Log.e("Auth", "Unexpected credential type: ${credential.type}")
                                     }
@@ -382,6 +404,60 @@ fun RegisterScreen(
                     }
                     
                     Spacer(modifier = Modifier.height(24.dp))
+                    
+                    // Show Google account linked indicator
+                    if (googleIdToken != null && googleEmail != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isDark) Color(0xFF1A2E1A) else Color(0xFFF0FDF4)
+                            ),
+                            border = BorderStroke(1.dp, if (isDark) Color(0xFF22C55E).copy(alpha = 0.3f) else Color(0xFF86EFAC))
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    tint = if (isDark) Color(0xFF4ADE80) else Color(0xFF22C55E),
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        "Google account linked",
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = if (isDark) Color(0xFF4ADE80) else Color(0xFF16A34A)
+                                    )
+                                    Text(
+                                        googleEmail!!,
+                                        fontSize = 12.sp,
+                                        color = if (isDark) Color(0xFF86EFAC) else Color(0xFF22C55E)
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {
+                                        googleIdToken = null
+                                        googleEmail = null
+                                    },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remove Google account",
+                                        tint = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                     
                     // OR divider
                     Row(
@@ -814,86 +890,89 @@ fun RegisterScreen(
                         )
                     }
                     
-                    // Password Field
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = "Password",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = labelColor,
-                            fontSize = 14.sp
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = state.password,
-                        onValueChange = { viewModel.updateRegisterField(password = it) },
-                        placeholder = { Text("••••••••", color = inputPlaceholder) },
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = null,
-                                    tint = inputPlaceholder
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = inputText,
-                            unfocusedTextColor = inputText,
-                            focusedContainerColor = inputBg,
-                            unfocusedContainerColor = inputBg,
-                            focusedBorderColor = inputFocusedBorder,
-                            unfocusedBorderColor = inputBorder
+                    // Password Fields - Only show when NOT using Google Sign-Up
+                    if (googleIdToken == null) {
+                        // Password Field
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "Password",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = labelColor,
+                                fontSize = 14.sp
+                            ),
+                            modifier = Modifier.fillMaxWidth()
                         )
-                    )
-                    
-                    // Confirm Password Field
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = "Confirm Password",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = labelColor,
-                            fontSize = 14.sp
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = state.confirmPassword,
-                        onValueChange = { viewModel.updateRegisterField(confirmPassword = it) },
-                        placeholder = { Text("••••••••", color = inputPlaceholder) },
-                        trailingIcon = {
-                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (confirmPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = null,
-                                    tint = inputPlaceholder
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = inputText,
-                            unfocusedTextColor = inputText,
-                            focusedContainerColor = inputBg,
-                            unfocusedContainerColor = inputBg,
-                            focusedBorderColor = inputFocusedBorder,
-                            unfocusedBorderColor = inputBorder
-                        ),
-                        isError = state.confirmPassword.isNotEmpty() && state.password != state.confirmPassword
-                    )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = state.password,
+                            onValueChange = { viewModel.updateRegisterField(password = it) },
+                            placeholder = { Text("••••••••", color = inputPlaceholder) },
+                            trailingIcon = {
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Icon(
+                                        imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = null,
+                                        tint = inputPlaceholder
+                                    )
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            singleLine = true,
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            )
+                        )
+                        
+                        // Confirm Password Field
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = "Confirm Password",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = labelColor,
+                                fontSize = 14.sp
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = state.confirmPassword,
+                            onValueChange = { viewModel.updateRegisterField(confirmPassword = it) },
+                            placeholder = { Text("••••••••", color = inputPlaceholder) },
+                            trailingIcon = {
+                                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                    Icon(
+                                        imageVector = if (confirmPasswordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = null,
+                                        tint = inputPlaceholder
+                                    )
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                            singleLine = true,
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = inputText,
+                                unfocusedTextColor = inputText,
+                                focusedContainerColor = inputBg,
+                                unfocusedContainerColor = inputBg,
+                                focusedBorderColor = inputFocusedBorder,
+                                unfocusedBorderColor = inputBorder
+                            ),
+                            isError = state.confirmPassword.isNotEmpty() && state.password != state.confirmPassword
+                        )
+                    }
                     
                     if (state.error != null) {
                         Spacer(modifier = Modifier.height(10.dp))
@@ -908,7 +987,13 @@ fun RegisterScreen(
                     
                     // Register Button
                     Button(
-                        onClick = { viewModel.register() },
+                        onClick = {
+                            if (googleIdToken != null) {
+                                viewModel.registerWithGoogle(googleIdToken!!)
+                            } else {
+                                viewModel.register()
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
@@ -928,13 +1013,27 @@ fun RegisterScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Text(
-                                text = "Create Account",
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 16.sp
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                if (googleIdToken != null) {
+                                    Icon(
+                                        imageVector = GoogleIconVectorRegister,
+                                        contentDescription = null,
+                                        tint = Color.Unspecified,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                                Text(
+                                    text = if (googleIdToken != null) "Create Account with Google" else "Create Account",
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                     

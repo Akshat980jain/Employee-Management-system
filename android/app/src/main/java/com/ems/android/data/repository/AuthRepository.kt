@@ -170,6 +170,55 @@ class AuthRepository @Inject constructor(
         }
     }
     
+    fun registerWithGoogle(request: GoogleRegisterRequest): Flow<Resource<AuthResponse>> = flow {
+        emit(Resource.Loading())
+        Log.d(TAG, "Attempting Google registration")
+        
+        try {
+            val response = apiService.googleRegister(request)
+            Log.d(TAG, "Google register response code: ${response.code()}")
+            
+            if (response.isSuccessful && response.body() != null) {
+                val authResponse = response.body()!!
+                val accessToken = authResponse.getAccessToken()
+                val userData = authResponse.getUserData()
+                Log.d(TAG, "Google register success: ${authResponse.success}, has token: ${accessToken != null}")
+                
+                if (authResponse.success && accessToken != null && userData != null) {
+                    tokenManager.saveToken(accessToken)
+                    tokenManager.saveUser(userData)
+                    Log.d(TAG, "Token and user saved after Google registration")
+                }
+                emit(Resource.Success(authResponse))
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e(TAG, "Google register failed: ${response.code()} - $errorBody")
+                
+                val errorMessage = try {
+                    errorBody?.let { 
+                        if (it.contains("message")) {
+                            val regex = """"message"\s*:\s*"([^"]+)"""".toRegex()
+                            regex.find(it)?.groupValues?.get(1) ?: it
+                        } else it
+                    } ?: "Google registration failed (${response.code()})"
+                } catch (e: Exception) {
+                    errorBody ?: "Google registration failed (${response.code()})"
+                }
+                
+                emit(Resource.Error(errorMessage))
+            }
+        } catch (e: SocketTimeoutException) {
+            Log.e(TAG, "Google register timeout", e)
+            emit(Resource.Error("Connection timeout. Please try again."))
+        } catch (e: UnknownHostException) {
+            Log.e(TAG, "No internet", e)
+            emit(Resource.Error("No internet connection. Please check your network."))
+        } catch (e: Exception) {
+            Log.e(TAG, "Google register error", e)
+            emit(Resource.Error(e.message ?: "Network error: ${e.javaClass.simpleName}"))
+        }
+    }
+    
     fun getCurrentUser(): Flow<Resource<AuthResponse>> = flow {
         emit(Resource.Loading())
         try {

@@ -227,7 +227,7 @@ class AuthViewModel @Inject constructor(
             password = state.password,
             firstName = state.firstName,
             lastName = state.lastName,
-            role = state.role,
+            role = mapRoleToBackend(state.role),
             organizationChoice = state.organizationChoice,
             organizationId = state.organizationId,
             organizationName = if (state.organizationChoice == "CREATE_NEW") state.organizationName else null,
@@ -238,6 +238,55 @@ class AuthViewModel @Inject constructor(
         
         viewModelScope.launch {
             authRepository.register(request).collect { result ->
+                when (result) {
+                    is Resource.Loading -> {
+                        _registerState.update { it.copy(isLoading = true, error = null) }
+                    }
+                    is Resource.Success -> {
+                        val response = result.data
+                        _registerState.update { 
+                            it.copy(
+                                isLoading = false,
+                                isRegistered = response?.success == true,
+                                pendingApproval = response?.isPendingVerification() == true,
+                                error = if (response?.success != true) response?.message else null
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        _registerState.update { it.copy(isLoading = false, error = result.message) }
+                    }
+                }
+            }
+        }
+    }
+    
+    fun registerWithGoogle(idToken: String) {
+        val state = _registerState.value
+        
+        // Validation - org selection is still required for Google signup
+        if (state.role == "ADMIN" && state.organizationChoice == "CREATE_NEW" && state.organizationName.isBlank()) {
+            _registerState.update { it.copy(error = "Please enter organization name") }
+            return
+        }
+        
+        if (state.organizationChoice == "JOIN_EXISTING" && state.organizationId == null) {
+            _registerState.update { it.copy(error = "Please select an organization") }
+            return
+        }
+        
+        val request = GoogleRegisterRequest(
+            idToken = idToken,
+            role = mapRoleToBackend(state.role),
+            organizationId = state.organizationId,
+            organizationName = if (state.organizationChoice == "CREATE_NEW") state.organizationName else null,
+            industry = if (state.organizationChoice == "CREATE_NEW") state.industry.ifBlank { null } else null,
+            size = if (state.organizationChoice == "CREATE_NEW") state.size.ifBlank { null } else null,
+            message = state.message.ifBlank { null }
+        )
+        
+        viewModelScope.launch {
+            authRepository.registerWithGoogle(request).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _registerState.update { it.copy(isLoading = true, error = null) }

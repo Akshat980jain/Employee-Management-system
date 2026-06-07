@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { OAuth2Client } from 'google-auth-library';
 import { Organization, User, Role, UserRole, Session, LeaveType, Shift, Employee, JoinRequest } from '../../models/index.js';
-import { RegisterInput, LoginInput, ResetPasswordInput } from './auth.dto.js';
+import { RegisterInput, LoginInput, ResetPasswordInput, GoogleRegisterInput } from './auth.dto.js';
 import { sendResetOtpEmail } from '../../utils/mailer.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { emitToOrganization } from '../../config/socket.js';
@@ -506,13 +506,46 @@ export class AuthService {
                 }
                 email = payload.email;
             } catch (error: any) {
-                console.error('Google ID token verification failed:', {
-                    error: error.message || error,
-                    configuredClientId: process.env.GOOGLE_CLIENT_ID ? '***' + process.env.GOOGLE_CLIENT_ID.slice(-10) : 'NOT SET',
-                    configuredAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID ? '***' + process.env.GOOGLE_ANDROID_CLIENT_ID.slice(-10) : 'NOT SET',
-                    tokenPreview: token.substring(0, 20) + '...',
-                });
-                throw ApiError.unauthorized('Invalid Google ID token');
+                // If verifyIdToken fails, try the tokeninfo endpoint as fallback
+                // This handles cases where SHA-1 fingerprint mismatch causes audience issues
+                console.warn('Primary Google ID token verification failed, trying tokeninfo fallback:', error.message);
+                try {
+                    const tokenInfoResponse = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
+                    if (!tokenInfoResponse.ok) {
+                        throw new Error('tokeninfo endpoint returned error');
+                    }
+                    const tokenInfo = await tokenInfoResponse.json() as any;
+                    
+                    // Verify the token was issued for our app
+                    const validAudiences = [
+                        process.env.GOOGLE_CLIENT_ID,
+                        process.env.GOOGLE_ANDROID_CLIENT_ID
+                    ].filter(Boolean);
+                    
+                    if (!tokenInfo.email) {
+                        throw new Error('No email in tokeninfo response');
+                    }
+                    
+                    if (validAudiences.length > 0 && !validAudiences.includes(tokenInfo.aud)) {
+                        console.error('Token audience mismatch:', {
+                            tokenAud: tokenInfo.aud,
+                            expectedAuds: validAudiences.map(a => '***' + (a as string).slice(-10)),
+                        });
+                        throw new Error('Audience mismatch');
+                    }
+                    
+                    email = tokenInfo.email;
+                    console.log('Google token verified via tokeninfo fallback for:', email);
+                } catch (fallbackError: any) {
+                    console.error('Google ID token verification failed (both methods):', {
+                        primaryError: error.message || error,
+                        fallbackError: fallbackError.message || fallbackError,
+                        configuredClientId: process.env.GOOGLE_CLIENT_ID ? '***' + process.env.GOOGLE_CLIENT_ID.slice(-10) : 'NOT SET',
+                        configuredAndroidClientId: process.env.GOOGLE_ANDROID_CLIENT_ID ? '***' + process.env.GOOGLE_ANDROID_CLIENT_ID.slice(-10) : 'NOT SET',
+                        tokenPreview: token.substring(0, 20) + '...',
+                    });
+                    throw ApiError.unauthorized('Invalid Google ID token. Please ensure your Google account is properly configured.');
+                }
             }
         } else {
             // It's an Access Token (from custom Web OAuth2 button)
@@ -587,7 +620,272 @@ export class AuthService {
             ...tokens,
         };
     }
+    async registerWithGoogle(input: GoogleRegisterInput, userAgent?: string, ipAddress?: string) {
+        const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        let email: string;
+        let firstName: string;
+        let lastName: string;
+
+        // Verify Google ID token
+        try {
+            const audienceList = [
+                process.env.GOOGLE_CLIENT_ID,
+                process.env.GOOGLE_ANDROID_CLIENT_ID
+            ].filter(Boolean) as string[];
+
+            const ticket = await googleClient.verifyIdToken({
+                idToken: input.idToken,
+                audience: audienceList,
+            });
+            const payload = ticket.getPayload();
+            if (!payload || !payload.email) {
+                throw ApiError.unauthorized('Invalid Google ID token payload');
+            }
+            email = payload.email;
+            firstName = payload.given_name || payload.name?.split(' ')[0] || '';
+            lastName = payload.family_name || payload.name?.split(' ').slice(1).join(' ') || '';
+        } catch (error: any) {
+            if (error instanceof ApiError) throw error;
+            // Fallback to tokeninfo endpoint
+            console.warn('Primary Google ID token verification failed during registration, trying tokeninfo fallback:', error.message);
+            try {
+                const tokenInfoResponse = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${input.idToken}`);
+                if (!tokenInfoResponse.ok) {
+                    throw new Error('tokeninfo endpoint returned error');
+                }
+                const tokenInfo = await tokenInfoResponse.json() as any;
+                
+                const validAudiences = [
+                    process.env.GOOGLE_CLIENT_ID,
+                    process.env.GOOGLE_ANDROID_CLIENT_ID
+                ].filter(Boolean);
+                
+                if (!tokenInfo.email) {
+                    throw new Error('No email in tokeninfo response');
+                }
+                
+                if (validAudiences.length > 0 && !validAudiences.includes(tokenInfo.aud)) {
+                    throw new Error('Audience mismatch');
+                }
+                
+                email = tokenInfo.email;
+                firstName = tokenInfo.given_name || tokenInfo.name?.split(' ')[0] || '';
+                lastName = tokenInfo.family_name || tokenInfo.name?.split(' ').slice(1).join(' ') || '';
+                console.log('Google token verified via tokeninfo fallback during registration for:', email);
+            } catch (fallbackError: any) {
+                console.error('Google ID token verification failed during registration (both methods):', {
+                    primaryError: error.message || error,
+                    fallbackError: fallbackError.message || fallbackError,
+                });
+                throw ApiError.unauthorized('Invalid Google ID token. Please ensure your Google account is properly configured.');
+            }
+        }
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw ApiError.conflict('Email already registered. Please use Google Login instead.');
+        }
+
+        const selectedRole = input.role || 'Employee';
+
+        // Generate a random password hash (user authenticated via Google, no password needed)
+        const randomPassword = uuidv4() + 'Aa1!'; // Satisfies password requirements but is never used
+        const passwordHash = await bcrypt.hash(randomPassword, BCRYPT_ROUNDS);
+
+        if (input.organizationId) {
+            // Join existing organization flow
+            const organization = await Organization.findById(input.organizationId);
+            if (!organization) {
+                throw ApiError.notFound('Organization not found');
+            }
+
+            const user = await User.create({
+                email,
+                passwordHash,
+                firstName,
+                lastName,
+                organizationId: organization._id,
+                pendingOrganizationId: organization._id,
+                isEmailVerified: true,
+                isVerified: false,
+            });
+
+            const joinRequest = await JoinRequest.create({
+                userId: user._id,
+                organizationId: organization._id,
+                status: 'PENDING',
+                requestedRole: selectedRole,
+                message: input.message,
+            });
+
+            emitToOrganization(
+                organization._id.toString(),
+                'joinRequest:new',
+                {
+                    requestId: joinRequest._id,
+                    userId: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    requestedRole: selectedRole,
+                }
+            );
+
+            const tokens = await this.generateTokens(user._id.toString(), user.email, organization._id.toString());
+
+            return {
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: selectedRole,
+                    isVerified: false,
+                },
+                organization: {
+                    id: organization._id,
+                    name: organization.name,
+                    slug: organization.slug,
+                },
+                pendingVerification: true,
+                ...tokens,
+            };
+        }
+
+        // Create new organization flow
+        if (!input.organizationName) {
+            throw ApiError.badRequest('Organization name is required for Admin/HR Manager registration');
+        }
+
+        const slug = input.organizationName
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
+
+        const organization = await Organization.create({
+            name: input.organizationName,
+            slug,
+            industry: input.industry,
+            size: input.size,
+            timezone: input.timezone || 'UTC',
+        });
+
+        const rolePermissions = ROLE_PERMISSIONS[selectedRole] || ROLE_PERMISSIONS['Employee'];
+
+        let userRole = await Role.findOne({
+            name: selectedRole,
+            organizationId: organization._id
+        });
+
+        if (!userRole) {
+            userRole = await Role.create({
+                name: selectedRole,
+                description: `${selectedRole} role`,
+                isSystem: true,
+                organizationId: organization._id,
+                permissions: rolePermissions,
+            });
+        }
+
+        const allRoles = ['Admin', 'HR Manager', 'Employee'];
+        for (const roleName of allRoles) {
+            if (roleName !== selectedRole) {
+                const existingRole = await Role.findOne({
+                    name: roleName,
+                    organizationId: organization._id
+                });
+                if (!existingRole) {
+                    await Role.create({
+                        name: roleName,
+                        description: `${roleName} role`,
+                        isSystem: true,
+                        organizationId: organization._id,
+                        permissions: ROLE_PERMISSIONS[roleName] || [],
+                    });
+                }
+            }
+        }
+
+        const user = await User.create({
+            email,
+            passwordHash,
+            firstName,
+            lastName,
+            organizationId: organization._id,
+            isEmailVerified: true,
+            isVerified: true,
+        });
+
+        await UserRole.create({
+            userId: user._id,
+            roleId: userRole._id,
+        });
+
+        const employeeId = `EMP${Date.now().toString(36).toUpperCase()}`;
+        await Employee.create({
+            userId: user._id,
+            organizationId: organization._id,
+            employeeId,
+            firstName,
+            lastName,
+            email,
+            status: 'ACTIVE',
+            joinDate: new Date(),
+            designation: selectedRole === 'Admin' ? 'Administrator' : selectedRole === 'HR Manager' ? 'HR Manager' : 'Employee',
+        });
+
+        const leaveTypes = [
+            { name: 'Annual Leave', code: 'AL', isPaid: true, color: '#4CAF50' },
+            { name: 'Sick Leave', code: 'SL', isPaid: true, color: '#F44336' },
+            { name: 'Casual Leave', code: 'CL', isPaid: true, color: '#2196F3' },
+            { name: 'Unpaid Leave', code: 'UL', isPaid: false, color: '#9E9E9E' },
+        ];
+
+        for (const lt of leaveTypes) {
+            await LeaveType.create({
+                ...lt,
+                organizationId: organization._id,
+            });
+        }
+
+        await Shift.create({
+            name: 'General Shift',
+            organizationId: organization._id,
+            startTime: '09:00',
+            endTime: '18:00',
+            graceMinutes: 15,
+            isDefault: true,
+        });
+
+        const tokens = await this.generateTokens(user._id.toString(), user.email, organization._id.toString());
+
+        await Session.create({
+            userId: user._id,
+            refreshToken: tokens.refreshToken,
+            userAgent,
+            ipAddress,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        });
+
+        return {
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: selectedRole,
+                isVerified: true,
+            },
+            organization: {
+                id: organization._id,
+                name: organization.name,
+                slug: organization.slug,
+            },
+            pendingVerification: false,
+            ...tokens,
+        };
+    }
 }
 
 export const authService = new AuthService();
-

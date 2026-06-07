@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from './auth.service.js';
-import { registerSchema, loginSchema, refreshTokenSchema, forgotPasswordSchema, resetPasswordSchema } from './auth.dto.js';
+import { registerSchema, loginSchema, refreshTokenSchema, forgotPasswordSchema, resetPasswordSchema, googleRegisterSchema } from './auth.dto.js';
 import { ApiError } from '../../middleware/errorHandler.js';
 import { AuthRequest } from '../../middleware/auth.js';
 import { User, Role, UserRole, Organization } from '../../models/index.js';
@@ -248,6 +248,28 @@ export class AuthController {
                 data: result,
             });
         } catch (error) {
+            next(error);
+        }
+    }
+
+    async googleRegister(req: Request, res: Response, next: NextFunction) {
+        try {
+            const input = googleRegisterSchema.parse(req.body);
+            const result = await authService.registerWithGoogle(
+                input,
+                req.headers['user-agent'],
+                req.ip
+            );
+
+            res.status(201).json({
+                success: true,
+                message: 'Registration successful',
+                data: result,
+            });
+        } catch (error: any) {
+            if (error.name === 'ZodError') {
+                return next(ApiError.badRequest('Validation failed', error.errors));
+            }
             next(error);
         }
     }

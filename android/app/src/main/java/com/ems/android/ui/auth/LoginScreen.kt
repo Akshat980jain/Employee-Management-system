@@ -192,6 +192,8 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
+    var lastLoginWasGoogle by remember { mutableStateOf(false) }
+    var lastGoogleIdToken by remember { mutableStateOf<String?>(null) }
     
     var showForgotPasswordDialog by remember { mutableStateOf(false) }
     var dialogStep by remember { mutableStateOf(ResetStep.EMAIL) }
@@ -299,9 +301,11 @@ fun LoginScreen(
             error = AppError(
                 type = when {
                     state.error!!.contains("network", ignoreCase = true) -> ErrorType.NETWORK
+                    state.error!!.contains("timeout", ignoreCase = true) -> ErrorType.NETWORK
                     state.error!!.contains("password", ignoreCase = true) ||
                     state.error!!.contains("email", ignoreCase = true) ||
                     state.error!!.contains("credentials", ignoreCase = true) -> ErrorType.AUTH
+                    state.error!!.contains("Google", ignoreCase = true) -> ErrorType.AUTH
                     state.error!!.contains("validation", ignoreCase = true) -> ErrorType.VALIDATION
                     state.error!!.contains("server", ignoreCase = true) -> ErrorType.SERVER
                     else -> ErrorType.UNKNOWN
@@ -309,13 +313,19 @@ fun LoginScreen(
                 title = "Login Failed",
                 message = state.error!!,
                 details = "Email: ${state.email}\nTimestamp: ${System.currentTimeMillis()}",
-                endpoint = "POST /api/auth/login"
+                endpoint = if (lastLoginWasGoogle) "POST /api/auth/google-login" else "POST /api/auth/login"
             ),
             onDismiss = { 
                 showErrorDialog = false
                 viewModel.clearError()
             },
-            onRetry = { viewModel.login() }
+            onRetry = {
+                if (lastLoginWasGoogle && lastGoogleIdToken != null) {
+                    viewModel.loginWithGoogle(lastGoogleIdToken!!, rememberMe)
+                } else {
+                    viewModel.login()
+                }
+            }
         )
     }
     
@@ -544,6 +554,8 @@ fun LoginScreen(
                                         credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                                         val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                                         val idToken = googleIdTokenCredential.idToken
+                                        lastLoginWasGoogle = true
+                                        lastGoogleIdToken = idToken
                                         viewModel.loginWithGoogle(idToken, rememberMe)
                                     } else {
                                         Log.e("Auth", "Unexpected credential type: ${credential.type}")
@@ -698,6 +710,7 @@ fun LoginScreen(
                         keyboardActions = KeyboardActions(
                             onDone = { 
                                 focusManager.clearFocus()
+                                lastLoginWasGoogle = false
                                 viewModel.login()
                             }
                         ),
@@ -757,7 +770,7 @@ fun LoginScreen(
                     
                     // Sign In Button
                     Button(
-                        onClick = { viewModel.login(rememberMe) },
+                        onClick = { lastLoginWasGoogle = false; viewModel.login(rememberMe) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
@@ -783,6 +796,27 @@ fun LoginScreen(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 16.sp
                                 )
+                            )
+                        }
+                    }
+                    
+                    // Show server waking up message when loading takes long
+                    if (state.isLoading) {
+                        var showWakeupMessage by remember { mutableStateOf(false) }
+                        LaunchedEffect(Unit) {
+                            kotlinx.coroutines.delay(5000)
+                            showWakeupMessage = true
+                        }
+                        if (showWakeupMessage) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "⏳ Server is waking up, this may take up to 30 seconds...",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = textColorSecondary,
+                                    fontSize = 12.sp
+                                ),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
                     }

@@ -79,5 +79,39 @@ export const resetPasswordSchema = z.object({
         .regex(/[0-9]/, 'Password must contain at least one number'),
 });
 
+export const googleRegisterSchema = z.object({
+    // Google ID token (replaces password)
+    idToken: z.string().min(1),
+
+    // Organization details - for creating new organization
+    organizationName: z.string().min(2).max(100).optional(),
+    industry: z.string().optional(),
+    size: z.enum(['STARTUP', 'SMALL', 'MEDIUM', 'LARGE', 'ENTERPRISE']).optional(),
+    timezone: z.string().default('UTC'),
+
+    // For joining an existing organization
+    organizationId: z.string().optional(),
+
+    // Role selection (optional, defaults to Employee)
+    role: z.enum(['Admin', 'HR Manager', 'Employee']).optional().default('Employee'),
+
+    // Optional message for join request
+    message: z.string().max(500).optional(),
+}).refine((data) => {
+    if (!data.organizationId && !data.organizationName) {
+        return false;
+    }
+    if (data.organizationId && data.organizationName) {
+        return false;
+    }
+    if (data.role === 'Employee' && data.organizationName) {
+        return false;
+    }
+    return true;
+}, {
+    message: 'Employees must join an existing organization. Only Admin or HR Manager can create new organizations.',
+});
+
+export type GoogleRegisterInput = z.infer<typeof googleRegisterSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

@@ -122,3 +122,26 @@ data class ResetPasswordRequest(
 data class GoogleLoginRequest(
     @Json(name = "idToken") val idToken: String
 )
+
+@JsonClass(generateAdapter = true)
+data class GoogleRegisterRequest(
+    @Json(name = "idToken") val idToken: String,
+    @Json(name = "role") val role: String, // "Admin", "HR Manager", "Employee"
+    @Json(name = "organizationId") val organizationId: String? = null,
+    @Json(name = "organizationName") val organizationName: String? = null,
+    @Json(name = "industry") val industry: String? = null,
+    @Json(name = "size") val size: String? = null,
+    @Json(name = "message") val message: String? = null
+)
+
+/**
+ * Maps Android role enum values to backend-expected values.
+ * Android uses: ADMIN, HR_MANAGER, EMPLOYEE
+ * Backend expects: Admin, HR Manager, Employee
+ */
+fun mapRoleToBackend(role: String): String = when (role) {
+    "ADMIN" -> "Admin"
+    "HR_MANAGER" -> "HR Manager"
+    "EMPLOYEE" -> "Employee"
+    else -> role // Pass through if already in correct format
+}
